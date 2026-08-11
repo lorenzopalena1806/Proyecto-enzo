@@ -15,6 +15,8 @@ import {
   X,
   ChevronRight,
   Store,
+  Users,
+  Settings,
 } from 'lucide-react';
 import type { Profile } from '@/types';
 
@@ -22,7 +24,7 @@ interface SidebarProps {
   profile: Profile;
 }
 
-const NAV_ITEMS = [
+const MERCHANT_NAV_ITEMS = [
   {
     href: '/dashboard',
     label: 'Inicio',
@@ -44,6 +46,27 @@ const NAV_ITEMS = [
   {
     href: '/dashboard/marketing',
     label: 'Marketing',
+    icon: ImageIcon,
+    exact: false,
+  },
+];
+
+const ADMIN_NAV_ITEMS = [
+  {
+    href: '/admin',
+    label: 'Dashboard',
+    icon: LayoutDashboard,
+    exact: true,
+  },
+  {
+    href: '/admin/merchants',
+    label: 'Comercios',
+    icon: Users,
+    exact: false,
+  },
+  {
+    href: '/admin/marketing',
+    label: 'Upload Marketing',
     icon: ImageIcon,
     exact: false,
   },
@@ -96,7 +119,7 @@ export function Sidebar({ profile }: SidebarProps) {
 
       {/* Navegación */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {NAV_ITEMS.map((item) => {
+        {(profile.role === 'superadmin' ? ADMIN_NAV_ITEMS : MERCHANT_NAV_ITEMS).map((item) => {
           const active = isActive(item.href, item.exact);
           const Icon = item.icon;
           return (
