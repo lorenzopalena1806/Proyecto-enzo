@@ -5,6 +5,7 @@ import { QRDisplay } from '@/components/dashboard/QRDisplay';
 import { LogoutButton } from '@/components/dashboard/LogoutButton';
 import { LogOut, User } from 'lucide-react';
 import Link from 'next/link';
+import { encodeQRPayload } from '@/lib/qr-utils';
 
 export default async function ClientQRPage() {
   const supabase = await createClient();
@@ -58,6 +59,13 @@ export default async function ClientQRPage() {
     }
   }
 
+  const encodedQR = encodeQRPayload({
+    userId: user.id,
+    role: 'client',
+    token: qrData.qr_token,
+    version: 1,
+  });
+
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col">
       {/* Header */}
@@ -81,7 +89,7 @@ export default async function ClientQRPage() {
 
         <div className="w-full">
           <QRDisplay 
-            qrValue={qrData.qr_token} 
+            qrValue={encodedQR} 
             userName={profile?.full_name || 'Cliente'} 
           />
         </div>
