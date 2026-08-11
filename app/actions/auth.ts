@@ -17,3 +17,13 @@ export async function getUserRoleServer() {
     
   return profile?.role || null;
 }
+export async function getUserRoleById(userId: string) {
+  const adminClient = createAdminClient();
+  const { data: profile } = await adminClient
+    .from('profiles')
+    .select('role')
+    .eq('id', userId)
+    .single();
+    
+  return profile?.role || null;
+}

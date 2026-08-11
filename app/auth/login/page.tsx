@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Store, Loader2, LogIn } from 'lucide-react';
 
-import { getUserRoleServer } from '@/app/actions/auth';
+import { getUserRoleById } from '@/app/actions/auth';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -26,27 +26,25 @@ export default function LoginPage() {
     const { createClient } = await import('@/lib/supabase');
     const supabase = createClient();
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
+    const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    if (signInError) {
+    if (signInError || !authData.user) {
       setError('Email o contraseña incorrectos. Verificá tus datos.');
       setLoading(false);
       return;
     }
 
-    // Esperar un instante para asegurar que las cookies se guarden en el navegador
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    // Obtener rol desde el servidor para evitar problemas de RLS (bucles infinitos)
-    const role = await getUserRoleServer();
-      // Usamos window.location.href en lugar de router.push para forzar
-      // una recarga completa y que las cookies de sesión estén listas
-      if (role === 'superadmin') window.location.href = '/admin';
-      if (role === 'merchant') window.location.href = '/dashboard';
-      else window.location.href = '/client/qr';
+    // Usar el ID devuelto por el login en el cliente para buscar el rol sin depender de las cookies
+    const role = await getUserRoleById(authData.user.id);
+      
+    // Usamos window.location.href en lugar de router.push para forzar
+    // una recarga completa y que las cookies de sesión estén listas
+    if (role === 'superadmin') window.location.href = '/admin';
+    else if (role === 'merchant') window.location.href = '/dashboard';
+    else window.location.href = '/client/qr';
   };
 
   return (
