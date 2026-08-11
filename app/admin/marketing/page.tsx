@@ -6,10 +6,11 @@ import React, { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase';
 import type { Profile } from '@/types';
 import { UploadCloud, Loader2, Image as ImageIcon, Store } from 'lucide-react';
+import { getMerchantsForMarketingServer, createMarketingAssetServer } from '@/app/actions/admin';
 
 export default function AdminMarketingPage() {
   const supabase = createClient();
-  const [merchants, setMerchants] = useState<Profile[]>([]);
+  const [merchants, setMerchants] = useState<any[]>([]);
   const [loadingMerchants, setLoadingMerchants] = useState(true);
 
   const [selectedMerchant, setSelectedMerchant] = useState('');
@@ -26,12 +27,8 @@ export default function AdminMarketingPage() {
 
   const fetchMerchants = async () => {
     setLoadingMerchants(true);
-    const { data } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('role', 'merchant')
-      .order('business_name');
-    if (data) setMerchants(data);
+    const data = await getMerchantsForMarketingServer();
+    setMerchants(data);
     setLoadingMerchants(false);
   };
 
@@ -62,11 +59,13 @@ export default function AdminMarketingPage() {
         .from('marketing-assets')
         .getPublicUrl(filePath);
 
-      // 2. Crear registro en la tabla marketing_assets
+      // 2. Crear registro en la tabla marketing_assets usando Server Action
       const { data: sessionData } = await supabase.auth.getSession();
       const adminId = sessionData.session?.user.id;
 
-      const { error: dbError } = await supabase.from('marketing_assets').insert({
+      if (!adminId) throw new Error("Sesión no encontrada");
+
+      const result = await createMarketingAssetServer({
         merchant_id: selectedMerchant,
         title: title || 'Material Promocional',
         description: description || '',
@@ -75,7 +74,7 @@ export default function AdminMarketingPage() {
         uploaded_by: adminId,
       });
 
-      if (dbError) throw dbError;
+      if (!result.success) throw new Error(result.error);
 
       setMessage({ type: 'success', text: 'Material subido correctamente.' });
       

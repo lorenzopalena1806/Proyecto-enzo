@@ -7,6 +7,7 @@ import { Html5QrcodeScanner, Html5QrcodeScanType } from 'html5-qrcode';
 import { calculateDiscount, formatARS, getPaymentMethodLabel } from '@/lib/discount-logic';
 import { decodeQRPayload } from '@/lib/qr-utils';
 import { createClient } from '@/lib/supabase';
+import { processQRScanServer, ProcessScanResult } from '@/app/actions/scanner';
 import type { PaymentMethod, DiscountOutcome, ScannerState, Profile } from '@/types';
 import {
   QrCode,
@@ -27,12 +28,7 @@ import {
 // TIPOS LOCALES
 // ============================================================
 
-interface ScanResult {
-  outcome: DiscountOutcome;
-  scannedUser: Profile | null;
-  originalAmount: number;
-  paymentMethod: PaymentMethod;
-}
+type ScanResult = ProcessScanResult;
 
 // ============================================================
 // COMPONENTE PRINCIPAL: QRScanner
@@ -113,169 +109,12 @@ export function QRScanner() {
     setScannerState('processing');
 
     try {
-      // 1. Decodificar el payload del QR
-      const payload = decodeQRPayload(qrText);
-
-      if (!payload) {
-        setScanResult({
-          outcome: {
-            valid: false,
-            reason: 'El código QR escaneado no es válido o no pertenece a esta plataforma.',
-            final_amount: null,
-          },
-          scannedUser: null,
-          originalAmount: amount,
-          paymentMethod: method,
-        });
-        setScannerState('result');
-        return;
-      }
-
-      // 2. Verificar que el token esté activo en la base de datos
-      const { data: qrRecord, error: qrError } = await supabase
-        .from('qr_codes')
-        .select('is_active, user_id')
-        .eq('qr_token', payload.token)
-        .single();
-
-      if (qrError || !qrRecord) {
-        setScanResult({
-          outcome: {
-            valid: false,
-            reason: 'Este código QR no fue encontrado en el sistema.',
-            final_amount: null,
-          },
-          scannedUser: null,
-          originalAmount: amount,
-          paymentMethod: method,
-        });
-        setScannerState('result');
-        return;
-      }
-
-      if (!qrRecord.is_active) {
-        setScanResult({
-          outcome: {
-            valid: false,
-            reason: 'Este código QR está desactivado. El usuario debe contactar al administrador.',
-            final_amount: null,
-          },
-          scannedUser: null,
-          originalAmount: amount,
-          paymentMethod: method,
-        });
-        setScannerState('result');
-        return;
-      }
-
-      // 3. Obtener el perfil del usuario escaneado
-      const { data: scannedUser, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', payload.userId)
-        .single();
-
-      if (profileError || !scannedUser) {
-        setScanResult({
-          outcome: {
-            valid: false,
-            reason: 'No se pudo obtener el perfil del usuario asociado a este QR.',
-            final_amount: null,
-          },
-          scannedUser: null,
-          originalAmount: amount,
-          paymentMethod: method,
-        });
-        setScannerState('result');
-        return;
-      }
-
-      if (!scannedUser.is_active) {
-        setScanResult({
-          outcome: {
-            valid: false,
-            reason: `El usuario "${scannedUser.full_name ?? 'Desconocido'}" no está activo en la plataforma.`,
-            final_amount: null,
-          },
-          scannedUser,
-          originalAmount: amount,
-          paymentMethod: method,
-        });
-        setScannerState('result');
-        return;
-      }
-
-      // 4. Si es merchant, verificar suscripción activa
-      if (scannedUser.role === 'merchant') {
-        const { data: subscription } = await supabase
-          .from('subscriptions')
-          .select('status, expires_at')
-          .eq('merchant_id', scannedUser.id)
-          .eq('status', 'active')
-          .single();
-
-        if (!subscription) {
-          setScanResult({
-            outcome: {
-              valid: false,
-              reason: `El comercio "${scannedUser.business_name ?? scannedUser.full_name}" no tiene una suscripción activa en la red.`,
-              final_amount: null,
-            },
-            scannedUser,
-            originalAmount: amount,
-            paymentMethod: method,
-          });
-          setScannerState('result');
-          return;
-        }
-
-        // Verificar expiración
-        if (subscription.expires_at && new Date(subscription.expires_at) < new Date()) {
-          setScanResult({
-            outcome: {
-              valid: false,
-              reason: `La suscripción del comercio "${scannedUser.business_name}" ha expirado.`,
-              final_amount: null,
-            },
-            scannedUser,
-            originalAmount: amount,
-            paymentMethod: method,
-          });
-          setScannerState('result');
-          return;
-        }
-      }
-
-      // 5. Calcular el descuento con la lógica de negocio
-      const outcome = calculateDiscount(scannedUser.role, method, amount);
-
-      // 6. Si el descuento es válido, registrar la transacción
-      if (outcome.valid) {
-        const { data: { user: currentUser } } = await supabase.auth.getUser();
-
-        if (currentUser) {
-          await supabase.from('discount_transactions').insert({
-            scanner_id: currentUser.id,
-            scanned_user_id: scannedUser.id,
-            original_amount: amount,
-            discount_pct: outcome.discount_pct,
-            final_amount: outcome.final_amount,
-            payment_method: method,
-            day_of_week: new Date().getDay(),
-          });
-        }
-      }
-
-      setScanResult({
-        outcome,
-        scannedUser,
-        originalAmount: amount,
-        paymentMethod: method,
-      });
+      const result = await processQRScanServer(qrText, amount, method);
+      setScanResult(result);
       setScannerState('result');
-    } catch (err) {
-      console.error('Error al procesar QR:', err);
-      setErrorMessage('Ocurrió un error inesperado. Por favor, intentá de nuevo.');
+    } catch (err: any) {
+      console.error(err);
+      setErrorMessage(err.message || 'Ocurrió un error al procesar el código QR.');
       setScannerState('error');
     }
   };

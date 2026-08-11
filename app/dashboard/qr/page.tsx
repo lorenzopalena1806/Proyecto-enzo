@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase-server';
+import { createClient, createAdminClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import { QRDisplay } from '@/components/dashboard/QRDisplay';
 import { encodeQRPayload } from '@/lib/qr-utils';
@@ -10,11 +10,12 @@ export const metadata = {
 
 export default async function QRPage() {
   const supabase = await createClient();
+  const adminClient = createAdminClient();
 
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/auth/login');
 
-  const { data: profile } = await supabase
+  const { data: profile } = await adminClient
     .from('profiles')
     .select('*')
     .eq('id', user.id)
@@ -23,7 +24,7 @@ export default async function QRPage() {
   if (!profile) redirect('/auth/login');
 
   // Obtener o crear el código QR del usuario
-  let { data: qrCode } = await supabase
+  let { data: qrCode } = await adminClient
     .from('qr_codes')
     .select('*')
     .eq('user_id', user.id)
@@ -35,7 +36,7 @@ export default async function QRPage() {
     const { generateQRToken } = await import('@/lib/qr-utils');
     const token = generateQRToken();
 
-    const { data: newQR } = await supabase
+    const { data: newQR } = await adminClient
       .from('qr_codes')
       .insert({ user_id: user.id, qr_token: token })
       .select()

@@ -3,9 +3,9 @@
 export const dynamic = 'force-dynamic';
 
 import React, { useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase';
 import type { Profile } from '@/types';
 import { Store, Loader2, CheckCircle, XCircle } from 'lucide-react';
+import { getMerchantsListServer, toggleMerchantSubscriptionServer } from '@/app/actions/admin';
 
 interface MerchantWithSubscription extends Profile {
   subscriptionStatus: 'active' | 'inactive' | 'none';
@@ -16,62 +16,21 @@ export default function MerchantsPage() {
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
 
-  const supabase = createClient();
-
   useEffect(() => {
     fetchMerchants();
   }, []);
 
   const fetchMerchants = async () => {
     setLoading(true);
-    
-    // Traer todos los merchants
-    const { data: profiles, error: profilesError } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('role', 'merchant')
-      .order('created_at', { ascending: false });
-
-    if (profilesError || !profiles) {
-      console.error(profilesError);
-      setLoading(false);
-      return;
-    }
-
-    // Traer las suscripciones
-    const { data: subscriptions } = await supabase
-      .from('subscriptions')
-      .select('merchant_id, status');
-
-    const subsMap = new Map(subscriptions?.map((s) => [s.merchant_id, s.status]) || []);
-
-    const combined: MerchantWithSubscription[] = profiles.map((p) => ({
-      ...p,
-      subscriptionStatus: (subsMap.get(p.id) as 'active' | 'inactive') || 'none',
-    }));
-
-    setMerchants(combined);
+    const data = await getMerchantsListServer();
+    setMerchants(data as MerchantWithSubscription[]);
     setLoading(false);
   };
 
   const toggleSubscription = async (merchantId: string, currentStatus: string) => {
     setProcessingId(merchantId);
-    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
-
-    if (currentStatus === 'none') {
-      // Crear suscripción
-      await supabase.from('subscriptions').insert({
-        merchant_id: merchantId,
-        status: 'active',
-        plan_name: 'basic',
-      });
-    } else {
-      // Actualizar suscripción
-      await supabase
-        .from('subscriptions')
-        .update({ status: newStatus, updated_at: new Date().toISOString() })
-        .eq('merchant_id', merchantId);
-    }
+    
+    await toggleMerchantSubscriptionServer(merchantId, currentStatus);
 
     await fetchMerchants();
     setProcessingId(null);

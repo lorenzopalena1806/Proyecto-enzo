@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase-server';
+import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { QrCode, ScanLine, ImageIcon, TrendingUp, ArrowRight, AlertTriangle } from 'lucide-react';
@@ -14,7 +14,9 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/auth/login');
 
-  const { data: profile } = await supabase
+  const adminClient = createAdminClient();
+
+  const { data: profile } = await adminClient
     .from('profiles')
     .select('*')
     .eq('id', user.id)
@@ -23,17 +25,17 @@ export default async function DashboardPage() {
   if (!profile) redirect('/auth/login');
 
   // Obtener estadísticas del comerciante
-  const { count: totalTransactions } = await supabase
+  const { count: totalTransactions } = await adminClient
     .from('discount_transactions')
     .select('*', { count: 'exact', head: true })
     .eq('scanner_id', user.id);
 
-  const { count: totalAssets } = await supabase
+  const { count: totalAssets } = await adminClient
     .from('marketing_assets')
     .select('*', { count: 'exact', head: true })
     .eq('merchant_id', user.id);
 
-  const { data: recentTransactions } = await supabase
+  const { data: recentTransactions } = await adminClient
     .from('discount_transactions')
     .select('*, scanned_user:profiles!scanned_user_id(full_name, business_name, role)')
     .eq('scanner_id', user.id)

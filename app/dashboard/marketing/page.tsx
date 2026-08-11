@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase-server';
+import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import { MarketingGallery } from '@/components/dashboard/MarketingGallery';
 
@@ -13,7 +13,9 @@ export default async function MarketingPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/auth/login');
 
-  const { data: assets, error } = await supabase
+  const adminClient = createAdminClient();
+
+  const { data: assets, error } = await adminClient
     .from('marketing_assets')
     .select('*')
     .eq('merchant_id', user.id)
