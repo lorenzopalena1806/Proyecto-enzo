@@ -128,7 +128,7 @@ export default async function ClientQRPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {offers.map(offer => {
+              {offers.map((offer: any) => {
                 const merchant = offer.merchant as { business_name?: string; full_name?: string };
                 const merchantName = merchant?.business_name || merchant?.full_name || 'Comercio Adherido';
 

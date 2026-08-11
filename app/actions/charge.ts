@@ -107,11 +107,6 @@ async function executePaymentServer(merchantId: string, clientId: string, amount
       return { success: false, reason: `Esta oferta es exclusiva para ${offer.target_role === 'client' ? 'Clientes' : 'Comercios'}.` };
     }
     
-    // Validar método de pago (si no es tarjeta)
-    if (method === 'credit_card' || method === 'debit_card') {
-      return { success: false, reason: 'Los pagos con tarjeta no tienen descuento.' };
-    }
-    
     finalPct = offer.discount_pct;
     finalAmount = amount - (amount * (finalPct / 100));
 

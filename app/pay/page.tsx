@@ -85,8 +85,6 @@ export default async function PayPage({
       outcome = { valid: false, discount_pct: 0, final_amount: amount, reason: 'La oferta ya no está disponible.', offerTitle: '' };
     } else if (offer.target_role !== 'all' && offer.target_role !== clientUser.role) {
       outcome = { valid: false, discount_pct: 0, final_amount: amount, reason: `Esta oferta es exclusiva para ${offer.target_role === 'client' ? 'Clientes' : 'Comercios'}.`, offerTitle: '' };
-    } else if (method === 'credit_card' || method === 'debit_card') {
-      outcome = { valid: false, discount_pct: 0, final_amount: amount, reason: 'Los pagos con tarjeta no aplican para esta oferta.', offerTitle: '' };
     } else {
       outcome = { 
         valid: true, 
@@ -98,7 +96,13 @@ export default async function PayPage({
     }
   } else {
     const defaultOutcome = calculateDiscount(clientUser.role, method, amount);
-    outcome = { ...defaultOutcome, offerTitle: '' };
+    outcome = { 
+      valid: defaultOutcome.valid,
+      discount_pct: defaultOutcome.valid ? defaultOutcome.discount_pct : 0,
+      final_amount: defaultOutcome.valid ? defaultOutcome.final_amount : amount,
+      reason: defaultOutcome.valid ? '' : defaultOutcome.reason,
+      offerTitle: '' 
+    };
   }
 
   return (
