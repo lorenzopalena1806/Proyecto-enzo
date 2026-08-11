@@ -1,383 +1,314 @@
 import Link from 'next/link';
-import { Store, QrCode, ScanLine, ImageIcon, Shield, TrendingUp, Users, CheckCircle2, Star, ArrowRight, Zap } from 'lucide-react';
+import { ArrowRight, QrCode, Store, TrendingUp, Users, Star, CheckCircle2, ShieldCheck, Zap } from 'lucide-react';
+import { Navbar } from '@/components/marketing/Navbar';
 
-export const metadata = {
-  title: 'RedBeneficios — Red de Descuentos B2B para Comercios',
-  description:
-    'La plataforma SaaS que conecta comercios locales con una red de descuentos inteligente. Generá fidelidad, atraé clientes y potenciá tu marketing.',
-};
-
-export default function LandingPage() {
+export default function Home() {
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-      {/* ── NAVBAR ──────────────────────────────────────────── */}
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-slate-800/60 bg-slate-950/80 backdrop-blur-xl">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-600">
-                <Store className="h-4 w-4 text-white" />
-              </div>
-              <span className="font-bold text-white text-lg">RedBeneficios</span>
+    <div className="min-h-screen bg-[#0A0A0B] text-slate-50 selection:bg-violet-500/30 font-sans overflow-x-hidden">
+      {/* Background ambient light */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-violet-600/20 blur-[120px]" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-600/20 blur-[120px]" />
+      </div>
+
+      <Navbar />
+
+      <main className="relative z-10">
+        {/* ✨ HERO SECTION ✨ */}
+        <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 text-center space-y-8">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 backdrop-blur-md text-sm font-medium text-violet-300 mb-4 animate-fade-in">
+              <SparklesIcon className="w-4 h-4" />
+              <span>La nueva era de los beneficios</span>
             </div>
-
-            <nav className="hidden md:flex items-center gap-6 text-sm">
-              <a href="#features" className="text-slate-400 hover:text-white transition-colors">Funcionalidades</a>
-              <a href="#how-it-works" className="text-slate-400 hover:text-white transition-colors">Cómo funciona</a>
-              <a href="#pricing" className="text-slate-400 hover:text-white transition-colors">Precios</a>
-            </nav>
-
-            <div className="flex items-center gap-3">
-              <Link
-                href="/auth/login"
-                className="text-sm text-slate-400 hover:text-white transition-colors px-3 py-2"
-              >
-                Ingresar
-              </Link>
+            
+            <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400 max-w-4xl mx-auto leading-[1.1]">
+              Tu red exclusiva de <br className="hidden sm:block" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-500">
+                descuentos inteligentes
+              </span>
+            </h1>
+            
+            <p className="text-lg lg:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+              Uní tu comercio a la red que transforma cada venta. Fidelizá clientes, accedé a descuentos B2B y hacé crecer tu negocio con tecnología QR en segundos.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8">
               <Link
                 href="/auth/register"
-                className="text-sm font-medium px-4 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white transition-all duration-200 shadow-lg shadow-violet-900/40"
+                className="group relative flex items-center justify-center gap-2 px-8 py-4 w-full sm:w-auto rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold text-lg overflow-hidden transition-all hover:scale-[1.02] hover:shadow-[0_0_40px_8px_rgba(124,58,237,0.3)]"
               >
-                Comenzar gratis
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                <span className="relative">Empezar ahora</span>
+                <ArrowRight className="relative h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link
+                href="/auth/login"
+                className="group flex items-center justify-center gap-2 px-8 py-4 w-full sm:w-auto rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-lg transition-all"
+              >
+                Ya tengo cuenta
               </Link>
             </div>
-          </div>
-        </div>
-      </header>
 
-      {/* ── HERO ────────────────────────────────────────────── */}
-      <section className="relative pt-28 pb-20 overflow-hidden">
-        {/* Fondo con gradiente */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-violet-600/10 rounded-full blur-[120px]" />
-          <div className="absolute top-20 left-0 w-[400px] h-[400px] bg-blue-600/5 rounded-full blur-[80px]" />
-        </div>
-
-        <div className="relative mx-auto max-w-6xl px-4 sm:px-6 text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-violet-800/60 bg-violet-950/40 px-4 py-1.5 text-sm text-violet-300 mb-6">
-            <Zap className="h-3.5 w-3.5" />
-            <span>Plataforma SaaS B2B para comercios locales</span>
-          </div>
-
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-6">
-            La red de beneficios que{' '}
-            <span className="bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent">
-              potencia tu comercio
-            </span>
-          </h1>
-
-          <p className="max-w-2xl mx-auto text-slate-400 text-lg mb-8">
-            Generá descuentos inteligentes con QR, atraé clientes de otros comercios
-            de la red y accedé a tu material de marketing personalizado — todo en un solo panel.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Link
-              href="/auth/register?role=merchant"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-semibold transition-all duration-200 shadow-2xl shadow-violet-900/50 hover:scale-[1.02] active:scale-[0.99]"
-            >
-              Suscribirme ahora
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/auth/register?role=client"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border border-slate-700 bg-slate-800/60 text-slate-300 hover:text-white hover:border-slate-600 font-medium transition-all duration-200"
-            >
-              Soy cliente, quiero mi QR gratis
-            </Link>
-          </div>
-
-          {/* Social proof */}
-          <div className="mt-10 flex items-center justify-center gap-6 text-sm text-slate-500">
-            <div className="flex items-center gap-1.5">
-              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-              Sin tarjeta requerida
-            </div>
-            <div className="flex items-center gap-1.5">
-              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-              Configuración en minutos
-            </div>
-            <div className="flex items-center gap-1.5">
-              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-              Cancela cuando quieras
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── DESCUENTOS GRID ─────────────────────────────────── */}
-      <section className="py-12 bg-slate-900/50 border-y border-slate-800">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <p className="text-center text-sm text-slate-500 mb-6 uppercase tracking-wider font-medium">
-            Sistema de descuentos automáticos
-          </p>
-          <div className="grid sm:grid-cols-3 gap-4">
-            {[
-              { pct: '10%', label: 'Cliente + Transferencia', color: 'border-blue-800 bg-blue-950/30', badge: 'text-blue-400' },
-              { pct: '15%', label: 'Cliente + Efectivo', color: 'border-violet-800 bg-violet-950/30', badge: 'text-violet-400' },
-              { pct: '25%', label: 'Comerciante + Efectivo', color: 'border-emerald-800 bg-emerald-950/30', badge: 'text-emerald-400', isB2B: true },
-            ].map((item) => (
-              <div
-                key={item.pct}
-                className={`flex items-center gap-4 rounded-xl border p-4 ${item.color}`}
-              >
-                <div className={`text-4xl font-bold ${item.badge}`}>{item.pct}</div>
-                <div>
-                  <p className="text-white font-medium text-sm">{item.label}</p>
-                  {item.isB2B && (
-                    <span className="text-xs text-emerald-500 font-medium">⭐ Beneficio B2B</span>
-                  )}
+            {/* Metrics Ribbon */}
+            <div className="pt-20 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-4xl mx-auto border-t border-white/10">
+              {[
+                { label: 'Comercios Adheridos', value: '+500' },
+                { label: 'Usuarios Activos', value: '10k+' },
+                { label: 'Descuento Promedio', value: '15%' },
+                { label: 'Transacciones', value: '1M+' },
+              ].map((stat, i) => (
+                <div key={i} className="flex flex-col items-center justify-center space-y-1">
+                  <span className="text-3xl font-bold text-white tracking-tight">{stat.value}</span>
+                  <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">{stat.label}</span>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-          <p className="text-center text-xs text-slate-600 mt-4">
-            Válido de Lunes a Jueves · Solo efectivo o transferencia · QR dinámico y seguro
-          </p>
-        </div>
-      </section>
+        </section>
 
-      {/* ── FUNCIONALIDADES ─────────────────────────────────── */}
-      <section id="features" className="py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-4">Todo lo que necesitás para crecer</h2>
-            <p className="text-slate-400 max-w-xl mx-auto">
-              Una suite completa de herramientas diseñadas específicamente para comercios locales
-            </p>
-          </div>
+        {/* ✨ FEATURES BENTO GRID ✨ */}
+        <section id="features" className="py-24 relative">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">Diseñado para impulsar tu comercio</h2>
+              <p className="text-slate-400 text-lg max-w-2xl mx-auto">Todo lo que necesitás para gestionar beneficios, en una sola plataforma ultra rápida.</p>
+            </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {[
-              {
-                icon: QrCode,
-                title: 'QR Dinámico Único',
-                desc: 'Cada usuario recibe un código QR personal y seguro, listo para descargar y compartir.',
-                color: 'bg-violet-900/40 border-violet-800',
-                iconColor: 'text-violet-400',
-              },
-              {
-                icon: ScanLine,
-                title: 'Escáner Inteligente',
-                desc: 'Escanéa el QR de cualquier cliente o comerciante y el sistema calcula el descuento automáticamente.',
-                color: 'bg-blue-900/40 border-blue-800',
-                iconColor: 'text-blue-400',
-              },
-              {
-                icon: ImageIcon,
-                title: 'Marketing Personalizado',
-                desc: 'El SuperAdmin sube tus carruseles de Instagram y publicidades directamente a tu perfil.',
-                color: 'bg-emerald-900/40 border-emerald-800',
-                iconColor: 'text-emerald-400',
-              },
-              {
-                icon: Shield,
-                title: 'Roles y Seguridad',
-                desc: 'Tres niveles de acceso: SuperAdmin, Comerciante y Cliente. Cada uno ve solo lo que necesita.',
-                color: 'bg-amber-900/40 border-amber-800',
-                iconColor: 'text-amber-400',
-              },
-              {
-                icon: TrendingUp,
-                title: 'Historial de Transacciones',
-                desc: 'Registramos cada escaneo con fecha, monto, descuento y método de pago para tu control.',
-                color: 'bg-pink-900/40 border-pink-800',
-                iconColor: 'text-pink-400',
-              },
-              {
-                icon: Users,
-                title: 'Red B2B',
-                desc: 'Los comerciantes se benefician entre sí con un 25% de descuento exclusivo en efectivo.',
-                color: 'bg-indigo-900/40 border-indigo-800',
-                iconColor: 'text-indigo-400',
-              },
-            ].map((f) => {
-              const Icon = f.icon;
-              return (
-                <div
-                  key={f.title}
-                  className={`rounded-2xl border p-5 space-y-3 hover:scale-[1.01] transition-transform duration-200 ${f.color}`}
-                >
-                  <div className={`inline-flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900/60 ${f.iconColor}`}>
-                    <Icon className="h-5 w-5" />
+            <div className="grid md:grid-cols-3 gap-6">
+              {/* Feature 1 - Large */}
+              <div className="md:col-span-2 group relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 to-slate-900/50 border border-white/10 p-8 hover:border-violet-500/50 transition-colors">
+                <div className="absolute inset-0 bg-violet-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative z-10 h-full flex flex-col justify-between">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-violet-500/20 text-violet-400 mb-6 border border-violet-500/30">
+                    <QrCode className="h-6 w-6" />
                   </div>
-                  <h3 className="text-white font-semibold">{f.title}</h3>
-                  <p className="text-slate-400 text-sm leading-relaxed">{f.desc}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ── CÓMO FUNCIONA ───────────────────────────────────── */}
-      <section id="how-it-works" className="py-20 bg-slate-900/50 border-y border-slate-800">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-4">¿Cómo funciona?</h2>
-            <p className="text-slate-400">Empezá en menos de 5 minutos</p>
-          </div>
-
-          <div className="space-y-4">
-            {[
-              {
-                step: '01',
-                title: 'Suscribite como Comerciante',
-                desc: 'El SuperAdmin activa tu suscripción y configura tu perfil con tus materiales de marketing.',
-              },
-              {
-                step: '02',
-                title: 'Compartí tu QR',
-                desc: 'Descargá y mostrá tu QR único en tu comercio para acceder a descuentos en la red.',
-              },
-              {
-                step: '03',
-                title: 'Escaneá el QR de tus clientes',
-                desc: 'Cuando alguien quiere un descuento, escaneás su QR, elegís el método de pago y el sistema aplica el porcentaje automáticamente.',
-              },
-              {
-                step: '04',
-                title: 'Descargá tu material de marketing',
-                desc: 'Accedé a tus carruseles e imágenes personalizadas para publicar en tus redes sociales.',
-              },
-            ].map((item, i) => (
-              <div
-                key={i}
-                className="flex gap-5 rounded-xl border border-slate-800 bg-slate-900/60 p-5"
-              >
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-violet-900 border border-violet-700 text-violet-300 font-bold text-sm">
-                  {item.step}
-                </div>
-                <div>
-                  <h3 className="text-white font-semibold mb-1">{item.title}</h3>
-                  <p className="text-slate-400 text-sm">{item.desc}</p>
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-2">Escáner QR Integrado</h3>
+                    <p className="text-slate-400">Olvidate del hardware costoso. Usá la cámara de cualquier celular o tablet para validar descuentos al instante. Cálculo automático según método de pago.</p>
+                  </div>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* ── PRICING ─────────────────────────────────────────── */}
-      <section id="pricing" className="py-20">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-4">Planes simples y transparentes</h2>
-            <p className="text-slate-400">Sin sorpresas, sin letras chicas</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Plan Cliente */}
-            <div className="rounded-2xl border border-slate-700 bg-slate-800/40 p-6 space-y-5">
-              <div>
-                <p className="text-slate-400 text-sm font-medium uppercase tracking-wider">Cliente</p>
-                <p className="text-4xl font-bold text-white mt-2">Gratis</p>
-                <p className="text-slate-500 text-sm mt-1">Para siempre</p>
+              {/* Feature 2 - Small */}
+              <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 to-slate-900/50 border border-white/10 p-8 hover:border-emerald-500/50 transition-colors">
+                <div className="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative z-10 h-full flex flex-col justify-between">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 mb-6 border border-emerald-500/30">
+                    <ShieldCheck className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white mb-2">100% Seguro</h3>
+                    <p className="text-slate-400 text-sm">Cada QR es único y encriptado, evitando fraudes.</p>
+                  </div>
+                </div>
               </div>
-              <ul className="space-y-2.5 text-sm text-slate-400">
-                {[
-                  'QR único personal',
-                  'Descuentos en la red de comercios',
-                  '10% con transferencia',
-                  '15% en efectivo',
-                  'Sin costo de activación',
-                ].map((feat) => (
-                  <li key={feat} className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
-                    {feat}
-                  </li>
-                ))}
-              </ul>
+
+              {/* Feature 3 - Small */}
+              <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 to-slate-900/50 border border-white/10 p-8 hover:border-blue-500/50 transition-colors">
+                <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative z-10 h-full flex flex-col justify-between">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-500/20 text-blue-400 mb-6 border border-blue-500/30">
+                    <TrendingUp className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white mb-2">Métricas en Vivo</h3>
+                    <p className="text-slate-400 text-sm">Panel de control con estadísticas detalladas de tus ventas.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Feature 4 - Large */}
+              <div className="md:col-span-2 group relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 to-slate-900/50 border border-white/10 p-8 hover:border-pink-500/50 transition-colors">
+                <div className="absolute inset-0 bg-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative z-10 h-full flex flex-col justify-between">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-pink-500/20 text-pink-400 mb-6 border border-pink-500/30">
+                    <Zap className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-2">Descuentos B2B Exclusivos</h3>
+                    <p className="text-slate-400">Si sos comerciante adherido, obtenés un 25% de descuento fijo en todos los demás comercios de la red. Una comunidad diseñada para potenciarse mutuamente.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ✨ HOW IT WORKS ✨ */}
+        <section id="how-it-works" className="py-24 bg-black/40 border-y border-white/5 relative">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl lg:text-4xl font-bold text-white">¿Cómo funciona?</h2>
+            </div>
+
+            <div className="grid md:grid-cols-4 gap-8">
+              {[
+                {
+                  step: '01',
+                  title: 'Registrate',
+                  desc: 'Creá tu cuenta gratis como cliente o suscribite como comerciante en menos de 1 minuto.',
+                },
+                {
+                  step: '02',
+                  title: 'Obtené tu QR',
+                  desc: 'El sistema generará tu QR personal e intransferible de forma instantánea.',
+                },
+                {
+                  step: '03',
+                  title: 'Mostralo o Escaneá',
+                  desc: 'Los clientes muestran su QR; los comerciantes lo escanean con un solo toque.',
+                },
+                {
+                  step: '04',
+                  title: 'Descuento Aplicado',
+                  desc: 'El cálculo se hace solo. Pagá en efectivo o transferencia y disfrutá.',
+                },
+              ].map((item, i) => (
+                <div key={i} className="relative group">
+                  <div className="text-6xl font-extrabold text-white/5 absolute -top-8 -left-4 pointer-events-none group-hover:text-violet-500/10 transition-colors duration-500">
+                    {item.step}
+                  </div>
+                  <div className="relative z-10 space-y-4">
+                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-violet-400 font-bold group-hover:scale-110 group-hover:bg-violet-600 group-hover:text-white transition-all duration-300">
+                      {item.step}
+                    </div>
+                    <h3 className="text-xl font-semibold text-white">{item.title}</h3>
+                    <p className="text-slate-400 leading-relaxed">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ✨ PRICING ✨ */}
+        <section id="pricing" className="py-24">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">Planes Transparentes</h2>
+              <p className="text-slate-400 text-lg">Sumate a la red sin letras chicas.</p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Client Plan */}
+              <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm flex flex-col">
+                <div className="mb-8">
+                  <span className="px-3 py-1 text-xs font-semibold uppercase tracking-wider text-slate-400 bg-white/5 rounded-full border border-white/5">Cliente</span>
+                  <div className="mt-4 flex items-baseline text-5xl font-extrabold text-white">
+                    Gratis
+                  </div>
+                  <p className="mt-2 text-slate-400">Para siempre. Tu pase de ahorro.</p>
+                </div>
+                <ul className="flex-1 space-y-4 mb-8">
+                  {[
+                    'QR único personal',
+                    'Acceso a toda la red de comercios',
+                    '10% de descuento con transferencia',
+                    '15% de descuento en efectivo',
+                    'Soporte estándar',
+                  ].map((feat) => (
+                    <li key={feat} className="flex items-start gap-3">
+                      <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
+                      <span className="text-slate-300">{feat}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/auth/register?role=client"
+                  className="w-full py-4 rounded-xl border border-white/10 text-white font-semibold hover:bg-white/5 transition-colors text-center"
+                >
+                  Registrarme Gratis
+                </Link>
+              </div>
+
+              {/* Merchant Plan */}
+              <div className="relative rounded-3xl border border-violet-500/50 bg-violet-950/20 p-8 backdrop-blur-sm flex flex-col shadow-[0_0_40px_-10px_rgba(124,58,237,0.15)]">
+                <div className="absolute top-0 right-8 -translate-y-1/2">
+                  <span className="bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-xs font-bold px-4 py-1.5 rounded-full flex items-center gap-1 shadow-lg">
+                    <Star className="w-3 h-3 fill-current" /> Recomendado
+                  </span>
+                </div>
+                <div className="mb-8">
+                  <span className="px-3 py-1 text-xs font-semibold uppercase tracking-wider text-violet-300 bg-violet-500/10 rounded-full border border-violet-500/20">Comerciante</span>
+                  <div className="mt-4 flex items-baseline text-5xl font-extrabold text-white">
+                    Personalizado
+                  </div>
+                  <p className="mt-2 text-violet-200/70">Plan activado por el administrador.</p>
+                </div>
+                <ul className="flex-1 space-y-4 mb-8">
+                  {[
+                    'Todo lo del plan Cliente',
+                    'Panel de Comerciante ultra rápido',
+                    'Escáner de QR web integrado',
+                    'Historial de métricas en vivo',
+                    'Descuento B2B del 25% en la red',
+                    'Material de marketing mensual',
+                  ].map((feat) => (
+                    <li key={feat} className="flex items-start gap-3">
+                      <CheckCircle2 className="h-5 w-5 text-violet-400 shrink-0" />
+                      <span className="text-slate-200">{feat}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/auth/register?role=merchant"
+                  className="w-full py-4 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold transition-all text-center shadow-lg shadow-violet-900/30"
+                >
+                  Solicitar Suscripción
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ✨ CTA ✨ */}
+        <section className="py-24 relative overflow-hidden">
+          <div className="absolute inset-0 bg-violet-900/20 mix-blend-screen" />
+          <div className="relative mx-auto max-w-4xl px-4 sm:px-6 text-center space-y-8">
+            <h2 className="text-4xl md:text-5xl font-extrabold text-white">Listo para transformar tu negocio?</h2>
+            <p className="text-xl text-slate-300 max-w-2xl mx-auto">
+              Sumate a cientos de comercios que ya están escalando sus ventas con RedBeneficios.
+            </p>
+            <div className="pt-4">
               <Link
-                href="/auth/register?role=client"
-                className="block text-center py-3 rounded-xl border border-slate-600 text-slate-300 hover:text-white hover:border-slate-500 font-medium transition-all"
+                href="/auth/register"
+                className="inline-flex items-center justify-center gap-2 px-10 py-5 rounded-2xl bg-white text-black font-extrabold text-lg hover:scale-105 transition-transform shadow-[0_0_40px_rgba(255,255,255,0.3)]"
               >
-                Registrarme gratis
+                Comenzar ahora
+                <ArrowRight className="h-5 w-5" />
               </Link>
             </div>
+          </div>
+        </section>
+      </main>
 
-            {/* Plan Comerciante */}
-            <div className="relative rounded-2xl border border-violet-600 bg-violet-950/30 p-6 space-y-5">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                <span className="px-3 py-1 rounded-full bg-violet-600 text-white text-xs font-bold flex items-center gap-1">
-                  <Star className="h-3 w-3" /> Recomendado
-                </span>
-              </div>
-              <div>
-                <p className="text-violet-300 text-sm font-medium uppercase tracking-wider">Comerciante</p>
-                <div className="flex items-baseline gap-1 mt-2">
-                  <p className="text-4xl font-bold text-white">Personalizado</p>
-                </div>
-                <p className="text-slate-400 text-sm mt-1">Precio según plan activado por el administrador</p>
-              </div>
-              <ul className="space-y-2.5 text-sm text-slate-400">
-                {[
-                  'Todo lo del plan Cliente',
-                  'Panel de Comerciante completo',
-                  'Escáner de QR ilimitado',
-                  'Historial de transacciones',
-                  'Galería de marketing personalizada',
-                  '25% de descuento B2B entre comerciantes',
-                  'Soporte prioritario',
-                ].map((feat) => (
-                  <li key={feat} className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-violet-400 flex-shrink-0" />
-                    <span className="text-slate-300">{feat}</span>
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href="/auth/register?role=merchant"
-                className="block text-center py-3 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-semibold transition-all shadow-lg shadow-violet-900/40"
-              >
-                Suscribirme como Comerciante
-              </Link>
+      <footer className="border-t border-white/10 bg-black/50 backdrop-blur-lg">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-violet-600 to-indigo-600">
+              <Store className="h-4 w-4 text-white" />
             </div>
+            <span className="text-white font-bold text-xl tracking-tight">RedBeneficios</span>
           </div>
-        </div>
-      </section>
-
-      {/* ── CTA FINAL ───────────────────────────────────────── */}
-      <section className="py-20 border-t border-slate-800">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 text-center space-y-6">
-          <h2 className="text-3xl font-bold text-white">
-            ¿Listo para unirte a la red?
-          </h2>
-          <p className="text-slate-400 text-lg">
-            Miles de comerciantes ya están ahorrando y fidelizando clientes con RedBeneficios.
+          <p className="text-slate-500 text-sm">
+            © {new Date().getFullYear()} RedBeneficios. Todos los derechos reservados.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Link
-              href="/auth/register"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold text-lg transition-all duration-200 shadow-2xl shadow-violet-900/50 hover:scale-[1.02]"
-            >
-              Empezar ahora — Es gratis
-              <ArrowRight className="h-5 w-5" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── FOOTER ──────────────────────────────────────────── */}
-      <footer className="border-t border-slate-800 py-8">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-violet-600">
-              <Store className="h-3 w-3 text-white" />
-            </div>
-            <span className="text-slate-400 text-sm font-medium">RedBeneficios</span>
-          </div>
-          <p className="text-slate-600 text-sm">
-            © 2025 RedBeneficios. Todos los derechos reservados.
-          </p>
-          <div className="flex gap-4 text-sm text-slate-600">
-            <a href="#" className="hover:text-slate-400 transition-colors">Privacidad</a>
-            <a href="#" className="hover:text-slate-400 transition-colors">Términos</a>
-            <a href="#" className="hover:text-slate-400 transition-colors">Contacto</a>
+          <div className="flex gap-6 text-sm font-medium text-slate-400">
+            <a href="#" className="hover:text-white transition-colors">Privacidad</a>
+            <a href="#" className="hover:text-white transition-colors">Términos</a>
+            <a href="#" className="hover:text-white transition-colors">Soporte</a>
           </div>
         </div>
       </footer>
     </div>
+  );
+}
+
+function SparklesIcon(props: any) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+    </svg>
   );
 }
