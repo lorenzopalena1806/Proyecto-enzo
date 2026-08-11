@@ -67,15 +67,14 @@ export default function RegisterPage() {
     }
 
     if (data.user) {
-      // 2. Actualizar perfil en la tabla profiles (ya fue creado por el trigger de Supabase)
-      const { error: profileError } = await supabase.from('profiles')
-        .update({
-          business_name: formData.role === 'merchant' ? formData.businessName : null,
-          phone: formData.phone || null,
-        })
-        .eq('id', data.user.id);
+      // 2. Actualizar perfil usando Server Action para evitar problemas de RLS
+      const { updateProfileServer } = await import('@/app/actions/auth');
+      const result = await updateProfileServer(data.user.id, {
+        business_name: formData.role === 'merchant' ? formData.businessName : null,
+        phone: formData.phone || null,
+      });
 
-      if (profileError) {
+      if (!result.success) {
         setError('Error al crear el perfil. Contactá al soporte.');
         setLoading(false);
         return;

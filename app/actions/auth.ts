@@ -27,3 +27,12 @@ export async function getUserRoleById(userId: string) {
     
   return profile?.role || null;
 }
+
+export async function updateProfileServer(userId: string, data: any) {
+  const adminClient = createAdminClient();
+  const { error } = await adminClient
+    .from('profiles')
+    .update(data)
+    .eq('id', userId);
+  return { success: !error, error };
+}
