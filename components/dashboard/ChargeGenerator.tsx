@@ -94,7 +94,7 @@ export function ChargeGenerator({ merchantId }: ChargeGeneratorProps) {
       if (res.success) {
         setSuccessData({
           amount: parseFloat(amount),
-          final: res.finalAmount!,
+          final: (res as any).finalAmount,
         });
         setStatus('success');
       } else {
