@@ -45,12 +45,12 @@ export default function LoginPage() {
         .single();
 
       const role = profile?.role;
-      if (role === 'superadmin') router.push('/admin');
-      else if (role === 'merchant') router.push('/dashboard');
-      else router.push('/client/qr');
+      // Usamos window.location.href en lugar de router.push para forzar
+      // una recarga completa y que las cookies de sesión estén listas
+      if (role === 'superadmin') window.location.href = '/admin';
+      else if (role === 'merchant') window.location.href = '/dashboard';
+      else window.location.href = '/client/qr';
     }
-
-    router.refresh();
   };
 
   return (
