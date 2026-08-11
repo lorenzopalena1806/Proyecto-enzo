@@ -108,7 +108,8 @@ async function executePaymentServer(merchantId: string, clientId: string, amount
   });
 
   if (insertError) {
-    return { success: false, reason: 'Error al registrar la transacción.' };
+    console.error("Insert error:", insertError);
+    return { success: false, reason: `Error al registrar: ${insertError.message}` };
   }
 
   return { success: true, finalAmount: outcome.final_amount, discountPct: outcome.discount_pct };
