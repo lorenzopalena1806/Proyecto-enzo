@@ -135,6 +135,7 @@ export default async function DashboardPage() {
                         month: 'short',
                         hour: '2-digit',
                         minute: '2-digit',
+                        timeZone: 'America/Argentina/Buenos_Aires',
                       })}
                     </p>
                   </div>
