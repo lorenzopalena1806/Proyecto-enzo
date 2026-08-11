@@ -36,3 +36,13 @@ export async function updateProfileServer(userId: string, data: any) {
     .eq('id', userId);
   return { success: !error, error };
 }
+
+export async function createClientQRServer(userId: string) {
+  const adminClient = createAdminClient();
+  const token = crypto.randomUUID();
+  const { error } = await adminClient.from('qr_codes').insert({
+    user_id: userId,
+    qr_token: token,
+  });
+  return { success: !error, error };
+}

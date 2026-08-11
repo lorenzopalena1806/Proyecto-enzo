@@ -82,11 +82,8 @@ export default function RegisterPage() {
 
       // 3. Si es cliente, crear QR automáticamente
       if (formData.role === 'client') {
-        const token = crypto.randomUUID();
-        await supabase.from('qr_codes').insert({
-          user_id: data.user.id,
-          qr_token: token,
-        });
+        const { createClientQRServer } = await import('@/app/actions/auth');
+        await createClientQRServer(data.user.id);
       }
     }
 
