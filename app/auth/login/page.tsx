@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Store, Loader2, LogIn } from 'lucide-react';
 
+import { getUserRoleServer } from '@/app/actions/auth';
+
 export default function LoginPage() {
   const router = useRouter();
 
@@ -35,22 +37,13 @@ export default function LoginPage() {
       return;
     }
 
-    // Obtener rol para redirigir al dashboard correcto
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single();
-
-      const role = profile?.role;
+    // Obtener rol desde el servidor para evitar problemas de RLS (bucles infinitos)
+    const role = await getUserRoleServer();
       // Usamos window.location.href en lugar de router.push para forzar
       // una recarga completa y que las cookies de sesión estén listas
       if (role === 'superadmin') window.location.href = '/admin';
-      else if (role === 'merchant') window.location.href = '/dashboard';
+      if (role === 'merchant') window.location.href = '/dashboard';
       else window.location.href = '/client/qr';
-    }
   };
 
   return (

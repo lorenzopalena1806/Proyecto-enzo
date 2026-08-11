@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase-server';
+import { createClient, createAdminClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import { Sidebar } from '@/components/dashboard/Sidebar';
 
@@ -17,7 +17,8 @@ export default async function DashboardLayout({
   }
 
   // Obtener perfil con rol
-  const { data: profile, error: profileError } = await supabase
+  const adminClient = createAdminClient();
+  const { data: profile, error: profileError } = await adminClient
     .from('profiles')
     .select('*')
     .eq('id', user.id)

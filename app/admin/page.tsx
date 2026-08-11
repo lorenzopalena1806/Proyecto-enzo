@@ -1,22 +1,22 @@
 import React from 'react';
-import { createClient } from '@/lib/supabase-server';
+import { createAdminClient } from '@/lib/supabase-server';
 import { Users, Store, Receipt } from 'lucide-react';
 
 export default async function AdminDashboard() {
-  const supabase = await createClient();
+  const adminClient = createAdminClient();
 
-  // Estadísticas básicas
-  const { count: merchantsCount } = await supabase
+  // Estadísticas básicas usando Admin Client para saltar políticas RLS
+  const { count: merchantsCount } = await adminClient
     .from('profiles')
     .select('*', { count: 'exact', head: true })
     .eq('role', 'merchant');
 
-  const { count: clientsCount } = await supabase
+  const { count: clientsCount } = await adminClient
     .from('profiles')
     .select('*', { count: 'exact', head: true })
     .eq('role', 'client');
 
-  const { count: transactionsCount } = await supabase
+  const { count: transactionsCount } = await adminClient
     .from('discount_transactions')
     .select('*', { count: 'exact', head: true });
 

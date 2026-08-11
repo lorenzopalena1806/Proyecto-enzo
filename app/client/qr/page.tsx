@@ -1,5 +1,5 @@
 import React from 'react';
-import { createClient } from '@/lib/supabase-server';
+import { createClient, createAdminClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import { QRDisplay } from '@/components/dashboard/QRDisplay';
 import { LogoutButton } from '@/components/dashboard/LogoutButton';
@@ -15,14 +15,16 @@ export default async function ClientQRPage() {
     redirect('/auth/login');
   }
 
+  const adminClient = createAdminClient();
+
   // Obtener perfil y QR
-  const { data: profile } = await supabase
+  const { data: profile } = await adminClient
     .from('profiles')
     .select('full_name')
     .eq('id', user.id)
     .single();
 
-  const { data: qrData } = await supabase
+  const { data: qrData } = await adminClient
     .from('qr_codes')
     .select('qr_token')
     .eq('user_id', user.id)

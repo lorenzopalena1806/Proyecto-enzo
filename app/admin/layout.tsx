@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase-server';
+import { createClient, createAdminClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import { Sidebar } from '@/components/dashboard/Sidebar';
 
@@ -15,7 +15,9 @@ export default async function AdminLayout({
     redirect('/auth/login');
   }
 
-  const { data: profile, error: profileError } = await supabase
+  // Usamos Admin Client para saltarnos cualquier problema de bucles infinitos RLS
+  const adminClient = createAdminClient();
+  const { data: profile, error: profileError } = await adminClient
     .from('profiles')
     .select('*')
     .eq('id', user.id)
