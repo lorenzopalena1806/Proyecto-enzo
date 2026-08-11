@@ -1,13 +1,13 @@
 import { createClient } from '@/lib/supabase-server';
-import { ChargeGenerator } from '@/components/dashboard/ChargeGenerator';
 import { redirect } from 'next/navigation';
+import { OffersManager } from '@/components/dashboard/OffersManager';
 
 export const metadata = {
-  title: 'Generar Cobro | RedBeneficios',
-  description: 'Generá un código QR o pedí el código del cliente para aplicar descuentos automáticamente.',
+  title: 'Mis Ofertas | RedBeneficios',
+  description: 'Gestioná los descuentos que ofrecés en la red.',
 };
 
-export default async function ScannerPage() {
+export default async function OffersPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -15,23 +15,23 @@ export default async function ScannerPage() {
     redirect('/auth/login');
   }
 
+  // Fetch offers for this merchant
   const { data: offers } = await supabase
     .from('merchant_offers')
     .select('*')
     .eq('merchant_id', user.id)
-    .eq('is_active', true)
     .order('created_at', { ascending: false });
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white">Generar Cobro</h1>
+        <h1 className="text-2xl font-bold text-white">Mis Ofertas</h1>
         <p className="text-slate-400 mt-1">
-          Ingresá el monto y seleccioná el método de pago para cobrar con descuento.
+          Creá descuentos especiales. Estas ofertas aparecerán en la vidriera de los clientes.
         </p>
       </div>
 
-      <ChargeGenerator merchantId={user.id} activeOffers={offers || []} />
+      <OffersManager initialOffers={offers || []} />
     </div>
   );
 }

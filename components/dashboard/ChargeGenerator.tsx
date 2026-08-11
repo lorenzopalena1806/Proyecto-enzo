@@ -18,25 +18,31 @@ import {
   Loader2,
   XCircle,
   Keyboard,
+  Tag,
 } from 'lucide-react';
 
 interface ChargeGeneratorProps {
   merchantId: string;
+  activeOffers?: any[];
 }
 
-export function ChargeGenerator({ merchantId }: ChargeGeneratorProps) {
+export function ChargeGenerator({ merchantId, activeOffers = [] }: ChargeGeneratorProps) {
   const supabase = createClient();
 
   const [amount, setAmount] = useState<string>('');
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cash');
   const [shortCode, setShortCode] = useState<string>('');
+  const [selectedOffer, setSelectedOffer] = useState<string>('');
   const [status, setStatus] = useState<'idle' | 'waiting' | 'success' | 'error' | 'processing'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const [successData, setSuccessData] = useState<{ amount: number; final: number } | null>(null);
 
   // Generar URL para el QR
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-  const qrUrl = `${baseUrl}/pay?m=${merchantId}&a=${amount}&method=${paymentMethod}`;
+  let qrUrl = `${baseUrl}/pay?m=${merchantId}&a=${amount}&method=${paymentMethod}`;
+  if (selectedOffer) {
+    qrUrl += `&offer=${selectedOffer}`;
+  }
 
   // Escuchar cobros en tiempo real
   useEffect(() => {
@@ -90,7 +96,14 @@ export function ChargeGenerator({ merchantId }: ChargeGeneratorProps) {
     setErrorMessage('');
 
     try {
-      const res = await processPaymentByShortCodeServer(merchantId, parseFloat(amount), paymentMethod, shortCode.toLowerCase());
+      const res = await processPaymentByShortCodeServer(
+        merchantId, 
+        parseFloat(amount), 
+        paymentMethod, 
+        shortCode.toLowerCase(),
+        selectedOffer || undefined
+      );
+      
       if (res.success) {
         setSuccessData({
           amount: parseFloat(amount),
@@ -113,6 +126,7 @@ export function ChargeGenerator({ merchantId }: ChargeGeneratorProps) {
     setStatus('idle');
     setSuccessData(null);
     setErrorMessage('');
+    setSelectedOffer('');
   };
 
   return (
@@ -131,6 +145,27 @@ export function ChargeGenerator({ merchantId }: ChargeGeneratorProps) {
       {/* ── ESTADO: IDLE — Formulario previo al cobro ───── */}
       {status === 'idle' && (
         <div className="rounded-2xl border border-slate-700 bg-slate-800/60 backdrop-blur-sm p-6 space-y-5">
+          {activeOffers && activeOffers.length > 0 && (
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-slate-300">
+                <Tag className="inline h-4 w-4 mr-1 text-violet-400" />
+                ¿Qué estás cobrando? (Opcional)
+              </label>
+              <select
+                value={selectedOffer}
+                onChange={(e) => setSelectedOffer(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-600 text-white focus:outline-none focus:ring-2 focus:ring-violet-500"
+              >
+                <option value="">Cobro General (Descuento estándar)</option>
+                {activeOffers.map(offer => (
+                  <option key={offer.id} value={offer.id}>
+                    {offer.title} (-{offer.discount_pct}%)
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           <div className="space-y-2">
             <label className="block text-sm font-medium text-slate-300">
               <DollarSign className="inline h-4 w-4 mr-1 text-violet-400" />

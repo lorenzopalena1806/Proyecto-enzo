@@ -17,6 +17,7 @@ import {
   Store,
   Users,
   Settings,
+  Tag,
 } from 'lucide-react';
 import type { Profile } from '@/types';
 
@@ -32,6 +33,12 @@ const MERCHANT_NAV_ITEMS = [
     exact: true,
   },
   {
+    href: '/dashboard/offers',
+    label: 'Mis Ofertas',
+    icon: Tag,
+    exact: false,
+  },
+  {
     href: '/dashboard/qr',
     label: 'Mi QR',
     icon: QrCode,
@@ -39,7 +46,7 @@ const MERCHANT_NAV_ITEMS = [
   },
   {
     href: '/dashboard/scanner',
-    label: 'Escáner',
+    label: 'Cobrar',
     icon: ScanLine,
     exact: false,
   },

@@ -11,9 +11,10 @@ interface ClientPayFormProps {
   amount: number;
   method: PaymentMethod;
   merchantName: string;
+  offerId?: string;
 }
 
-export function ClientPayForm({ merchantId, amount, method, merchantName }: ClientPayFormProps) {
+export function ClientPayForm({ merchantId, amount, method, merchantName, offerId }: ClientPayFormProps) {
   const router = useRouter();
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
@@ -23,7 +24,7 @@ export function ClientPayForm({ merchantId, amount, method, merchantName }: Clie
     setErrorMsg('');
 
     try {
-      const res = await confirmScannedPaymentServer(merchantId, amount, method);
+      const res = await confirmScannedPaymentServer(merchantId, amount, method, offerId);
       if (res.success) {
         setStatus('success');
       } else {

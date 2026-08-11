@@ -14,6 +14,7 @@ export default async function PayPage({
   const m = typeof resolvedParams.m === 'string' ? resolvedParams.m : null;
   const a = typeof resolvedParams.a === 'string' ? resolvedParams.a : null;
   const method = typeof resolvedParams.method === 'string' ? (resolvedParams.method as PaymentMethod) : null;
+  const offerId = typeof resolvedParams.offer === 'string' ? resolvedParams.offer : null;
 
   if (!m || !a || !method) {
     return (
@@ -30,8 +31,9 @@ export default async function PayPage({
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    // Si no está logueado, redirigir al login y luego volver acá
-    redirect(`/auth/login?redirectTo=${encodeURIComponent(`/pay?m=${m}&a=${a}&method=${method}`)}`);
+    let returnUrl = `/pay?m=${m}&a=${a}&method=${method}`;
+    if (offerId) returnUrl += `&offer=${offerId}`;
+    redirect(`/auth/login?redirectTo=${encodeURIComponent(returnUrl)}`);
   }
 
   const adminClient = createAdminClient();
@@ -68,8 +70,36 @@ export default async function PayPage({
 
   const merchantName = merchantUser.business_name || merchantUser.full_name || 'Comercio';
 
-  // 3. Calcular el descuento simulado
-  const outcome = calculateDiscount(clientUser.role, method, amount);
+  // 3. Calcular el descuento simulado para mostrar en la UI
+  let outcome = { valid: false, discount_pct: 0, final_amount: amount, reason: '', offerTitle: '' };
+
+  if (offerId) {
+    const { data: offer } = await adminClient
+      .from('merchant_offers')
+      .select('*')
+      .eq('id', offerId)
+      .eq('merchant_id', m)
+      .single();
+
+    if (!offer || !offer.is_active) {
+      outcome = { valid: false, discount_pct: 0, final_amount: amount, reason: 'La oferta ya no está disponible.', offerTitle: '' };
+    } else if (offer.target_role !== 'all' && offer.target_role !== clientUser.role) {
+      outcome = { valid: false, discount_pct: 0, final_amount: amount, reason: `Esta oferta es exclusiva para ${offer.target_role === 'client' ? 'Clientes' : 'Comercios'}.`, offerTitle: '' };
+    } else if (method === 'credit_card' || method === 'debit_card') {
+      outcome = { valid: false, discount_pct: 0, final_amount: amount, reason: 'Los pagos con tarjeta no aplican para esta oferta.', offerTitle: '' };
+    } else {
+      outcome = { 
+        valid: true, 
+        discount_pct: offer.discount_pct, 
+        final_amount: amount - (amount * (offer.discount_pct / 100)), 
+        reason: '',
+        offerTitle: offer.title
+      };
+    }
+  } else {
+    const defaultOutcome = calculateDiscount(clientUser.role, method, amount);
+    outcome = { ...defaultOutcome, offerTitle: '' };
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 p-4 pt-12 flex flex-col items-center max-w-md mx-auto">
@@ -83,6 +113,13 @@ export default async function PayPage({
       </div>
 
       <div className="w-full rounded-2xl bg-slate-900 border border-slate-700 p-6 shadow-xl mb-6 space-y-4">
+        {outcome.offerTitle && (
+          <div className="bg-violet-950/40 border border-violet-800 p-3 rounded-xl mb-4 text-center">
+            <span className="text-violet-300 font-semibold text-sm uppercase tracking-wider block mb-1">Oferta Especial</span>
+            <span className="text-white font-bold text-lg">{outcome.offerTitle}</span>
+          </div>
+        )}
+        
         <div className="flex justify-between items-center pb-4 border-b border-slate-800">
           <span className="text-slate-400 font-medium">Método de pago</span>
           <span className="text-white font-medium">{getPaymentMethodLabel(method)}</span>
@@ -96,7 +133,7 @@ export default async function PayPage({
         {outcome.valid ? (
           <>
             <div className="flex justify-between items-center pb-4 border-b border-slate-800">
-              <span className="text-slate-400 font-medium">Descuento RedBeneficios</span>
+              <span className="text-slate-400 font-medium">Descuento aplicado</span>
               <span className="text-emerald-400 font-bold text-lg">−{outcome.discount_pct}%</span>
             </div>
             <div className="flex justify-between items-center pt-2">
@@ -120,7 +157,8 @@ export default async function PayPage({
           merchantId={m} 
           amount={amount} 
           method={method} 
-          merchantName={merchantName} 
+          merchantName={merchantName}
+          offerId={offerId || undefined}
         />
       )}
     </div>

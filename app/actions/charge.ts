@@ -4,11 +4,9 @@ import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { calculateDiscount } from '@/lib/discount-logic';
 import type { PaymentMethod, Profile } from '@/types';
 
-export async function processPaymentByShortCodeServer(merchantId: string, amount: number, method: PaymentMethod, shortCode: string) {
+export async function processPaymentByShortCodeServer(merchantId: string, amount: number, method: PaymentMethod, shortCode: string, offerId?: string) {
   const adminClient = createAdminClient();
 
-  // Find the QR code by short code (first 6 chars of qr_token)
-  // Since we don't have a short_code column, we use a wildcard search on qr_token
   const { data: qrRecords } = await adminClient
     .from('qr_codes')
     .select('user_id, qr_token, is_active')
@@ -25,10 +23,10 @@ export async function processPaymentByShortCodeServer(merchantId: string, amount
     return { success: false, reason: 'El código de este cliente está desactivado.' };
   }
 
-  return await executePaymentServer(merchantId, qrRecord.user_id, amount, method, qrRecord.qr_token);
+  return await executePaymentServer(merchantId, qrRecord.user_id, amount, method, qrRecord.qr_token, offerId);
 }
 
-export async function confirmScannedPaymentServer(merchantId: string, amount: number, method: PaymentMethod) {
+export async function confirmScannedPaymentServer(merchantId: string, amount: number, method: PaymentMethod, offerId?: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   
@@ -38,7 +36,6 @@ export async function confirmScannedPaymentServer(merchantId: string, amount: nu
 
   const adminClient = createAdminClient();
 
-  // Get the client's QR token
   const { data: qrData } = await adminClient
     .from('qr_codes')
     .select('qr_token, is_active')
@@ -49,10 +46,10 @@ export async function confirmScannedPaymentServer(merchantId: string, amount: nu
     return { success: false, reason: 'No tienes un código QR activo para recibir beneficios.' };
   }
 
-  return await executePaymentServer(merchantId, user.id, amount, method, qrData.qr_token);
+  return await executePaymentServer(merchantId, user.id, amount, method, qrData.qr_token, offerId);
 }
 
-async function executePaymentServer(merchantId: string, clientId: string, amount: number, method: PaymentMethod, qrToken: string) {
+async function executePaymentServer(merchantId: string, clientId: string, amount: number, method: PaymentMethod, qrToken: string, offerId?: string) {
   const adminClient = createAdminClient();
 
   // 1. Get Merchant Profile
@@ -89,11 +86,43 @@ async function executePaymentServer(merchantId: string, clientId: string, amount
     return { success: false, reason: 'El usuario cliente no es válido o está inactivo.' };
   }
 
-  // 4. Calculate Discount
-  const outcome = calculateDiscount(clientUser.role, method, amount);
+  let finalPct = 0;
+  let finalAmount = amount;
 
-  if (!outcome.valid) {
-    return { success: false, reason: outcome.reason };
+  // 4. Calculate Discount
+  if (offerId) {
+    // Si hay una oferta específica
+    const { data: offer } = await adminClient
+      .from('merchant_offers')
+      .select('*')
+      .eq('id', offerId)
+      .eq('merchant_id', merchantId)
+      .single();
+
+    if (!offer || !offer.is_active) {
+      return { success: false, reason: 'La oferta seleccionada no existe o ya no está activa.' };
+    }
+
+    if (offer.target_role !== 'all' && offer.target_role !== clientUser.role) {
+      return { success: false, reason: `Esta oferta es exclusiva para ${offer.target_role === 'client' ? 'Clientes' : 'Comercios'}.` };
+    }
+    
+    // Validar método de pago (si no es tarjeta)
+    if (method === 'credit_card' || method === 'debit_card') {
+      return { success: false, reason: 'Los pagos con tarjeta no tienen descuento.' };
+    }
+    
+    finalPct = offer.discount_pct;
+    finalAmount = amount - (amount * (finalPct / 100));
+
+  } else {
+    // Fallback: Descuento estándar global
+    const outcome = calculateDiscount(clientUser.role, method, amount);
+    if (!outcome.valid) {
+      return { success: false, reason: outcome.reason };
+    }
+    finalPct = outcome.discount_pct;
+    finalAmount = outcome.final_amount;
   }
 
   // 5. Insert Transaction
@@ -101,8 +130,8 @@ async function executePaymentServer(merchantId: string, clientId: string, amount
     scanner_id: merchantId,
     scanned_user_id: clientId,
     original_amount: amount,
-    discount_pct: outcome.discount_pct,
-    final_amount: outcome.final_amount,
+    discount_pct: finalPct,
+    final_amount: finalAmount,
     payment_method: method,
     day_of_week: new Date().getDay(),
   });
@@ -112,5 +141,5 @@ async function executePaymentServer(merchantId: string, clientId: string, amount
     return { success: false, reason: `Error al registrar: ${insertError.message}` };
   }
 
-  return { success: true, finalAmount: outcome.final_amount, discountPct: outcome.discount_pct };
+  return { success: true, finalAmount: finalAmount, discountPct: finalPct };
 }
