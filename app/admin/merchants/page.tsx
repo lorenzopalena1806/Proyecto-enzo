@@ -30,7 +30,10 @@ export default function MerchantsPage() {
   const toggleSubscription = async (merchantId: string, currentStatus: string) => {
     setProcessingId(merchantId);
     
-    await toggleMerchantSubscriptionServer(merchantId, currentStatus);
+    const result = await toggleMerchantSubscriptionServer(merchantId, currentStatus);
+    if (!result.success) {
+      alert('Error al actualizar la suscripción. Verifica los logs del servidor.');
+    }
 
     await fetchMerchants();
     setProcessingId(null);

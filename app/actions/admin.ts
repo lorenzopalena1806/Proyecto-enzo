@@ -58,20 +58,23 @@ export async function toggleMerchantSubscriptionServer(merchantId: string, curre
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
 
     if (currentStatus === 'none') {
-      await adminClient.from('subscriptions').insert({
+      const { error } = await adminClient.from('subscriptions').insert({
         merchant_id: merchantId,
         status: 'active',
         plan_name: 'basic',
+        started_at: new Date().toISOString(),
       });
+      if (error) throw error;
     } else {
-      await adminClient
+      const { error } = await adminClient
         .from('subscriptions')
         .update({ status: newStatus, updated_at: new Date().toISOString() })
         .eq('merchant_id', merchantId);
+      if (error) throw error;
     }
     return { success: true };
-  } catch (error) {
-    console.error('Error toggling subscription:', error);
+  } catch (error: any) {
+    console.error('Error toggling subscription:', error.message || error);
     return { success: false };
   }
 }
