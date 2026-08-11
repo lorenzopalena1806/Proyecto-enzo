@@ -8,11 +8,12 @@ import { Store, AlertTriangle } from 'lucide-react';
 export default async function PayPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const m = typeof searchParams.m === 'string' ? searchParams.m : null;
-  const a = typeof searchParams.a === 'string' ? searchParams.a : null;
-  const method = typeof searchParams.method === 'string' ? (searchParams.method as PaymentMethod) : null;
+  const resolvedParams = await searchParams;
+  const m = typeof resolvedParams.m === 'string' ? resolvedParams.m : null;
+  const a = typeof resolvedParams.a === 'string' ? resolvedParams.a : null;
+  const method = typeof resolvedParams.method === 'string' ? (resolvedParams.method as PaymentMethod) : null;
 
   if (!m || !a || !method) {
     return (
