@@ -104,7 +104,6 @@ async function executePaymentServer(merchantId: string, clientId: string, amount
     discount_pct: outcome.discount_pct,
     final_amount: outcome.final_amount,
     payment_method: method,
-    qr_token_used: qrToken,
   });
 
   if (insertError) {
