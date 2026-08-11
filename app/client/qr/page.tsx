@@ -32,8 +32,14 @@ export default async function ClientQRPage() {
   if (!qrData) {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
-        <p className="text-white">Tu código QR se está generando o hubo un error con tu cuenta.</p>
-        <div className="mt-6 p-4 rounded-xl border border-slate-800 bg-slate-900/50">
+        <p className="text-white text-center">
+          Tu código QR se está generando o hubo un error con tu cuenta.<br/><br/>
+          <span className="text-slate-400 text-sm">
+            Actualmente estás logueado como: <strong className="text-violet-400">{user.email}</strong>
+          </span>
+        </p>
+        <div className="mt-6 p-4 rounded-xl border border-slate-800 bg-slate-900/50 flex flex-col items-center space-y-3">
+          <p className="text-xs text-slate-500 text-center">Si esto es un error, por favor cerrá sesión y volvé a ingresar.</p>
           <LogoutButton />
         </div>
       </div>
