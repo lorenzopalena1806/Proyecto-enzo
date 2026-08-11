@@ -38,9 +38,9 @@ export async function getMerchantsListServer() {
       .from('subscriptions')
       .select('merchant_id, status');
 
-    const subsMap = new Map(subscriptions?.map((s) => [s.merchant_id, s.status]) || []);
+    const subsMap = new Map(subscriptions?.map((s: any) => [s.merchant_id, s.status]) || []);
 
-    const combined = profiles.map((p) => ({
+    const combined = profiles.map((p: any) => ({
       ...p,
       subscriptionStatus: (subsMap.get(p.id) as 'active' | 'inactive') || 'none',
     }));
@@ -93,7 +93,7 @@ export async function getMerchantsForMarketingServer() {
   }
 }
 
-export async function createMarketingAssetServer(data: { merchant_id: string, title: string, description: string, file_url: string, uploaded_by: string }) {
+export async function createMarketingAssetServer(data: { merchant_id: string, title: string, description: string, file_url: string, file_type: string, uploaded_by: string }) {
   try {
     const adminClient = await requireSuperAdmin();
     const { error } = await adminClient.from('marketing_assets').insert(data);

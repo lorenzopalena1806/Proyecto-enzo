@@ -118,7 +118,7 @@ export default async function DashboardPage() {
         <div className="rounded-2xl border border-slate-700 bg-slate-800/60 p-5 space-y-4">
           <h2 className="text-white font-semibold">Últimos escaneos</h2>
           <div className="space-y-2">
-            {recentTransactions.map((tx) => {
+            {recentTransactions.map((tx: any) => {
               const su = tx.scanned_user as { full_name?: string; business_name?: string; role?: string } | null;
               return (
                 <div
