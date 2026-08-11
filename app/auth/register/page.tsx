@@ -67,14 +67,13 @@ export default function RegisterPage() {
     }
 
     if (data.user) {
-      // 2. Crear perfil en la tabla profiles
-      const { error: profileError } = await supabase.from('profiles').insert({
-        id: data.user.id,
-        role: formData.role,
-        full_name: formData.fullName,
-        business_name: formData.role === 'merchant' ? formData.businessName : null,
-        phone: formData.phone || null,
-      });
+      // 2. Actualizar perfil en la tabla profiles (ya fue creado por el trigger de Supabase)
+      const { error: profileError } = await supabase.from('profiles')
+        .update({
+          business_name: formData.role === 'merchant' ? formData.businessName : null,
+          phone: formData.phone || null,
+        })
+        .eq('id', data.user.id);
 
       if (profileError) {
         setError('Error al crear el perfil. Contactá al soporte.');
