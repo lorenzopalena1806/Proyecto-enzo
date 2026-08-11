@@ -37,6 +37,9 @@ export default function LoginPage() {
       return;
     }
 
+    // Esperar un instante para asegurar que las cookies se guarden en el navegador
+    await new Promise(resolve => setTimeout(resolve, 500));
+
     // Obtener rol desde el servidor para evitar problemas de RLS (bucles infinitos)
     const role = await getUserRoleServer();
       // Usamos window.location.href en lugar de router.push para forzar
