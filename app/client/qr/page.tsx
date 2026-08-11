@@ -60,7 +60,10 @@ export default async function ClientQRPage() {
         </div>
 
         <div className="w-full">
-          <QRDisplay qrToken={qrData.qr_token} />
+          <QRDisplay 
+            qrValue={qrData.qr_token} 
+            userName={profile?.full_name || 'Cliente'} 
+          />
         </div>
       </main>
     </div>
