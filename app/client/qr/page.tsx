@@ -32,8 +32,10 @@ export default async function ClientQRPage() {
   if (!qrData) {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
-        <p className="text-white">Tu código QR se está generando. Por favor, recargá la página en unos minutos.</p>
-        <Link href="/auth/login" className="mt-4 text-violet-400">Volver</Link>
+        <p className="text-white">Tu código QR se está generando o hubo un error con tu cuenta.</p>
+        <div className="mt-6 p-4 rounded-xl border border-slate-800 bg-slate-900/50">
+          <LogoutButton />
+        </div>
       </div>
     );
   }
