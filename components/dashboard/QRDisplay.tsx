@@ -125,7 +125,7 @@ export function QRDisplay({
           <QRCodeSVG
             value={qrValue}
             size={size}
-            level="H"
+            level="M"
             includeMargin={false}
             bgColor="#ffffff"
             fgColor="#0f172a"
