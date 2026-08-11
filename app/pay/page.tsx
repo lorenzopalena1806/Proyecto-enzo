@@ -1,0 +1,127 @@
+import { createClient, createAdminClient } from '@/lib/supabase-server';
+import { redirect } from 'next/navigation';
+import { calculateDiscount, formatARS, getPaymentMethodLabel } from '@/lib/discount-logic';
+import type { PaymentMethod } from '@/types';
+import { ClientPayForm } from './ClientPayForm';
+import { Store, AlertTriangle } from 'lucide-react';
+
+export default async function PayPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const m = typeof searchParams.m === 'string' ? searchParams.m : null;
+  const a = typeof searchParams.a === 'string' ? searchParams.a : null;
+  const method = typeof searchParams.method === 'string' ? (searchParams.method as PaymentMethod) : null;
+
+  if (!m || !a || !method) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
+        <p className="text-red-400">Enlace de pago inválido.</p>
+      </div>
+    );
+  }
+
+  const amount = parseFloat(a);
+
+  // Requerir autenticación
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    // Si no está logueado, redirigir al login y luego volver acá
+    redirect(`/auth/login?redirectTo=${encodeURIComponent(`/pay?m=${m}&a=${a}&method=${method}`)}`);
+  }
+
+  const adminClient = createAdminClient();
+
+  // 1. Obtener perfil del usuario que está pagando
+  const { data: clientUser } = await adminClient
+    .from('profiles')
+    .select('role, is_active')
+    .eq('id', user.id)
+    .single();
+
+  if (!clientUser || !clientUser.is_active) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
+        <p className="text-red-400">Tu cuenta no está activa o es inválida.</p>
+      </div>
+    );
+  }
+
+  // 2. Obtener datos del comercio
+  const { data: merchantUser } = await adminClient
+    .from('profiles')
+    .select('business_name, full_name, is_active')
+    .eq('id', m)
+    .single();
+
+  if (!merchantUser || !merchantUser.is_active) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
+        <p className="text-red-400">El comercio escaneado no es válido.</p>
+      </div>
+    );
+  }
+
+  const merchantName = merchantUser.business_name || merchantUser.full_name || 'Comercio';
+
+  // 3. Calcular el descuento simulado
+  const outcome = calculateDiscount(clientUser.role, method, amount);
+
+  return (
+    <div className="min-h-screen bg-slate-950 p-4 pt-12 flex flex-col items-center max-w-md mx-auto">
+      <div className="w-full flex flex-col items-center mb-8">
+        <div className="h-16 w-16 bg-violet-600 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-violet-900/50">
+          <Store className="h-8 w-8 text-white" />
+        </div>
+        <h1 className="text-2xl font-bold text-white text-center leading-tight">
+          Estás pagando en <br/> <span className="text-violet-400">{merchantName}</span>
+        </h1>
+      </div>
+
+      <div className="w-full rounded-2xl bg-slate-900 border border-slate-700 p-6 shadow-xl mb-6 space-y-4">
+        <div className="flex justify-between items-center pb-4 border-b border-slate-800">
+          <span className="text-slate-400 font-medium">Método de pago</span>
+          <span className="text-white font-medium">{getPaymentMethodLabel(method)}</span>
+        </div>
+
+        <div className="flex justify-between items-center pb-4 border-b border-slate-800">
+          <span className="text-slate-400 font-medium">Monto original</span>
+          <span className="text-white text-lg">{formatARS(amount)}</span>
+        </div>
+
+        {outcome.valid ? (
+          <>
+            <div className="flex justify-between items-center pb-4 border-b border-slate-800">
+              <span className="text-slate-400 font-medium">Descuento RedBeneficios</span>
+              <span className="text-emerald-400 font-bold text-lg">−{outcome.discount_pct}%</span>
+            </div>
+            <div className="flex justify-between items-center pt-2">
+              <span className="text-white font-semibold text-lg">Total a abonar</span>
+              <span className="text-emerald-400 font-bold text-3xl">{formatARS(outcome.final_amount)}</span>
+            </div>
+          </>
+        ) : (
+          <div className="rounded-xl bg-amber-950/30 border border-amber-800 p-4 flex gap-3 mt-4">
+            <AlertTriangle className="h-5 w-5 text-amber-500 flex-shrink-0" />
+            <div>
+              <p className="text-sm font-semibold text-amber-400">Sin descuento aplicable</p>
+              <p className="text-xs text-amber-500/80">{outcome.reason}</p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {outcome.valid && (
+        <ClientPayForm 
+          merchantId={m} 
+          amount={amount} 
+          method={method} 
+          merchantName={merchantName} 
+        />
+      )}
+    </div>
+  );
+}

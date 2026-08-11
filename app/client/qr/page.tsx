@@ -86,10 +86,17 @@ export default async function ClientQRPage() {
       <main className="flex-1 flex flex-col items-center justify-center p-4 space-y-6 max-w-md mx-auto w-full">
         <div className="text-center space-y-2">
           <h1 className="text-2xl font-bold text-white">Hola, {profile?.full_name || 'Cliente'}</h1>
-          <p className="text-slate-400 text-sm">Mostrá este QR en los comercios adheridos para acceder a tus descuentos exclusivos.</p>
+          <p className="text-slate-400 text-sm">Dictale este código al comerciante para aplicar tu descuento, o escaneá el QR del local con tu cámara.</p>
         </div>
 
-        <div className="w-full">
+        <div className="w-full bg-slate-900 border border-violet-800/50 rounded-2xl p-6 text-center shadow-xl shadow-violet-900/20">
+          <p className="text-slate-400 text-sm mb-2 font-medium uppercase tracking-wider">Tu Código Único</p>
+          <div className="text-5xl font-black text-white tracking-widest bg-violet-950/40 py-4 rounded-xl border border-violet-800">
+            {qrData.qr_token.substring(0, 6).toUpperCase()}
+          </div>
+        </div>
+
+        <div className="w-full hidden">
           <QRDisplay 
             qrValue={encodedQR} 
             userName={profile?.full_name || 'Cliente'} 
