@@ -131,10 +131,12 @@ export default async function ClientQRPage() {
               {offers.map((offer: any) => {
                 const merchant = offer.merchant as { business_name?: string; full_name?: string };
                 const merchantName = merchant?.business_name || merchant?.full_name || 'Comercio Adherido';
+                const hasPrices = offer.original_price && offer.final_price;
+                const savings = hasPrices ? offer.original_price - offer.final_price : null;
 
                 return (
                   <div key={offer.id} className="bg-slate-900 border border-slate-700 hover:border-violet-600/50 transition-colors rounded-2xl p-5 flex flex-col relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 bg-violet-600 text-white font-bold px-3 py-1.5 rounded-bl-xl text-sm z-10">
+                    <div className="absolute top-0 right-0 bg-violet-600 text-white font-bold px-3 py-1.5 rounded-bl-xl text-sm z-10 shadow-sm">
                       -{offer.discount_pct}%
                     </div>
                     <p className="text-xs text-violet-400 font-medium uppercase tracking-wider mb-1 pr-12 truncate">
@@ -142,7 +144,23 @@ export default async function ClientQRPage() {
                     </p>
                     <h3 className="font-bold text-lg text-white mb-2 pr-8 leading-tight">{offer.title}</h3>
                     {offer.description && (
-                      <p className="text-slate-400 text-sm mb-3 line-clamp-2 flex-1">{offer.description}</p>
+                      <p className="text-slate-400 text-sm mb-4 line-clamp-2">{offer.description}</p>
+                    )}
+                    
+                    {hasPrices && (
+                      <div className="mt-auto bg-slate-950/80 rounded-xl p-3 border border-slate-800/80">
+                        <div className="flex justify-between items-center mb-1">
+                          <span className="text-xs text-slate-500">Precio Normal</span>
+                          <span className="text-sm text-slate-400 line-through">${offer.original_price.toLocaleString('es-AR')}</span>
+                        </div>
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-xs text-emerald-400 font-medium">Precio con App</span>
+                          <span className="text-xl text-white font-black">${offer.final_price.toLocaleString('es-AR')}</span>
+                        </div>
+                        <div className="text-xs text-emerald-950 bg-emerald-400 py-1.5 px-2 rounded-lg text-center font-bold uppercase tracking-wider shadow-sm shadow-emerald-900/50">
+                          ¡Ahorrás ${savings?.toLocaleString('es-AR')}!
+                        </div>
+                      </div>
                     )}
                   </div>
                 );

@@ -153,7 +153,16 @@ export function ChargeGenerator({ merchantId, activeOffers = [] }: ChargeGenerat
               </label>
               <select
                 value={selectedOffer}
-                onChange={(e) => setSelectedOffer(e.target.value)}
+                onChange={(e) => {
+                  const offerId = e.target.value;
+                  setSelectedOffer(offerId);
+                  if (offerId) {
+                    const offer = activeOffers.find(o => o.id === offerId);
+                    if (offer && offer.original_price) {
+                      setAmount(offer.original_price.toString());
+                    }
+                  }
+                }}
                 className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-600 text-white focus:outline-none focus:ring-2 focus:ring-violet-500"
               >
                 <option value="">Cobro General (Descuento estándar)</option>
