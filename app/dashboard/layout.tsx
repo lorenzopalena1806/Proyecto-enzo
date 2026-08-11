@@ -35,7 +35,7 @@ export default async function DashboardLayout({
 
   // Verificar suscripción activa para merchants
   if (profile.role === 'merchant') {
-    const { data: subscription } = await supabase
+    const { data: subscription } = await adminClient
       .from('subscriptions')
       .select('status')
       .eq('merchant_id', user.id)
