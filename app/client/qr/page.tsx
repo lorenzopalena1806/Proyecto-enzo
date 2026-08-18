@@ -83,6 +83,18 @@ export default async function ClientQRPage() {
     .in('target_role', ['client', 'all'])
     .order('created_at', { ascending: false });
 
+  // 2. Fetch this client's transaction history
+  const { data: clientHistory } = await adminClient
+    .from('discount_transactions')
+    .select(`
+      *,
+      scanner:profiles!scanner_id(business_name, full_name),
+      offer:merchant_offers(title)
+    `)
+    .eq('scanned_user_id', user.id)
+    .order('applied_at', { ascending: false })
+    .limit(20);
+
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col">
       {/* Header */}
@@ -162,6 +174,62 @@ export default async function ClientQRPage() {
                         </div>
                       </div>
                     )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </section>
+
+        {/* Sección: Mis Descuentos Usados */}
+        <section className="space-y-4 pt-4 border-t border-slate-800/50">
+          <div>
+            <h2 className="text-xl font-bold text-white">Mis Descuentos Usados</h2>
+            <p className="text-sm text-slate-400">Historial de tus últimas compras con descuento.</p>
+          </div>
+
+          {(!clientHistory || clientHistory.length === 0) ? (
+            <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-8 text-center">
+              <p className="text-slate-400">Todavía no usaste ningún descuento.</p>
+              <p className="text-slate-500 text-sm mt-1">Mostrá tu código en un comercio adherido para empezar a ahorrar.</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {clientHistory.map((tx: any) => {
+                const scanner = tx.scanner as { business_name?: string; full_name?: string } | null;
+                const offer = tx.offer as { title?: string } | null;
+                const merchantName = scanner?.business_name || scanner?.full_name || 'Comercio';
+                const saved = (tx.original_amount || 0) - (tx.final_amount || 0);
+
+                return (
+                  <div key={tx.id} className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="text-white font-medium text-sm truncate">{merchantName}</p>
+                      <p className="text-slate-500 text-xs truncate">{offer?.title || 'Descuento general'}</p>
+                      <p className="text-slate-600 text-xs mt-0.5">
+                        {new Date(tx.applied_at).toLocaleString('es-AR', {
+                          day: '2-digit',
+                          month: 'short',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          timeZone: 'America/Argentina/Buenos_Aires',
+                        })}
+                      </p>
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      <p className="text-emerald-400 font-bold text-sm">-{tx.discount_pct}%</p>
+                      {saved > 0 && (
+                        <p className="text-xs text-emerald-600">
+                          Ahorraste ${saved.toLocaleString('es-AR')}
+                        </p>
+                      )}
+                      {tx.final_amount && (
+                        <p className="text-xs text-slate-400">
+                          ${tx.final_amount.toLocaleString('es-AR')} pagado
+                        </p>
+                      )}
+                    </div>
                   </div>
                 );
               })}

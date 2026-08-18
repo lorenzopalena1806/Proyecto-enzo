@@ -18,6 +18,7 @@ import {
   Users,
   Settings,
   Tag,
+  History,
 } from 'lucide-react';
 import type { Profile } from '@/types';
 
@@ -54,6 +55,12 @@ const MERCHANT_NAV_ITEMS = [
     href: '/dashboard/marketing',
     label: 'Marketing',
     icon: ImageIcon,
+    exact: false,
+  },
+  {
+    href: '/dashboard/history',
+    label: 'Historial',
+    icon: History,
     exact: false,
   },
 ];
