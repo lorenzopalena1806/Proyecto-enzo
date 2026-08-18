@@ -39,7 +39,14 @@ export default function UpdatePasswordPage() {
     });
 
     if (updateError) {
-      setError('Error al actualizar: ' + updateError.message);
+      let errorMsg = updateError.message;
+      if (errorMsg.includes('New password should be different')) {
+        errorMsg = 'La nueva contraseña debe ser diferente a la actual.';
+      } else if (errorMsg.includes('Password should contain')) {
+        errorMsg = 'La contraseña es demasiado débil.';
+      }
+      
+      setError(errorMsg);
       setLoading(false);
       return;
     }
