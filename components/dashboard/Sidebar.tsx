@@ -66,8 +66,8 @@ const ADMIN_NAV_ITEMS = [
     exact: true,
   },
   {
-    href: '/admin/merchants',
-    label: 'Comercios',
+    href: '/admin/users',
+    label: 'Usuarios Registrados',
     icon: Users,
     exact: false,
   },
