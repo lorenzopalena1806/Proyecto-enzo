@@ -63,6 +63,12 @@ const MERCHANT_NAV_ITEMS = [
     icon: History,
     exact: false,
   },
+  {
+    href: '/dashboard/profile',
+    label: 'Mi Perfil',
+    icon: Settings,
+    exact: false,
+  },
 ];
 
 const ADMIN_NAV_ITEMS = [

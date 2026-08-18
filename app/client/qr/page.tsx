@@ -105,8 +105,13 @@ export default async function ClientQRPage() {
           </div>
           <span className="text-white font-bold text-sm">RedBeneficios</span>
         </div>
-        
-        <LogoutButton />
+        <div className="flex items-center gap-2">
+          <Link href="/client/profile" className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-800">
+            <User className="h-4 w-4" />
+            <span className="hidden sm:inline">Mi Perfil</span>
+          </Link>
+          <LogoutButton />
+        </div>
       </header>
 
       {/* Main Content */}

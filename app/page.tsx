@@ -1,8 +1,36 @@
 import Link from 'next/link';
 import { ArrowRight, QrCode, Store, TrendingUp, Users, Star, CheckCircle2, ShieldCheck, Zap } from 'lucide-react';
 import { Navbar } from '@/components/marketing/Navbar';
+import { createAdminClient } from '@/lib/supabase-server';
 
-export default function Home() {
+export const dynamic = 'force-dynamic';
+
+export default async function Home() {
+  const adminClient = createAdminClient();
+
+  // Contar datos reales de la base de datos
+  const [
+    { count: merchantCount },
+    { count: clientCount },
+    { count: txCount },
+    { data: avgData },
+  ] = await Promise.all([
+    adminClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'merchant').eq('is_active', true),
+    adminClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'client'),
+    adminClient.from('discount_transactions').select('*', { count: 'exact', head: true }),
+    adminClient.from('discount_transactions').select('discount_pct'),
+  ]);
+
+  const avgDiscount = avgData && avgData.length > 0
+    ? Math.round(avgData.reduce((sum: number, t: any) => sum + (t.discount_pct || 0), 0) / avgData.length)
+    : 15;
+
+  const stats = [
+    { label: 'Comercios Adheridos', value: merchantCount ? `${merchantCount}` : '0' },
+    { label: 'Usuarios Activos', value: clientCount ? `${clientCount}` : '0' },
+    { label: 'Descuento Promedio', value: `${avgDiscount}%` },
+    { label: 'Transacciones', value: txCount ? `${txCount}` : '0' },
+  ];
   return (
     <div className="min-h-screen bg-[#0A0A0B] text-slate-50 selection:bg-violet-500/30 font-sans overflow-x-hidden">
       {/* Background ambient light */}
@@ -52,12 +80,7 @@ export default function Home() {
 
             {/* Metrics Ribbon */}
             <div className="pt-20 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-4xl mx-auto border-t border-white/10">
-              {[
-                { label: 'Comercios Adheridos', value: '+500' },
-                { label: 'Usuarios Activos', value: '10k+' },
-                { label: 'Descuento Promedio', value: '15%' },
-                { label: 'Transacciones', value: '1M+' },
-              ].map((stat, i) => (
+              {stats.map((stat, i) => (
                 <div key={i} className="flex flex-col items-center justify-center space-y-1">
                   <span className="text-3xl font-bold text-white tracking-tight">{stat.value}</span>
                   <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">{stat.label}</span>
