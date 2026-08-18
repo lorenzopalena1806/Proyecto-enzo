@@ -1,11 +1,13 @@
+export const dynamic = 'force-dynamic';
+
 import { createClient, createAdminClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import { QRDisplay } from '@/components/dashboard/QRDisplay';
 import { encodeQRPayload } from '@/lib/qr-utils';
+import { Store } from 'lucide-react';
 
 export const metadata = {
-  title: 'Mi QR | RedBeneficios',
-  description: 'Tu código QR único para acceder a descuentos en la red de comercios.',
+  title: 'Mi QR & Beneficios | RedBeneficios',
 };
 
 export default async function QRPage() {
@@ -32,20 +34,16 @@ export default async function QRPage() {
     .single();
 
   if (!qrCode) {
-    // Crear QR si no existe
     const { generateQRToken } = await import('@/lib/qr-utils');
     const token = generateQRToken();
-
     const { data: newQR } = await adminClient
       .from('qr_codes')
       .insert({ user_id: user.id, qr_token: token })
       .select()
       .single();
-
     qrCode = newQR;
   }
 
-  // Codificar el payload del QR
   const qrValue = qrCode
     ? encodeQRPayload({
         userId: user.id,
@@ -55,15 +53,51 @@ export default async function QRPage() {
       })
     : '';
 
+  // Ofertas disponibles para comercios (merchant o all) de otros comercios
+  const { data: merchantOffers } = await adminClient
+    .from('merchant_offers')
+    .select(`
+      *,
+      merchant:profiles!merchant_id (
+        business_name,
+        full_name
+      )
+    `)
+    .eq('is_active', true)
+    .in('target_role', ['merchant', 'all'])
+    .neq('merchant_id', user.id) // Excluir sus propias ofertas
+    .order('discount_pct', { ascending: false });
+
+  // Historial del comercio como COMPRADOR (cuando fue escaneado en otro local)
+  const { data: buyerHistory } = await adminClient
+    .from('discount_transactions')
+    .select(`
+      *,
+      scanner:profiles!scanner_id(business_name, full_name),
+      offer:merchant_offers(title)
+    `)
+    .eq('scanned_user_id', user.id)
+    .order('applied_at', { ascending: false })
+    .limit(15);
+
   return (
-    <div className="max-w-md mx-auto py-4 space-y-6">
+    <div className="space-y-8 max-w-2xl mx-auto py-4">
+
+      {/* Encabezado */}
       <div>
-        <h1 className="text-2xl font-bold text-white">Mi Código QR</h1>
+        <h1 className="text-2xl font-bold text-white">Mi QR & Beneficios B2B</h1>
         <p className="text-slate-400 mt-1">
-          Presentá este QR en cualquier local de la red para acceder a tus descuentos
+          Mostrá tu QR cuando vayas a comprar en otro local de la red y accedé a descuentos exclusivos para comercios.
         </p>
       </div>
 
+      {/* Badge de rol */}
+      <div className="flex items-center gap-2 px-4 py-2 bg-violet-950/50 border border-violet-800/50 rounded-xl w-fit">
+        <Store className="h-4 w-4 text-violet-400" />
+        <span className="text-violet-300 text-sm font-medium">Comercio adherido — Beneficios B2B activos</span>
+      </div>
+
+      {/* QR */}
       <QRDisplay
         qrValue={qrValue}
         userName={profile.full_name ?? user.email ?? 'Usuario'}
@@ -73,13 +107,13 @@ export default async function QRPage() {
 
       {/* Instrucciones */}
       <div className="rounded-2xl border border-slate-700 bg-slate-800/40 p-5 space-y-3">
-        <h3 className="text-white font-semibold">¿Cómo usar tu QR?</h3>
+        <h3 className="text-white font-semibold">¿Cómo usar tu descuento B2B?</h3>
         <ol className="space-y-2 text-sm text-slate-400">
           {[
-            'Abrí esta pantalla en el local donde vayas a comprar.',
-            'Pedile al comerciante que escanee tu QR con su panel.',
-            'El sistema calcula automáticamente tu descuento.',
-            'El descuento aplica solo de Lunes a Jueves, pagando en efectivo o transferencia.',
+            'Andá a cualquier local de la red como comprador.',
+            'Abrí esta pantalla y mostrá tu QR al dueño del local.',
+            'El sistema detecta que sos comercio y aplica el descuento B2B automáticamente.',
+            'El descuento para comercios es mayor que el de clientes regulares.',
           ].map((step, i) => (
             <li key={i} className="flex gap-2">
               <span className="flex h-5 w-5 items-center justify-center rounded-full bg-violet-900 text-violet-300 text-xs font-bold flex-shrink-0 mt-0.5">
@@ -90,6 +124,118 @@ export default async function QRPage() {
           ))}
         </ol>
       </div>
+
+      {/* Ofertas para comercios */}
+      <section className="space-y-4 border-t border-slate-800/50 pt-6">
+        <div>
+          <h2 className="text-xl font-bold text-white">Ofertas Exclusivas para Comercios</h2>
+          <p className="text-sm text-slate-400 mt-1">Estos locales tienen descuentos especiales para vos como dueño de comercio.</p>
+        </div>
+
+        {(!merchantOffers || merchantOffers.length === 0) ? (
+          <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-8 text-center">
+            <p className="text-slate-400">Por ahora no hay ofertas B2B disponibles de otros comercios.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {merchantOffers.map((offer: any) => {
+              const merchant = offer.merchant as { business_name?: string; full_name?: string };
+              const merchantName = merchant?.business_name || merchant?.full_name || 'Comercio';
+              const hasPrices = offer.original_price && offer.final_price;
+              const savings = hasPrices ? offer.original_price - offer.final_price : null;
+
+              return (
+                <div key={offer.id} className="bg-slate-900 border border-violet-800/30 hover:border-violet-600/60 transition-colors rounded-2xl p-5 flex flex-col relative overflow-hidden group">
+                  {/* Badge descuento */}
+                  <div className="absolute top-0 right-0 bg-violet-600 text-white font-bold px-3 py-1.5 rounded-bl-xl text-sm z-10 shadow-sm">
+                    -{offer.discount_pct}%
+                  </div>
+                  {/* B2B Badge */}
+                  <div className="absolute top-0 left-0 bg-amber-500 text-black font-bold px-2 py-0.5 rounded-br-lg text-xs">
+                    B2B
+                  </div>
+                  <p className="text-xs text-violet-400 font-medium uppercase tracking-wider mb-1 mt-4 pr-12 truncate">
+                    {merchantName}
+                  </p>
+                  <h3 className="font-bold text-lg text-white mb-2 pr-8 leading-tight">{offer.title}</h3>
+                  {offer.description && (
+                    <p className="text-slate-400 text-sm mb-4 line-clamp-2">{offer.description}</p>
+                  )}
+
+                  {hasPrices && (
+                    <div className="mt-auto bg-slate-950/80 rounded-xl p-3 border border-slate-800/80">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-xs text-slate-500">Precio sin app</span>
+                        <span className="text-sm text-slate-400 line-through">${offer.original_price.toLocaleString('es-AR')}</span>
+                      </div>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-xs text-amber-400 font-medium">Precio B2B</span>
+                        <span className="text-xl text-white font-black">${offer.final_price.toLocaleString('es-AR')}</span>
+                      </div>
+                      <div className="text-xs text-amber-950 bg-amber-400 py-1.5 px-2 rounded-lg text-center font-bold uppercase tracking-wider">
+                        ¡Ahorrás ${savings?.toLocaleString('es-AR')}!
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      {/* Historial como comprador */}
+      <section className="space-y-4 border-t border-slate-800/50 pt-6">
+        <div>
+          <h2 className="text-xl font-bold text-white">Mis Compras en Otros Locales</h2>
+          <p className="text-sm text-slate-400 mt-1">Historial de cuando fuiste a comprar como cliente a otro comercio de la red.</p>
+        </div>
+
+        {(!buyerHistory || buyerHistory.length === 0) ? (
+          <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-8 text-center">
+            <p className="text-slate-400">Todavía no usaste tu descuento B2B en ningún local.</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {buyerHistory.map((tx: any) => {
+              const scanner = tx.scanner as { business_name?: string; full_name?: string } | null;
+              const offer = tx.offer as { title?: string } | null;
+              const merchantName = scanner?.business_name || scanner?.full_name || 'Comercio';
+              const saved = (tx.original_amount || 0) - (tx.final_amount || 0);
+
+              return (
+                <div key={tx.id} className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-white font-medium text-sm truncate">{merchantName}</p>
+                    <p className="text-slate-500 text-xs truncate">{offer?.title || 'Descuento B2B'}</p>
+                    <p className="text-slate-600 text-xs mt-0.5">
+                      {new Date(tx.applied_at).toLocaleString('es-AR', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        timeZone: 'America/Argentina/Buenos_Aires',
+                      })}
+                    </p>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <span className="text-xs bg-amber-500 text-black font-bold px-1.5 py-0.5 rounded mb-1 inline-block">B2B</span>
+                    <p className="text-emerald-400 font-bold text-sm">-{tx.discount_pct}%</p>
+                    {saved > 0 && (
+                      <p className="text-xs text-emerald-600">Ahorraste ${saved.toLocaleString('es-AR')}</p>
+                    )}
+                    {tx.final_amount && (
+                      <p className="text-xs text-slate-400">${tx.final_amount.toLocaleString('es-AR')} pagado</p>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
     </div>
   );
 }

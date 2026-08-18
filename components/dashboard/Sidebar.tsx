@@ -41,7 +41,7 @@ const MERCHANT_NAV_ITEMS = [
   },
   {
     href: '/dashboard/qr',
-    label: 'Mi QR',
+    label: 'Mi QR & Beneficios',
     icon: QrCode,
     exact: false,
   },
