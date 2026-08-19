@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient } from '@/lib/supabase-server';
+import { createClient, createAdminClient } from '@/lib/supabase-server';
 import { revalidatePath } from 'next/cache';
 
 export async function createOffer(formData: FormData) {
@@ -24,16 +24,16 @@ export async function createOffer(formData: FormData) {
   if (original_price && final_price && original_price > 0 && final_price > 0 && final_price < original_price) {
     discount_pct = Math.round((1 - (final_price / original_price)) * 100);
   } else {
-    // Si no son válidos, los reseteamos a null
     original_price = null;
     final_price = null;
   }
 
   if (!title || isNaN(discount_pct) || discount_pct <= 0 || discount_pct > 100) {
-    return { success: false, error: 'Datos inválidos' };
+    return { success: false, error: 'Datos inválidos. Asegurate de poner el descuento o los precios.' };
   }
 
-  const { error } = await supabase.from('merchant_offers').insert({
+  const adminClient = createAdminClient();
+  const { error } = await adminClient.from('merchant_offers').insert({
     merchant_id: user.id,
     title,
     description,
@@ -60,7 +60,8 @@ export async function toggleOfferStatus(offerId: string, isActive: boolean) {
 
   if (!user) return { success: false, error: 'No autorizado' };
 
-  const { error } = await supabase
+  const adminClient = createAdminClient();
+  const { error } = await adminClient
     .from('merchant_offers')
     .update({ is_active: isActive })
     .eq('id', offerId)
@@ -79,7 +80,8 @@ export async function deleteOffer(offerId: string) {
 
   if (!user) return { success: false, error: 'No autorizado' };
 
-  const { error } = await supabase
+  const adminClient = createAdminClient();
+  const { error } = await adminClient
     .from('merchant_offers')
     .delete()
     .eq('id', offerId)

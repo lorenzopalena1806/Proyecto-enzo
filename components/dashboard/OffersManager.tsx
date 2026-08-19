@@ -12,8 +12,14 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
     e.preventDefault();
     setLoading(true);
     const formData = new FormData(e.currentTarget);
-    await createOffer(formData);
+    const res = await createOffer(formData);
     setLoading(false);
+    
+    if (res && !res.success) {
+      alert(res.error || 'Error al crear la oferta');
+      return;
+    }
+    
     setIsCreating(false);
   };
 
