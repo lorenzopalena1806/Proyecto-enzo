@@ -1,8 +1,9 @@
 import { createClient, createAdminClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import { calculateDiscount, formatARS, getPaymentMethodLabel } from '@/lib/discount-logic';
-import type { PaymentMethod } from '@/types';
 import { ClientPayForm } from './ClientPayForm';
+import type { PaymentMethod } from '@/types';
+import { ClientInputAmountForm } from './ClientInputAmountForm';
 import { Store, AlertTriangle } from 'lucide-react';
 
 export default async function PayPage({
@@ -16,7 +17,7 @@ export default async function PayPage({
   const method = typeof resolvedParams.method === 'string' ? (resolvedParams.method as PaymentMethod) : null;
   const offerId = typeof resolvedParams.offer === 'string' ? resolvedParams.offer : null;
 
-  if (!m || !a || !method) {
+  if (!m) {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
         <p className="text-red-400">Enlace de pago inválido.</p>
@@ -103,6 +104,23 @@ export default async function PayPage({
       reason: defaultOutcome.valid ? '' : defaultOutcome.reason,
       offerTitle: '' 
     };
+  }
+
+  // 4. Si falta el monto o el método de pago, mostramos el formulario para que el cliente lo ingrese
+  if (!a || !method) {
+    return (
+      <div className="min-h-screen bg-slate-950 p-4 pt-12 flex flex-col items-center max-w-md mx-auto">
+        <div className="w-full flex flex-col items-center mb-8">
+          <div className="h-16 w-16 bg-violet-600 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-violet-900/50">
+            <Store className="h-8 w-8 text-white" />
+          </div>
+          <h1 className="text-2xl font-bold text-white text-center leading-tight">
+            Estás pagando en <br/> <span className="text-violet-400">{merchantName}</span>
+          </h1>
+        </div>
+        <ClientInputAmountForm merchantId={m} merchantName={merchantName} />
+      </div>
+    );
   }
 
   return (

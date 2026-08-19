@@ -46,8 +46,14 @@ const MERCHANT_NAV_ITEMS = [
     exact: false,
   },
   {
+    href: '/dashboard/pos',
+    label: 'QR Fijo (Imprimir)',
+    icon: QrCode,
+    exact: false,
+  },
+  {
     href: '/dashboard/scanner',
-    label: 'Cobrar',
+    label: 'Cobro Dinámico',
     icon: ScanLine,
     exact: false,
   },

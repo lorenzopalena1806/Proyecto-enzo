@@ -5,7 +5,7 @@ import { createClient, createAdminClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import { QRDisplay } from '@/components/dashboard/QRDisplay';
 import { LogoutButton } from '@/components/dashboard/LogoutButton';
-import { LogOut, User } from 'lucide-react';
+import { LogOut, User, Scan } from 'lucide-react';
 import Link from 'next/link';
 import { encodeQRPayload } from '@/lib/qr-utils';
 
@@ -116,17 +116,24 @@ export default async function ClientQRPage() {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col p-4 space-y-8 max-w-lg mx-auto w-full pt-6 pb-20">
-        
-        {/* Sección: Código de Usuario */}
+        {/* Acción Principal */}
+        <div className="w-full">
+          <Link href="/client/scanner" className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-violet-600 hover:bg-violet-500 text-white font-bold text-lg shadow-lg shadow-violet-900/40 transition-all">
+            <Scan className="h-6 w-6" />
+            Escanear QR del Local
+          </Link>
+        </div>
+
+        {/* Sección: Código de Usuario (Fallback) */}
         <section className="space-y-4">
           <div className="text-center space-y-2">
-            <h1 className="text-2xl font-bold text-white">Hola, {profile?.full_name || 'Cliente'}</h1>
-            <p className="text-slate-400 text-sm">Dictale este código al comerciante para aplicar tu descuento, o escaneá el QR del local con tu cámara.</p>
+            <h1 className="text-xl font-bold text-white">Hola, {profile?.full_name || 'Cliente'}</h1>
+            <p className="text-slate-400 text-sm">Escaneá el QR en la caja del local, o dictales este código corto si no podés usar la cámara.</p>
           </div>
 
-          <div className="w-full bg-slate-900 border border-violet-800/50 rounded-2xl p-6 text-center shadow-xl shadow-violet-900/20">
-            <p className="text-slate-400 text-sm mb-2 font-medium uppercase tracking-wider">Tu Código Único</p>
-            <div className="text-5xl font-black text-white tracking-widest bg-violet-950/40 py-4 rounded-xl border border-violet-800">
+          <div className="w-full bg-slate-900 border border-violet-800/30 rounded-2xl p-4 text-center">
+            <p className="text-slate-400 text-xs mb-1 font-medium uppercase tracking-wider">Código de Respaldo</p>
+            <div className="text-4xl font-black text-white tracking-widest bg-slate-950 py-3 rounded-xl border border-slate-800">
               {qrData.qr_token.substring(0, 6).toUpperCase()}
             </div>
           </div>
