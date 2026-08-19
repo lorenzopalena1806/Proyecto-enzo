@@ -23,16 +23,28 @@ export default async function POSPage() {
 
   if (!profile || profile.role !== 'merchant') redirect('/dashboard');
 
+  // Traer las ofertas activas del comercio para el selector
+  const { data: offers } = await adminClient
+    .from('merchant_offers')
+    .select('id, title, discount_pct, original_price, final_price')
+    .eq('merchant_id', user.id)
+    .eq('is_active', true)
+    .order('created_at', { ascending: false });
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-white">QR de Cobro</h1>
         <p className="text-slate-400 mt-1">
-          Mostrá este QR a tus clientes. Ellos lo escanean, ingresan el monto y te avisan cuando está listo.
+          Seleccioná la oferta y el monto, tocá <strong className="text-white">Cargar QR</strong> y mostráselo al cliente.
         </p>
       </div>
 
-      <POSView merchantId={user.id} businessName={profile.business_name || profile.full_name} />
+      <POSView
+        merchantId={user.id}
+        businessName={profile.business_name || profile.full_name}
+        offers={offers || []}
+      />
     </div>
   );
 }

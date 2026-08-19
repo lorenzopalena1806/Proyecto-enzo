@@ -49,7 +49,7 @@ export async function confirmScannedPaymentServer(merchantId: string, amount: nu
   return await executePaymentServer(merchantId, user.id, amount, method, qrData.qr_token, offerId);
 }
 
-async function executePaymentServer(merchantId: string, clientId: string, amount: number, method: PaymentMethod, qrToken: string, offerId?: string) {
+async function executePaymentServer(merchantId: string, clientId: string, amount: number, method: PaymentMethod, qrToken: string, offerId?: string, offerTitle?: string) {
   const adminClient = createAdminClient();
 
   // 1. Get Merchant Profile
@@ -78,7 +78,7 @@ async function executePaymentServer(merchantId: string, clientId: string, amount
   // 3. Get Client Profile
   const { data: clientUser } = await adminClient
     .from('profiles')
-    .select('is_active, role')
+    .select('is_active, role, full_name')
     .eq('id', clientId)
     .single();
 
@@ -129,6 +129,8 @@ async function executePaymentServer(merchantId: string, clientId: string, amount
     final_amount: finalAmount,
     payment_method: method,
     day_of_week: new Date().getDay(),
+    client_name: (clientUser as any).full_name || null,
+    offer_title: offerTitle || null,
   });
 
   if (insertError) {
