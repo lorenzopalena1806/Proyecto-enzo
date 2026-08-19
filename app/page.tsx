@@ -141,8 +141,8 @@ export default async function Home() {
                     <QrCode className="h-6 w-6" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-white mb-2">Escáner QR Integrado</h3>
-                    <p className="text-slate-400">Olvidate del hardware costoso. Usá la cámara de cualquier celular o tablet para validar descuentos al instante. Cálculo automático según método de pago.</p>
+                    <h3 className="text-2xl font-bold text-white mb-2">Cobrá con el celular</h3>
+                    <p className="text-slate-400">No necesitás comprar aparatos raros. Usá la cámara de cualquier celu para leer el código de tu cliente y aplicar el descuento al toque. La app hace los números por vos.</p>
                   </div>
                 </div>
               </div>
@@ -154,8 +154,8 @@ export default async function Home() {
                     <ShieldCheck className="h-6 w-6" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-white mb-2">100% Seguro</h3>
-                    <p className="text-slate-400 text-sm">Cada QR es único y encriptado, evitando fraudes.</p>
+                    <h3 className="text-xl font-bold text-white mb-2">Seguro y sin trampas</h3>
+                    <p className="text-slate-400 text-sm">Cada código QR cambia todo el tiempo. Nadie puede usar el descuento de otra persona ni hacer capturas falsas.</p>
                   </div>
                 </div>
               </div>
@@ -167,8 +167,8 @@ export default async function Home() {
                     <TrendingUp className="h-6 w-6" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-white mb-2">Métricas en Vivo</h3>
-                    <p className="text-slate-400 text-sm">Panel de control con estadísticas detalladas de tus ventas.</p>
+                    <h3 className="text-xl font-bold text-white mb-2">Controlá tus ventas</h3>
+                    <p className="text-slate-400 text-sm">Mirá cuántos descuentos diste y cuánta plata entró a tu local, todo fácil y al momento desde tu pantalla.</p>
                   </div>
                 </div>
               </div>
@@ -180,8 +180,8 @@ export default async function Home() {
                     <Zap className="h-6 w-6" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-white mb-2">Descuentos B2B Exclusivos</h3>
-                    <p className="text-slate-400">Si sos comerciante adherido, obtenés un 25% de descuento fijo en todos los demás comercios de la red. Una comunidad diseñada para potenciarse mutuamente.</p>
+                    <h3 className="text-2xl font-bold text-white mb-2">Beneficios para dueños</h3>
+                    <p className="text-slate-400">Por ser parte de la red, tenés descuentos especiales (mucho más altos) cuando vas a comprar como cliente a otros locales del club. Nos ayudamos entre todos.</p>
                   </div>
                 </div>
               </div>
