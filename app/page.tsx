@@ -113,6 +113,28 @@ export default async function Home() {
               </div>
             </div>
 
+            {/* ✨ MARQUEE ✨ */}
+            <div className="pt-24 pb-4 overflow-hidden w-full relative">
+              <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#060D1A] to-transparent z-10" />
+              <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#060D1A] to-transparent z-10" />
+              <style dangerouslySetInnerHTML={{ __html: `
+                @keyframes marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-100%); } }
+                .animate-marquee { animation: marquee 35s linear infinite; }
+                .hover-pause:hover { animation-play-state: paused; }
+              ` }} />
+              <div className="flex w-[200%] animate-marquee hover-pause items-center">
+                {[...Array(2)].map((_, i) => (
+                  <div key={i} className="flex gap-12 sm:gap-24 items-center justify-around w-1/2 px-12 sm:px-24">
+                    {['Gastronomía', 'Gimnasios', 'Indumentaria', 'Peluquerías', 'Estética', 'Mascotas', 'Servicios', 'Autos'].map((cat, j) => (
+                      <span key={j} className="text-2xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-600 to-slate-800 uppercase tracking-widest whitespace-nowrap">
+                        {cat}
+                      </span>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {/* Stats Ribbon */}
             <div className="pt-16 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-4xl mx-auto border-t border-cyan-500/10">
               {stats.map((stat, i) => (
@@ -234,6 +256,35 @@ export default async function Home() {
           </div>
         </section>
 
+        {/* ✨ TESTIMONIALS ✨ */}
+        <section className="py-24 relative">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">Lo que dicen los locales</h2>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-6">
+              {[
+                { name: 'Martina L.', biz: 'Cafetería La Esquina', text: '"Los martes eran un día muerto. Desde que sumamos el descuento de la red, se llena de clientes nuevos que nos descubrieron por la app."' },
+                { name: 'Lucas G.', biz: 'Gimnasio Iron', text: '"El escáner QR es rapidísimo. Los profes lo usan con su celu y nosotros tenemos todas las métricas en la compu. Un golazo."' },
+                { name: 'Sofía R.', biz: 'Peluquería Style', text: '"Lo que más me gusta es el descuento B2B. Cuando voy a comprar la comida para el local a la fiambrería de enfrente, uso mi descuento de dueña."' }
+              ].map((t, i) => (
+                <div key={i} className="rounded-3xl border border-cyan-500/15 bg-white/3 p-8 backdrop-blur-sm relative">
+                  <div className="text-cyan-500/20 absolute top-4 right-6 text-6xl font-serif">"</div>
+                  <p className="text-slate-300 italic mb-6 relative z-10">{t.text}</p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold">{t.name.charAt(0)}</div>
+                    <div>
+                      <h4 className="text-white font-bold text-sm">{t.name}</h4>
+                      <p className="text-cyan-400 text-xs">{t.biz}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ✨ PRICING ✨ */}
         <section id="pricing" className="py-24">
           <div className="mx-auto max-w-5xl px-4 sm:px-6">
@@ -287,6 +338,37 @@ export default async function Home() {
                   Solicitar Suscripción
                 </Link>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ✨ FAQ ✨ */}
+        <section id="faq" className="py-24 relative border-t border-cyan-500/10">
+          <div className="mx-auto max-w-4xl px-4 sm:px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">Preguntas Frecuentes</h2>
+              <p className="text-slate-400 text-lg">Todo lo que necesitás saber antes de empezar.</p>
+            </div>
+            
+            <div className="space-y-4">
+              {[
+                { q: '¿Es realmente gratis para los clientes?', a: 'Sí, totalmente gratis. Registrate en la app, escaneá los códigos en los locales adheridos y el descuento se aplica automáticamente a tu compra pagando en efectivo o transferencia.' },
+                { q: '¿Necesito comprar alguna máquina o terminal si soy comercio?', a: '¡No! Todo funciona con tu propio celular, compu o tablet. Solo necesitás entrar a tu cuenta para leer el código de tu cliente.' },
+                { q: '¿Cuándo y cómo recibo la plata de mis ventas?', a: 'Nosotros no procesamos los pagos. Vos cobrás directamente en tu local (en efectivo o transferencia a tu cuenta). Nosotros solo calculamos el descuento por vos de forma segura.' },
+                { q: '¿Puedo cancelar mi plan de comerciante cuando quiera?', a: 'Sí, no hay contratos ni letras chicas. Podés pausar tu suscripción en cualquier momento.' },
+              ].map((faq, i) => (
+                <details key={i} className="group rounded-2xl border border-cyan-500/10 bg-white/3 backdrop-blur-sm [&_summary::-webkit-details-marker]:hidden">
+                  <summary className="flex cursor-pointer items-center justify-between p-6 font-medium text-white hover:text-cyan-300">
+                    <span className="text-lg">{faq.q}</span>
+                    <span className="ml-4 flex-shrink-0 transition-transform duration-300 group-open:-rotate-180">
+                      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                    </span>
+                  </summary>
+                  <div className="px-6 pb-6 text-slate-400">
+                    {faq.a}
+                  </div>
+                </details>
+              ))}
             </div>
           </div>
         </section>
