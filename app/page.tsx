@@ -125,7 +125,7 @@ export default async function Home() {
               <div className="flex w-[200%] animate-marquee hover-pause items-center">
                 {[...Array(2)].map((_, i) => (
                   <div key={i} className="flex gap-12 sm:gap-24 items-center justify-around w-1/2 px-12 sm:px-24">
-                    {['Gastronomía', 'Gimnasios', 'Indumentaria', 'Peluquerías', 'Estética', 'Mascotas', 'Servicios', 'Autos'].map((cat, j) => (
+                    {['Gastronomía', 'Verdulerías', 'Indumentaria', 'Peluquerías', 'Estética', 'Mascotas', 'Servicios', 'Autos'].map((cat, j) => (
                       <span key={j} className="text-2xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-600 to-slate-800 uppercase tracking-widest whitespace-nowrap">
                         {cat}
                       </span>
@@ -266,7 +266,7 @@ export default async function Home() {
             <div className="grid md:grid-cols-3 gap-6">
               {[
                 { name: 'Martina L.', biz: 'Cafetería La Esquina', text: '"Los martes eran un día muerto. Desde que sumamos el descuento de la red, se llena de clientes nuevos que nos descubrieron por la app."' },
-                { name: 'Lucas G.', biz: 'Gimnasio Iron', text: '"El escáner QR es rapidísimo. Los profes lo usan con su celu y nosotros tenemos todas las métricas en la compu. Un golazo."' },
+                { name: 'Jorge M.', biz: 'Verdulería El Sol', text: '"Es comodísimo. El cliente me muestra el celular, escaneo con el mío y le hago el descuento en la verdura de una. Se van re contentos."' },
                 { name: 'Sofía R.', biz: 'Peluquería Style', text: '"Lo que más me gusta es el descuento B2B. Cuando voy a comprar la comida para el local a la fiambrería de enfrente, uso mi descuento de dueña."' }
               ].map((t, i) => (
                 <div key={i} className="rounded-3xl border border-cyan-500/15 bg-white/3 p-8 backdrop-blur-sm relative">
