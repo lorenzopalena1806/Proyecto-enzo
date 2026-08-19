@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle2, Loader2, XCircle } from 'lucide-react';
-import { createClient } from '@/lib/supabase';
 import { confirmScannedPaymentServer } from '@/app/actions/charge';
+import { completePendingCharge } from '@/app/actions/pending-charges';
 import type { PaymentMethod } from '@/types';
 import { formatARS } from '@/lib/discount-logic';
 
@@ -54,12 +54,8 @@ export function ClientConfirmForm({
         return;
       }
 
-      // 2. Marcar el pending_charge como completado
-      const supabase = createClient();
-      await supabase
-        .from('pending_charges')
-        .update({ status: 'completed' })
-        .eq('id', chargeId);
+      // 2. Marcar el pending_charge como completado (via server action con admin client)
+      await completePendingCharge(chargeId);
 
       setStatus('success');
     } catch (err: any) {

@@ -65,3 +65,18 @@ export async function cancelPendingCharge(chargeId: string) {
   revalidatePath('/dashboard/pos');
   return { success: true };
 }
+
+// Called by the CLIENT after confirming payment — marks the charge as completed
+export async function completePendingCharge(chargeId: string) {
+  const adminClient = createAdminClient();
+  const { error } = await adminClient
+    .from('pending_charges')
+    .update({ status: 'completed' })
+    .eq('id', chargeId);
+
+  if (error) {
+    console.error('completePendingCharge error:', error);
+    return { success: false };
+  }
+  return { success: true };
+}
