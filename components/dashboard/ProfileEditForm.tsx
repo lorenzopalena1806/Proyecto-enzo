@@ -13,6 +13,8 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
     full_name: profile.full_name || '',
     business_name: profile.business_name || '',
     phone: profile.phone || '',
+    avatar_url: profile.avatar_url || '',
+    maps_url: profile.maps_url || '',
   });
 
   const [passwordData, setPasswordData] = useState({
@@ -49,6 +51,8 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
       full_name: formData.full_name || null,
       business_name: formData.business_name || null,
       phone: formData.phone || null,
+      avatar_url: formData.avatar_url || null,
+      maps_url: formData.maps_url || null,
     });
 
     if (result.success) {
@@ -120,18 +124,54 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
         </div>
 
         {profile.role === 'merchant' && (
-          <div className="space-y-1.5">
-            <label className="block text-sm font-medium text-slate-300">Nombre del negocio</label>
-            <div className="relative">
-              <Store className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
-              <input
-                name="business_name"
-                type="text"
-                value={formData.business_name}
-                onChange={handleProfileChange}
-                placeholder="Nombre de tu local"
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
-              />
+          <div className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-slate-300">Nombre del negocio</label>
+              <div className="relative">
+                <Store className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                <input
+                  name="business_name"
+                  type="text"
+                  value={formData.business_name}
+                  onChange={handleProfileChange}
+                  placeholder="Nombre de tu local"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-slate-300">Link del Logo (URL de imagen)</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span className="text-slate-500 font-bold text-sm">http://</span>
+                </div>
+                <input
+                  name="avatar_url"
+                  type="url"
+                  value={formData.avatar_url}
+                  onChange={handleProfileChange}
+                  placeholder="Ej: https://misitio.com/logo.png"
+                  className="w-full pl-16 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-slate-300">Link de Google Maps</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span className="text-slate-500 font-bold text-sm">📍</span>
+                </div>
+                <input
+                  name="maps_url"
+                  type="url"
+                  value={formData.maps_url}
+                  onChange={handleProfileChange}
+                  placeholder="Ej: https://maps.app.goo.gl/..."
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
+                />
+              </div>
             </div>
           </div>
         )}

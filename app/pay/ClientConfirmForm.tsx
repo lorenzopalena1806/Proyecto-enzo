@@ -56,7 +56,7 @@ export function ClientConfirmForm({
       }
 
       const resolvedFinal = 'finalAmount' in res ? res.finalAmount : finalAmount;
-      const resolvedPct   = 'discountPct'  in res ? res.discountPct  : discountPct;
+      const resolvedPct   = ('discountPct'  in res ? res.discountPct  : discountPct) ?? 0;
       await completePendingCharge(chargeId, clientName, resolvedFinal, resolvedPct);
 
       setStatus('success');

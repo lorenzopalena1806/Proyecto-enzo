@@ -4,7 +4,7 @@ import React from 'react';
 import { createClient, createAdminClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import { LogoutButton } from '@/components/dashboard/LogoutButton';
-import { User, Scan, Sparkles, Tag, ShoppingBag, Clock } from 'lucide-react';
+import { User, Scan, Sparkles, Tag, ShoppingBag, Clock, Store, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { encodeQRPayload } from '@/lib/qr-utils';
 
@@ -92,6 +92,14 @@ export default async function ClientQRPage() {
     .eq('scanned_user_id', user.id)
     .order('applied_at', { ascending: false })
     .limit(20);
+
+  // 3. Fetch Locales Adheridos (active merchants)
+  const { data: merchants } = await adminClient
+    .from('profiles')
+    .select('id, business_name, avatar_url, maps_url')
+    .eq('role', 'merchant')
+    .eq('is_active', true)
+    .order('created_at', { ascending: false });
 
   return (
     <div className="min-h-screen app-bg flex flex-col font-sans">
@@ -196,6 +204,54 @@ export default async function ClientQRPage() {
               {qrData.qr_token.substring(0, 6).toUpperCase()}
             </div>
           </div>
+        </section>
+
+        {/* Sección: Locales Adheridos */}
+        <section className="space-y-4 pt-6 border-t border-white/10">
+          <div className="flex items-center gap-2 mb-2">
+            <Store className="w-5 h-5 text-blue-400" />
+            <div>
+              <h2 className="text-xl font-bold text-white tracking-tight">Locales Adheridos</h2>
+              <p className="text-xs text-slate-400 font-medium">Comercios donde podés usar la app.</p>
+            </div>
+          </div>
+
+          {(!merchants || merchants.length === 0) ? (
+            <div className="glass-panel rounded-3xl p-8 text-center border-dashed border-white/20">
+              <p className="text-slate-400 font-medium">Por ahora no hay locales adheridos activos.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {merchants.map((merchant: any) => (
+                <div key={merchant.id} className="glass-panel rounded-3xl p-4 flex items-center justify-between gap-4 hover:border-blue-500/30 transition-all hover:bg-white/5 shadow-lg group">
+                  <div className="flex items-center gap-4 min-w-0">
+                    <div className="w-14 h-14 rounded-2xl bg-black/40 border border-white/10 flex-shrink-0 flex items-center justify-center overflow-hidden">
+                      {merchant.avatar_url ? (
+                        <img src={merchant.avatar_url} alt={merchant.business_name || 'Logo'} className="w-full h-full object-cover" />
+                      ) : (
+                        <Store className="w-6 h-6 text-slate-500" />
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="font-bold text-white truncate">{merchant.business_name || 'Comercio Adherido'}</h3>
+                      <p className="text-xs text-slate-400 truncate">Comercio verificado</p>
+                    </div>
+                  </div>
+                  {merchant.maps_url && (
+                    <a
+                      href={merchant.maps_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-shrink-0 flex flex-col items-center justify-center w-10 h-10 rounded-full bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white transition-colors"
+                      title="Cómo llegar"
+                    >
+                      <MapPin className="w-5 h-5" />
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </section>
 
         {/* Sección: Vidriera de Ofertas */}

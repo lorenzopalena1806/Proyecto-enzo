@@ -14,6 +14,7 @@ export interface Profile {
   business_name: string | null; // Solo para merchants
   phone: string | null;
   avatar_url: string | null;
+  maps_url: string | null;
   is_active: boolean;
   created_at: string;
 }
