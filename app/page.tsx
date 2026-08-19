@@ -185,6 +185,20 @@ export default async function Home() {
                   </div>
                 </div>
               </div>
+
+              {/* Feature 5 - Full Width */}
+              <div className="md:col-span-3 group relative overflow-hidden rounded-3xl bg-white/3 border border-purple-500/15 p-8 hover:border-purple-400/40 transition-all backdrop-blur-sm hover:shadow-[0_0_40px_-10px_rgba(168,85,247,0.15)]">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative z-10 h-full flex flex-col md:flex-row items-center gap-8">
+                  <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-purple-500/15 text-purple-400 border border-purple-500/25 shrink-0">
+                    <Store className="h-8 w-8" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-2">Tu propia página web</h3>
+                    <p className="text-slate-400">Al sumarte como local adherido, el sistema te crea automáticamente un perfil público (una página web para tu negocio). Ahí los clientes pueden ver tu ubicación, fotos de tu local y todas las ofertas que tenés activas. Es tu nueva vidriera digital para atraer más gente todos los días.</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
