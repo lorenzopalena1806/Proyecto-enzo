@@ -71,7 +71,7 @@ export default async function Home() {
             </h1>
 
             <p className="text-lg lg:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-              Nuestra misión es simple: que los comercios vendan más y los clientes paguen menos. Uní tu local, escaneá el QR y sumate al club de beneficios de la ciudad.
+              Nuestra misión es simple: que los comercios vendan más y los clientes paguen menos. Uní tu local, mostrá tu QR y sumate al club de beneficios de la ciudad.
             </p>
 
             {/* CTAs */}
@@ -102,8 +102,8 @@ export default async function Home() {
                   </div>
                   <div className="text-left">
                     <p className="text-cyan-300 text-xs font-semibold uppercase tracking-widest mb-1">Tecnología QR</p>
-                    <p className="text-white font-bold text-lg">Descuento aplicado</p>
-                    <p className="text-slate-400 text-sm mt-1">En segundos, sin apps extras</p>
+                    <p className="text-white font-bold text-lg">El cliente te escanea</p>
+                    <p className="text-slate-400 text-sm mt-1">Descuento aplicado al instante</p>
                     <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-500/15 border border-cyan-500/25 text-cyan-300 text-xs font-medium">
                       <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
                       Activo ahora
@@ -163,8 +163,8 @@ export default async function Home() {
                     <QrCode className="h-6 w-6" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-white mb-2">Cobrá con el celular</h3>
-                    <p className="text-slate-400">No necesitás comprar aparatos raros. Usá la cámara de cualquier celu para leer el código de tu cliente y aplicar el descuento al toque. La app hace los números por vos.</p>
+                    <h3 className="text-2xl font-bold text-white mb-2">Mostrá tu código y listo</h3>
+                    <p className="text-slate-400">No necesitás comprar aparatos raros. Solo mostrá tu código QR (impreso o en el celu) para que el cliente lo escanee. La app se encarga de aplicar el descuento al instante.</p>
                   </div>
                 </div>
               </div>
@@ -235,8 +235,8 @@ export default async function Home() {
             <div className="grid md:grid-cols-4 gap-8">
               {[
                 { step: '01', title: 'Registrate', desc: 'Creá tu cuenta gratis como cliente o suscribite como comerciante en menos de 1 minuto.' },
-                { step: '02', title: 'Obtené tu QR', desc: 'El sistema generará tu QR personal e intransferible de forma instantánea.' },
-                { step: '03', title: 'Mostralo o Escaneá', desc: 'Los clientes muestran su QR; los comerciantes lo escanean con un solo toque.' },
+                { step: '02', title: 'Tu QR o escáner', desc: 'Si sos comercio, el sistema genera tu QR. Si sos cliente, preparás tu cámara.' },
+                { step: '03', title: 'Escaneá y Ahorrá', desc: 'El comercio muestra su código QR y el cliente lo escanea directamente desde su celular.' },
                 { step: '04', title: 'Descuento Aplicado', desc: 'El cálculo se hace solo. Pagá en efectivo o transferencia y disfrutá.' },
               ].map((item, i) => (
                 <div key={i} className="relative group">
@@ -266,7 +266,7 @@ export default async function Home() {
             <div className="grid md:grid-cols-3 gap-6">
               {[
                 { name: 'Martina L.', biz: 'Cafetería La Esquina', text: '"Los martes eran un día muerto. Desde que sumamos el descuento de la red, se llena de clientes nuevos que nos descubrieron por la app."' },
-                { name: 'Jorge M.', biz: 'Verdulería El Sol', text: '"Es comodísimo. El cliente me muestra el celular, escaneo con el mío y le hago el descuento en la verdura de una. Se van re contentos."' },
+                { name: 'Jorge M.', biz: 'Verdulería El Sol', text: '"Es comodísimo. Yo les muestro el QR de la verdulería, el cliente escanea con su celu y ya le queda el descuento aplicado. Muy fácil."' },
                 { name: 'Sofía R.', biz: 'Peluquería Style', text: '"Lo que más me gusta es el descuento B2B. Cuando voy a comprar la comida para el local a la fiambrería de enfrente, uso mi descuento de dueña."' }
               ].map((t, i) => (
                 <div key={i} className="rounded-3xl border border-cyan-500/15 bg-white/3 p-8 backdrop-blur-sm relative">
@@ -353,7 +353,7 @@ export default async function Home() {
             <div className="space-y-4">
               {[
                 { q: '¿Es realmente gratis para los clientes?', a: 'Sí, totalmente gratis. Registrate en la app, escaneá los códigos en los locales adheridos y el descuento se aplica automáticamente a tu compra pagando en efectivo o transferencia.' },
-                { q: '¿Necesito comprar alguna máquina o terminal si soy comercio?', a: '¡No! Todo funciona con tu propio celular, compu o tablet. Solo necesitás entrar a tu cuenta para leer el código de tu cliente.' },
+                { q: '¿Necesito comprar alguna máquina o terminal si soy comercio?', a: '¡No! Todo funciona con tu propio celular, compu o tablet. Solo necesitás mostrarle tu código QR al cliente para que lo escanee.' },
                 { q: '¿Cuándo y cómo recibo la plata de mis ventas?', a: 'Nosotros no procesamos los pagos. Vos cobrás directamente en tu local (en efectivo o transferencia a tu cuenta). Nosotros solo calculamos el descuento por vos de forma segura.' },
                 { q: '¿Puedo cancelar mi plan de comerciante cuando quiera?', a: 'Sí, no hay contratos ni letras chicas. Podés pausar tu suscripción en cualquier momento.' },
               ].map((faq, i) => (
