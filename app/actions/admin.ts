@@ -121,7 +121,17 @@ export async function deleteMerchantServer(merchantId: string) {
   try {
     const adminClient = await requireSuperAdmin();
     
-    // Supabase admin method to delete a user. This cascades to profiles table.
+    // 1. Eliminar dependencias para evitar errores de Foreign Key (si no tienen ON DELETE CASCADE)
+    await adminClient.from('subscriptions').delete().eq('merchant_id', merchantId);
+    await adminClient.from('merchant_offers').delete().eq('merchant_id', merchantId);
+    await adminClient.from('marketing_assets').delete().eq('merchant_id', merchantId);
+    await adminClient.from('qr_codes').delete().eq('user_id', merchantId);
+    await adminClient.from('discount_transactions').delete().eq('scanner_id', merchantId);
+    
+    // 2. Eliminar el perfil público
+    await adminClient.from('profiles').delete().eq('id', merchantId);
+    
+    // 3. Supabase admin method to delete a user de auth.users
     const { error } = await adminClient.auth.admin.deleteUser(merchantId);
     
     if (error) throw error;

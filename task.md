@@ -1,5 +1,5 @@
-- [ ] Modificar `toggleMerchantSubscriptionServer` en `app/actions/admin.ts` para sincronizar `is_active` en perfiles.
-- [ ] Crear `deleteMerchantServer` en `app/actions/admin.ts` para eliminar usuarios usando Supabase Auth Admin.
-- [ ] Filtrar ofertas por comercios activos en `app/client/qr/page.tsx`.
-- [ ] Agregar el botón de Eliminar con confirmación visual en `app/admin/merchants/page.tsx`.
-- [ ] Actualizar el walkthrough.
+- [x] Modificar `toggleMerchantSubscriptionServer` en `app/actions/admin.ts` para sincronizar `is_active` en perfiles.
+- [x] Crear `deleteMerchantServer` en `app/actions/admin.ts` para eliminar usuarios usando Supabase Auth Admin.
+- [x] Filtrar ofertas por comercios activos en `app/client/qr/page.tsx`.
+- [x] Agregar el botón de Eliminar con confirmación visual en `app/admin/merchants/page.tsx`.
+- [x] Actualizar el walkthrough.
