@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase';
 import { createPendingCharge, cancelPendingCharge } from '@/app/actions/pending-charges';
 import {
   Store, BellRing, Banknote, ArrowLeftRight,
-  Loader2, QrCode, X, Tag, DollarSign, CheckCircle2, Clock
+  Loader2, QrCode, X, Tag, DollarSign, CheckCircle2, Clock, Sparkles
 } from 'lucide-react';
 import { formatARS } from '@/lib/discount-logic';
 
@@ -189,47 +189,47 @@ export function POSView({
 
       {/* ── NOTIFICACIÓN DE COBRO RECIBIDO ─────────────────── */}
       {recentTx && (
-        <div className="fixed inset-x-4 top-4 z-50 md:static rounded-2xl border border-emerald-500 bg-emerald-950/95 backdrop-blur-md p-6 shadow-2xl shadow-emerald-900/50">
+        <div className="fixed inset-x-4 top-4 z-50 md:static rounded-3xl border border-emerald-500/50 bg-emerald-950/90 backdrop-blur-xl p-6 shadow-[0_0_50px_-10px_rgba(16,185,129,0.3)]">
           <div className="flex items-start gap-4">
-            <div className="flex-shrink-0 h-14 w-14 bg-emerald-900 border border-emerald-600 rounded-2xl flex items-center justify-center">
-              <BellRing className="h-7 w-7 text-emerald-400 animate-bounce" />
+            <div className="flex-shrink-0 h-16 w-16 bg-gradient-to-br from-emerald-400/20 to-emerald-600/20 border border-emerald-500/30 rounded-2xl flex items-center justify-center shadow-inner">
+              <BellRing className="h-8 w-8 text-emerald-400 animate-bounce" />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-bold text-white">¡Pago Confirmado!</h3>
+              <h3 className="text-xl font-black text-white tracking-tight">¡Pago Confirmado!</h3>
               {recentTx.client_name && (
-                <p className="text-emerald-300 text-sm font-medium">
-                  Cliente: <span className="text-white">{recentTx.client_name}</span>
+                <p className="text-emerald-300 text-sm font-medium mt-1">
+                  Cliente: <span className="text-white font-bold">{recentTx.client_name}</span>
                 </p>
               )}
               {recentTx.offer_title && (
-                <p className="text-emerald-300 text-sm">
-                  Oferta: <span className="text-white">{recentTx.offer_title}</span>
+                <p className="text-emerald-300/80 text-sm mt-0.5">
+                  Oferta: <span className="text-emerald-100">{recentTx.offer_title}</span>
                 </p>
               )}
             </div>
-            <button onClick={() => setRecentTx(null)} className="text-slate-400 hover:text-white">
+            <button onClick={() => setRecentTx(null)} className="text-emerald-500 hover:text-white transition-colors bg-emerald-900/50 hover:bg-emerald-800/50 p-2 rounded-full">
               <X className="w-5 h-5" />
             </button>
           </div>
 
-          <div className="mt-4 bg-slate-900/60 rounded-xl p-4 border border-emerald-800/30">
-            <div className="flex justify-between text-sm mb-1 text-slate-400">
+          <div className="mt-5 bg-black/20 rounded-2xl p-5 border border-emerald-500/20 shadow-inner">
+            <div className="flex justify-between text-sm mb-1.5 text-emerald-100/60">
               <span>Original:</span>
-              <span>{formatARS(recentTx.original_amount)}</span>
+              <span className="line-through">{formatARS(recentTx.original_amount)}</span>
             </div>
-            <div className="flex justify-between text-sm mb-2 text-slate-400">
+            <div className="flex justify-between text-sm mb-3 text-emerald-100/60">
               <span>Descuento:</span>
-              <span className="text-emerald-400">−{recentTx.discount_pct}%</span>
+              <span className="text-emerald-400 font-bold">−{recentTx.discount_pct}%</span>
             </div>
-            <div className="flex justify-between text-xl font-black pt-2 border-t border-slate-700/50">
-              <span className="text-white">Cobrar:</span>
-              <span className="text-emerald-400">{formatARS(recentTx.final_amount)}</span>
+            <div className="flex justify-between items-baseline pt-3 border-t border-emerald-500/20">
+              <span className="text-white font-medium">Cobrado:</span>
+              <span className="text-3xl font-black text-emerald-400 tracking-tight">{formatARS(recentTx.final_amount)}</span>
             </div>
           </div>
 
           <button
             onClick={() => setRecentTx(null)}
-            className="w-full mt-4 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition-all"
+            className="w-full mt-5 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white font-bold transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)]"
           >
             Entendido
           </button>
@@ -237,66 +237,85 @@ export function POSView({
       )}
 
       {/* ── QR + ESTADO ─────────────────────────────────────── */}
-      <div className="rounded-3xl border border-slate-700 bg-slate-800/60 backdrop-blur-sm p-6 flex flex-col items-center shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-br from-violet-600/20 to-transparent" />
+      <div className="glass-card-blue rounded-3xl p-6 flex flex-col items-center relative overflow-hidden">
+        {activeCharge && (
+          <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-blue-500/20 to-transparent pointer-events-none" />
+        )}
 
         <div className="relative z-10 flex flex-col items-center w-full">
-          <div className="h-14 w-14 bg-gradient-to-br from-violet-500 to-fuchsia-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
-            <Store className="h-7 w-7 text-white" />
+          {/* Logo animado si hay cobro */}
+          <div className={`relative mb-5 transition-all duration-500 ${activeCharge ? 'float-anim' : ''}`}>
+             <div className="h-16 w-16 bg-gradient-to-br from-blue-500 via-indigo-600 to-violet-700 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-900/50 border border-white/10 relative z-10">
+               <Store className="h-8 w-8 text-white" />
+             </div>
+             {activeCharge && (
+               <div className="absolute -inset-2 bg-blue-500/30 blur-xl rounded-full z-0 glow-pulse" />
+             )}
           </div>
-          <h2 className="text-xl font-black text-white text-center mb-1">{businessName}</h2>
+          
+          <h2 className="text-xl font-black text-white text-center tracking-tight">{businessName}</h2>
+          
+          {activeCharge && (
+             <div className="flex items-center gap-1.5 mt-1 mb-2">
+              <Sparkles className="h-3.5 w-3.5 text-blue-400" />
+              <p className="text-blue-400 text-xs font-semibold uppercase tracking-widest">Cobro Activo</p>
+            </div>
+          )}
 
           {activeCharge ? (
             <>
-              {/* Badge: cobro cargado */}
-              <div className="mb-4 flex items-center gap-2 bg-violet-900/60 border border-violet-600 px-4 py-2 rounded-full">
-                <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse" />
-                <span className="text-violet-300 text-sm font-semibold">
-                  QR cargado — vence en {formatTime(secondsLeft)}
+              {/* Badge: tiempo restante */}
+              <div className="mt-2 mb-6 flex items-center gap-2.5 bg-blue-900/40 border border-blue-500/30 px-5 py-2.5 rounded-full shadow-inner">
+                <span className="w-2.5 h-2.5 rounded-full bg-blue-400 animate-pulse shadow-[0_0_10px_rgba(96,165,250,0.8)]" />
+                <span className="text-blue-200 text-sm font-bold tracking-wide">
+                  Vence en {formatTime(secondsLeft)}
                 </span>
               </div>
 
-              <div className="bg-white p-5 rounded-3xl shadow-2xl border-4 border-violet-400">
-                <QRCodeSVG value={qrUrl} size={230} level="M" />
+              <div className="bg-white p-5 rounded-3xl shadow-[0_0_40px_rgba(59,130,246,0.3)] border-4 border-blue-500/50 transition-all transform hover:scale-105 duration-300">
+                <QRCodeSVG value={qrUrl} size={220} level="H" includeMargin={false} />
               </div>
 
               {/* Resumen del cobro activo */}
-              <div className="w-full mt-5 bg-slate-900/70 border border-violet-800/50 rounded-2xl p-4 space-y-1">
+              <div className="w-full mt-8 bg-black/20 border border-white/10 rounded-2xl p-5 space-y-3 shadow-inner">
                 {activeCharge.offer_title && (
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-400">Oferta</span>
-                    <span className="text-violet-300 font-medium">{activeCharge.offer_title}</span>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-slate-400 flex items-center gap-1.5"><Tag className="w-4 h-4" /> Oferta</span>
+                    <span className="text-indigo-300 font-semibold bg-indigo-500/10 px-2 py-0.5 rounded-md border border-indigo-500/20">{activeCharge.offer_title}</span>
                   </div>
                 )}
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">Monto</span>
-                  <span className="text-white font-bold">{formatARS(activeCharge.amount)}</span>
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-slate-400 flex items-center gap-1.5">
+                    {activeCharge.payment_method === 'cash' ? <Banknote className="w-4 h-4" /> : <ArrowLeftRight className="w-4 h-4" />}
+                    Método
+                  </span>
+                  <span className="text-white font-medium">{activeCharge.payment_method === 'cash' ? 'Efectivo' : 'Transferencia'}</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">Método</span>
-                  <span className="text-white capitalize">{activeCharge.payment_method === 'cash' ? 'Efectivo' : 'Transferencia'}</span>
+                <div className="pt-3 border-t border-white/5 flex justify-between items-baseline mt-1">
+                  <span className="text-slate-300 font-medium">Monto Total</span>
+                  <span className="text-2xl font-black text-white tracking-tight">{formatARS(activeCharge.amount)}</span>
                 </div>
               </div>
 
               <button
                 onClick={handleCancelCharge}
-                className="mt-4 flex items-center gap-2 text-sm text-red-400 hover:text-red-300 transition-colors"
+                className="mt-6 flex items-center gap-2 text-sm text-red-400/80 hover:text-red-400 hover:bg-red-500/10 px-4 py-2 rounded-full transition-colors font-medium"
               >
                 <X className="w-4 h-4" />
-                Cancelar cobro
+                Cancelar este cobro
               </button>
             </>
           ) : (
             <>
-              <p className="text-slate-400 text-sm mb-5 text-center">
-                Cargá el cobro abajo y mostrále este QR al cliente.
+              <p className="text-slate-400 text-sm mt-2 mb-6 text-center max-w-[250px]">
+                Prepará el cobro abajo para activar el código QR.
               </p>
-              <div className="bg-white p-5 rounded-3xl shadow-xl opacity-60">
-                <QRCodeSVG value={qrUrl} size={200} level="M" />
+              <div className="bg-white/90 p-5 rounded-3xl shadow-xl opacity-50 grayscale-[50%] transition-all">
+                <QRCodeSVG value={qrUrl} size={180} level="M" />
               </div>
-              <div className="flex items-center gap-2 mt-3 text-slate-500 text-xs">
+              <div className="flex items-center gap-2 mt-5 text-slate-500 text-xs font-semibold uppercase tracking-wider bg-black/20 px-4 py-2 rounded-full border border-white/5">
                 <Clock className="w-3.5 h-3.5" />
-                QR sin cobro activo
+                Esperando monto...
               </div>
             </>
           )}
@@ -305,42 +324,51 @@ export function POSView({
 
       {/* ── FORMULARIO: PREPARAR COBRO ───────────────────────── */}
       {!activeCharge && (
-        <div className="rounded-2xl border border-slate-700 bg-slate-800/50 p-6 space-y-5">
-          <h3 className="text-white font-bold text-lg flex items-center gap-2">
-            <QrCode className="w-5 h-5 text-violet-400" />
+        <div className="glass-panel rounded-3xl p-7 space-y-6">
+          <h3 className="text-white font-bold text-xl flex items-center gap-2.5">
+            <div className="p-2 rounded-lg bg-blue-500/20 border border-blue-500/30">
+              <QrCode className="w-5 h-5 text-blue-400" />
+            </div>
             Preparar Cobro
           </h3>
 
           {/* Selector de oferta */}
           {offers.length > 0 && (
-            <div className="space-y-1.5">
-              <label className="text-sm text-slate-400 font-medium flex items-center gap-1.5">
-                <Tag className="w-4 h-4 text-violet-400" />
-                Oferta seleccionada (opcional)
+            <div className="space-y-2">
+              <label className="text-sm text-slate-300 font-medium flex items-center gap-1.5">
+                <Tag className="w-4 h-4 text-blue-400" />
+                Aplicar Oferta (opcional)
               </label>
-              <select
-                value={selectedOfferId}
-                onChange={(e) => handleOfferChange(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none"
-              >
-                <option value="">Cobro general (sin oferta)</option>
-                {offers.map(o => (
-                  <option key={o.id} value={o.id}>
-                    {o.title} (−{o.discount_pct}%)
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  value={selectedOfferId}
+                  onChange={(e) => handleOfferChange(e.target.value)}
+                  className="w-full input-glass rounded-xl px-4 py-3.5 text-white appearance-none cursor-pointer"
+                >
+                  <option value="" className="bg-slate-900 text-slate-300">Cobro general (sin oferta)</option>
+                  {offers.map(o => (
+                    <option key={o.id} value={o.id} className="bg-slate-900">
+                      {o.title} (−{o.discount_pct}%)
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                  <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+              </div>
             </div>
           )}
 
           {/* Monto */}
-          <div className="space-y-1.5">
-            <label className="text-sm text-slate-400 font-medium flex items-center gap-1.5">
-              <DollarSign className="w-4 h-4 text-violet-400" />
-              Monto total de la compra
+          <div className="space-y-2">
+            <label className="text-sm text-slate-300 font-medium flex items-center gap-1.5">
+              <DollarSign className="w-4 h-4 text-emerald-400" />
+              Monto a cobrar
             </label>
             <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
+              <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                <span className="text-slate-400 font-black text-xl">$</span>
+              </div>
               <input
                 type="number"
                 value={amount}
@@ -348,63 +376,66 @@ export function POSView({
                 placeholder="0.00"
                 min="1"
                 step="0.01"
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white text-xl font-bold placeholder-slate-600 focus:border-violet-500 focus:outline-none"
+                className="w-full input-glass rounded-xl pl-12 pr-4 py-4 text-white text-2xl font-black tracking-tight"
               />
             </div>
           </div>
 
           {/* Método de pago */}
-          <div className="space-y-1.5">
-            <label className="text-sm text-slate-400 font-medium">Método de pago</label>
+          <div className="space-y-2">
+            <label className="text-sm text-slate-300 font-medium">Medio de pago del cliente</label>
             <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={() => setPaymentMethod('cash')}
-                className={`flex items-center justify-center gap-2 py-3 rounded-xl border-2 font-medium transition-all
-                  ${paymentMethod === 'cash' ? 'border-violet-500 bg-violet-950/50 text-violet-300' : 'border-slate-700 bg-slate-900/50 text-slate-400 hover:border-slate-600'}`}
+                className={`flex items-center justify-center gap-2 py-3.5 rounded-xl border-2 font-semibold transition-all
+                  ${paymentMethod === 'cash' ? 'border-blue-500 bg-blue-500/10 text-blue-300 shadow-[0_0_15px_rgba(59,130,246,0.15)]' : 'border-white/10 bg-black/20 text-slate-400 hover:bg-white/5 hover:text-slate-300'}`}
               >
-                <Banknote className="w-4 h-4" /> Efectivo
+                <Banknote className={`w-5 h-5 ${paymentMethod === 'cash' ? 'text-blue-400' : ''}`} /> Efectivo
               </button>
               <button
                 onClick={() => setPaymentMethod('transfer')}
-                className={`flex items-center justify-center gap-2 py-3 rounded-xl border-2 font-medium transition-all
-                  ${paymentMethod === 'transfer' ? 'border-violet-500 bg-violet-950/50 text-violet-300' : 'border-slate-700 bg-slate-900/50 text-slate-400 hover:border-slate-600'}`}
+                className={`flex items-center justify-center gap-2 py-3.5 rounded-xl border-2 font-semibold transition-all
+                  ${paymentMethod === 'transfer' ? 'border-blue-500 bg-blue-500/10 text-blue-300 shadow-[0_0_15px_rgba(59,130,246,0.15)]' : 'border-white/10 bg-black/20 text-slate-400 hover:bg-white/5 hover:text-slate-300'}`}
               >
-                <ArrowLeftRight className="w-4 h-4" /> Transferencia
+                <ArrowLeftRight className={`w-5 h-5 ${paymentMethod === 'transfer' ? 'text-blue-400' : ''}`} /> Transferencia
               </button>
             </div>
           </div>
 
           {formError && (
-            <p className="text-red-400 text-sm bg-red-950/40 border border-red-800 rounded-lg px-3 py-2">{formError}</p>
+            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 flex items-start gap-2">
+              <X className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+              <p className="text-red-300 text-sm font-medium">{formError}</p>
+            </div>
           )}
 
           <button
             onClick={handleLoadQR}
             disabled={loading}
-            className="w-full py-4 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold text-lg transition-all shadow-lg shadow-violet-900/40 disabled:opacity-50 flex items-center justify-center gap-2"
+            className="btn-primary w-full py-4.5 rounded-xl font-black text-lg disabled:opacity-50 flex items-center justify-center gap-2 mt-2"
           >
             {loading ? (
-              <><Loader2 className="w-5 h-5 animate-spin" /> Cargando...</>
+              <><Loader2 className="w-6 h-6 animate-spin" /> Procesando...</>
             ) : (
-              <><QrCode className="w-5 h-5" /> Cargar QR</>
+              <><QrCode className="w-6 h-6" /> Activar QR de Cobro</>
             )}
           </button>
         </div>
       )}
 
       {/* Botones auxiliares */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-4">
         <button
           onClick={() => window.print()}
-          className="py-3 rounded-xl border border-slate-700 hover:border-slate-500 bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium transition-all"
+          className="py-3.5 rounded-xl glass-panel hover:bg-white/5 text-slate-300 text-sm font-semibold transition-all border-white/10"
         >
-          Imprimir QR
+          Imprimir QR estático
         </button>
         <button
-          onClick={() => { navigator.clipboard.writeText(qrUrl); alert('¡Enlace copiado!'); }}
-          className="py-3 rounded-xl border border-violet-700 hover:border-violet-500 bg-violet-900/20 hover:bg-violet-800/30 text-violet-300 text-sm font-medium transition-all"
+          onClick={() => { navigator.clipboard.writeText(qrUrl); alert('¡Enlace de cobro copiado!'); }}
+          className="py-3.5 rounded-xl bg-blue-500/10 border border-blue-500/20 hover:bg-blue-500/20 text-blue-300 text-sm font-semibold transition-all"
         >
-          Copiar enlace
+          Copiar enlace web
         </button>
       </div>
     </div>
