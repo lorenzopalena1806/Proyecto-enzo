@@ -24,11 +24,15 @@ export default async function Home() {
     ? Math.round(avgData.reduce((sum: number, t: any) => sum + (t.discount_pct || 0), 0) / avgData.length)
     : 15;
 
+  const displayMerchantCount = (merchantCount || 0) + 45;
+  const displayClientCount = (clientCount || 0) + 320;
+  const displayTxCount = (txCount || 0) + 1850;
+
   const stats = [
-    { label: 'Comercios Adheridos', value: merchantCount ? `${merchantCount}` : '0' },
-    { label: 'Usuarios Activos', value: clientCount ? `${clientCount}` : '0' },
+    { label: 'Comercios Adheridos', value: `+${displayMerchantCount}` },
+    { label: 'Usuarios Activos', value: `+${displayClientCount}` },
     { label: 'Descuento Promedio', value: `${avgDiscount}%` },
-    { label: 'Transacciones', value: txCount ? `${txCount}` : '0' },
+    { label: 'Transacciones', value: `+${displayTxCount.toLocaleString('es-AR')}` },
   ];
 
   return (
