@@ -122,10 +122,10 @@ export default async function Home() {
                 .animate-marquee { animation: marquee 35s linear infinite; }
                 .hover-pause:hover { animation-play-state: paused; }
               ` }} />
-              <div className="flex w-[200%] animate-marquee hover-pause items-center">
+              <div className="flex w-max animate-marquee hover-pause items-center">
                 {[...Array(2)].map((_, i) => (
-                  <div key={i} className="flex gap-12 sm:gap-24 items-center justify-around w-1/2 px-12 sm:px-24">
-                    {['Gastronomía', 'Verdulerías', 'Indumentaria', 'Peluquerías', 'Estética', 'Mascotas', 'Servicios', 'Autos'].map((cat, j) => (
+                  <div key={i} className="flex shrink-0 gap-12 sm:gap-24 items-center px-6 sm:px-12">
+                    {['Panaderías', 'Verdulerías', 'Carnicerías', 'Fiambrerías', 'Despensas', 'Kioscos', 'Heladerías', 'Ferreterías', 'Bares', 'Peluquerías'].map((cat, j) => (
                       <span key={j} className="text-2xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-600 to-slate-800 uppercase tracking-widest whitespace-nowrap">
                         {cat}
                       </span>
