@@ -4,8 +4,8 @@ export const dynamic = 'force-dynamic';
 
 import React, { useEffect, useState } from 'react';
 import type { Profile } from '@/types';
-import { Store, Loader2, CheckCircle, XCircle } from 'lucide-react';
-import { getMerchantsListServer, toggleMerchantSubscriptionServer } from '@/app/actions/admin';
+import { Store, Loader2, CheckCircle, XCircle, Trash2 } from 'lucide-react';
+import { getMerchantsListServer, toggleMerchantSubscriptionServer, deleteMerchantServer } from '@/app/actions/admin';
 
 interface MerchantWithSubscription extends Profile {
   subscriptionStatus: 'active' | 'inactive' | 'none';
@@ -35,6 +35,21 @@ export default function MerchantsPage() {
       alert('Error al actualizar la suscripción. Verifica los logs del servidor.');
     }
 
+    await fetchMerchants();
+    setProcessingId(null);
+  };
+
+  const handleDelete = async (merchantId: string) => {
+    if (!window.confirm('¿Seguro que querés eliminar este comercio por completo? Esta acción NO se puede deshacer y borrará toda su información.')) {
+      return;
+    }
+    
+    setProcessingId(merchantId);
+    const result = await deleteMerchantServer(merchantId);
+    if (!result.success) {
+      alert('Error al eliminar: ' + result.error);
+    }
+    
     await fetchMerchants();
     setProcessingId(null);
   };
@@ -96,23 +111,34 @@ export default function MerchantsPage() {
                       )}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button
-                        onClick={() => toggleSubscription(merchant.id, merchant.subscriptionStatus)}
-                        disabled={processingId === merchant.id}
-                        className={`inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-all ${
-                          merchant.subscriptionStatus === 'active'
-                            ? 'bg-slate-800 text-slate-300 hover:bg-red-900/50 hover:text-red-400 hover:border-red-800 border border-transparent'
-                            : 'bg-violet-600 text-white hover:bg-violet-500 shadow-lg shadow-violet-900/20'
-                        }`}
-                      >
-                        {processingId === merchant.id ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : merchant.subscriptionStatus === 'active' ? (
-                          'Desactivar'
-                        ) : (
-                          'Activar'
-                        )}
-                      </button>
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => toggleSubscription(merchant.id, merchant.subscriptionStatus)}
+                          disabled={processingId === merchant.id}
+                          className={`inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                            merchant.subscriptionStatus === 'active'
+                              ? 'bg-slate-800 text-slate-300 hover:bg-red-900/50 hover:text-red-400 hover:border-red-800 border border-transparent'
+                              : 'bg-violet-600 text-white hover:bg-violet-500 shadow-lg shadow-violet-900/20'
+                          }`}
+                        >
+                          {processingId === merchant.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : merchant.subscriptionStatus === 'active' ? (
+                            'Pausar'
+                          ) : (
+                            'Activar'
+                          )}
+                        </button>
+                        
+                        <button
+                          onClick={() => handleDelete(merchant.id)}
+                          disabled={processingId === merchant.id}
+                          title="Eliminar Comercio"
+                          className="inline-flex items-center justify-center rounded-lg p-2 text-slate-400 hover:bg-red-900/30 hover:text-red-400 transition-all border border-transparent hover:border-red-800/50"
+                        >
+                          <Trash2 className="h-5 w-5" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))

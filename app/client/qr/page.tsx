@@ -67,17 +67,19 @@ export default async function ClientQRPage() {
     version: 1,
   });
 
-  // 1. Fetch active offers from merchants
+  // 1. Fetch active offers from active merchants
   const { data: offers } = await adminClient
     .from('merchant_offers')
     .select(`
       *,
-      merchant:profiles!merchant_id (
+      merchant:profiles!inner (
         business_name,
-        full_name
+        full_name,
+        is_active
       )
     `)
     .eq('is_active', true)
+    .eq('merchant.is_active', true)
     .in('target_role', ['client', 'all'])
     .order('created_at', { ascending: false });
 

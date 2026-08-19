@@ -72,6 +72,15 @@ export async function toggleMerchantSubscriptionServer(merchantId: string, curre
         .eq('merchant_id', merchantId);
       if (error) throw error;
     }
+    
+    // Sincronizar el estado de la suscripción con el perfil (pausar o activar el local)
+    const { error: profileError } = await adminClient
+      .from('profiles')
+      .update({ is_active: newStatus === 'active' })
+      .eq('id', merchantId);
+      
+    if (profileError) throw profileError;
+
     return { success: true };
   } catch (error: any) {
     console.error('Error toggling subscription:', error.message || error);
@@ -105,5 +114,21 @@ export async function createMarketingAssetServer(data: { merchant_id: string, ti
   } catch (error: any) {
     console.error('Error creating marketing asset:', error);
     return { success: false, error: error.message };
+  }
+}
+
+export async function deleteMerchantServer(merchantId: string) {
+  try {
+    const adminClient = await requireSuperAdmin();
+    
+    // Supabase admin method to delete a user. This cascades to profiles table.
+    const { error } = await adminClient.auth.admin.deleteUser(merchantId);
+    
+    if (error) throw error;
+    
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error deleting merchant:', error.message || error);
+    return { success: false, error: error.message || 'Error desconocido' };
   }
 }
