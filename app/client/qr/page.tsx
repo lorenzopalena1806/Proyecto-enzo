@@ -3,9 +3,8 @@ export const dynamic = 'force-dynamic';
 import React from 'react';
 import { createClient, createAdminClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
-import { QRDisplay } from '@/components/dashboard/QRDisplay';
 import { LogoutButton } from '@/components/dashboard/LogoutButton';
-import { LogOut, User, Scan } from 'lucide-react';
+import { User, Scan, Sparkles, Tag, ShoppingBag, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { encodeQRPayload } from '@/lib/qr-utils';
 
@@ -46,14 +45,14 @@ export default async function ClientQRPage() {
       qrData = newQr;
     } else {
       return (
-        <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
+        <div className="min-h-screen bg-[#060D1A] flex flex-col items-center justify-center p-4">
           <p className="text-white text-center">
             Hubo un error al generar tu QR. Por favor intentá de nuevo más tarde.<br/><br/>
             <span className="text-slate-400 text-sm">
-              Actualmente estás logueado como: <strong className="text-violet-400">{user.email}</strong>
+              Actualmente estás logueado como: <strong className="text-blue-400">{user.email}</strong>
             </span>
           </p>
-          <div className="mt-6 p-4 rounded-xl border border-slate-800 bg-slate-900/50 flex flex-col items-center space-y-3">
+          <div className="mt-6 p-4 rounded-xl border border-white/10 bg-white/5 flex flex-col items-center space-y-3">
             <LogoutButton />
           </div>
         </div>
@@ -69,7 +68,6 @@ export default async function ClientQRPage() {
   });
 
   // 1. Fetch active offers from merchants
-  // We fetch offers targeted to 'client' or 'all'
   const { data: offers } = await adminClient
     .from('merchant_offers')
     .select(`
@@ -96,59 +94,123 @@ export default async function ClientQRPage() {
     .limit(20);
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col">
+    <div className="min-h-screen app-bg flex flex-col font-sans">
+      <style>{`
+        .app-bg {
+          background: radial-gradient(ellipse at top, #0f1f4a 0%, #060d1f 50%, #000510 100%);
+        }
+        .glass-panel {
+          background: rgba(255,255,255,0.03);
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+          border: 1px solid rgba(255,255,255,0.08);
+          box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+        .glass-card-blue {
+          background: rgba(59, 130, 246, 0.05);
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+          border: 1px solid rgba(59,130,246,0.15);
+          box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06), 0 0 40px rgba(59,130,246,0.05);
+        }
+        .btn-primary {
+          background: linear-gradient(135deg, #2563eb, #4f46e5);
+          box-shadow: 0 0 20px rgba(37,99,235,0.3), 0 4px 10px rgba(0,0,0,0.2);
+          border: 1px solid rgba(255,255,255,0.1);
+          color: white;
+          transition: all 0.2s ease;
+        }
+        .btn-primary:hover {
+          background: linear-gradient(135deg, #3b82f6, #6366f1);
+          box-shadow: 0 0 30px rgba(59,130,246,0.4), 0 4px 15px rgba(0,0,0,0.3);
+          transform: translateY(-1px);
+        }
+        .scan-btn {
+          background: linear-gradient(135deg, #8b5cf6, #d946ef);
+          box-shadow: 0 0 30px rgba(217,70,239,0.3), 0 4px 15px rgba(0,0,0,0.2);
+          border: 1px solid rgba(255,255,255,0.2);
+        }
+        .scan-btn:hover {
+          box-shadow: 0 0 40px rgba(217,70,239,0.4), 0 4px 15px rgba(0,0,0,0.3);
+          transform: translateY(-2px);
+        }
+        @keyframes pulse-glow {
+          0%, 100% { opacity: 0.4; }
+          50% { opacity: 0.8; }
+        }
+        .glow-pulse { animation: pulse-glow 2s ease-in-out infinite; }
+      `}</style>
+      
+      {/* Background ambient orbs */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-blue-600/10 blur-[120px]" />
+        <div className="absolute bottom-[-10%] left-[-20%] w-[50%] h-[50%] rounded-full bg-fuchsia-600/10 blur-[120px]" />
+      </div>
+
       {/* Header */}
-      <header className="px-4 py-4 border-b border-slate-800 flex justify-between items-center bg-slate-900/50 backdrop-blur-sm sticky top-0 z-10">
+      <header className="px-4 py-4 border-b border-white/5 flex justify-between items-center bg-black/20 backdrop-blur-md sticky top-0 z-50">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-600">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-900/40">
             <User className="h-4 w-4 text-white" />
           </div>
-          <span className="text-white font-bold text-sm">RedBeneficios</span>
+          <span className="text-white font-bold text-sm tracking-wide">RedBeneficios</span>
         </div>
         <div className="flex items-center gap-2">
-          <Link href="/client/profile" className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-800">
+          <Link href="/client/profile" className="flex items-center gap-1.5 text-xs text-slate-300 hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5">
             <User className="h-4 w-4" />
-            <span className="hidden sm:inline">Mi Perfil</span>
+            <span className="hidden sm:inline font-medium">Mi Perfil</span>
           </Link>
           <LogoutButton />
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col p-4 space-y-8 max-w-lg mx-auto w-full pt-6 pb-20">
-        {/* Acción Principal */}
+      <main className="flex-1 flex flex-col p-4 space-y-8 max-w-lg mx-auto w-full pt-8 pb-24 relative z-10">
+        
+        {/* Acción Principal - Escanear */}
         <div className="w-full">
-          <Link href="/client/scanner" className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-violet-600 hover:bg-violet-500 text-white font-bold text-lg shadow-lg shadow-violet-900/40 transition-all">
-            <Scan className="h-6 w-6" />
-            Escanear QR del Local
+          <Link href="/client/scanner" className="scan-btn flex items-center justify-center gap-3 w-full py-5 rounded-2xl text-white font-black text-xl transition-all relative overflow-hidden group">
+            <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+            <Scan className="h-7 w-7 relative z-10" />
+            <span className="relative z-10 tracking-wide">Escanear QR del Local</span>
           </Link>
         </div>
 
-        {/* Sección: Código de Usuario (Fallback) */}
+        {/* Sección: Bienvenida y Código Corto */}
         <section className="space-y-4">
-          <div className="text-center space-y-2">
-            <h1 className="text-xl font-bold text-white">Hola, {profile?.full_name || 'Cliente'}</h1>
-            <p className="text-slate-400 text-sm">Escaneá el QR en la caja del local, o dictales este código corto si no podés usar la cámara.</p>
+          <div className="text-center space-y-1 mb-6">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-semibold uppercase tracking-widest mb-2">
+              <Sparkles className="w-3.5 h-3.5" />
+              Club de Beneficios
+            </div>
+            <h1 className="text-2xl font-black text-white tracking-tight">Hola, {profile?.full_name || 'Cliente'}</h1>
+            <p className="text-slate-400 text-sm max-w-sm mx-auto">
+              Escaneá el QR en la caja del local, o dictales este código corto de ser necesario.
+            </p>
           </div>
 
-          <div className="w-full bg-slate-900 border border-violet-800/30 rounded-2xl p-4 text-center">
-            <p className="text-slate-400 text-xs mb-1 font-medium uppercase tracking-wider">Código de Respaldo</p>
-            <div className="text-4xl font-black text-white tracking-widest bg-slate-950 py-3 rounded-xl border border-slate-800">
+          <div className="glass-card-blue rounded-3xl p-6 text-center relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-2xl rounded-full" />
+            <p className="text-blue-300/80 text-xs font-bold uppercase tracking-widest mb-2">Tu Código Personal</p>
+            <div className="text-5xl font-black text-white tracking-[0.2em] bg-black/20 py-4 rounded-2xl border border-white/5 shadow-inner">
               {qrData.qr_token.substring(0, 6).toUpperCase()}
             </div>
           </div>
         </section>
 
         {/* Sección: Vidriera de Ofertas */}
-        <section className="space-y-4 pt-4 border-t border-slate-800/50">
-          <div>
-            <h2 className="text-xl font-bold text-white">Ofertas Disponibles</h2>
-            <p className="text-sm text-slate-400">Visitá estos locales y aprovechá los descuentos.</p>
+        <section className="space-y-4 pt-6 border-t border-white/10">
+          <div className="flex items-center gap-2 mb-2">
+            <ShoppingBag className="w-5 h-5 text-fuchsia-400" />
+            <div>
+              <h2 className="text-xl font-bold text-white tracking-tight">Ofertas Disponibles</h2>
+              <p className="text-xs text-slate-400 font-medium">Aprovechá estos descuentos hoy.</p>
+            </div>
           </div>
 
           {(!offers || offers.length === 0) ? (
-            <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-8 text-center">
-              <p className="text-slate-400">Por ahora no hay ofertas especiales disponibles.</p>
+            <div className="glass-panel rounded-3xl p-8 text-center border-dashed border-white/20">
+              <p className="text-slate-400 font-medium">Por ahora no hay ofertas especiales disponibles.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -159,29 +221,32 @@ export default async function ClientQRPage() {
                 const savings = hasPrices ? offer.original_price - offer.final_price : null;
 
                 return (
-                  <div key={offer.id} className="bg-slate-900 border border-slate-700 hover:border-violet-600/50 transition-colors rounded-2xl p-5 flex flex-col relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 bg-violet-600 text-white font-bold px-3 py-1.5 rounded-bl-xl text-sm z-10 shadow-sm">
+                  <div key={offer.id} className="glass-panel rounded-3xl p-5 flex flex-col relative overflow-hidden group hover:border-blue-500/30 transition-all hover:bg-white/5 shadow-lg">
+                    <div className="absolute top-0 right-0 bg-gradient-to-l from-blue-600 to-indigo-600 text-white font-bold px-3 py-1.5 rounded-bl-2xl text-sm z-10 shadow-md">
                       -{offer.discount_pct}%
                     </div>
-                    <p className="text-xs text-violet-400 font-medium uppercase tracking-wider mb-1 pr-12 truncate">
-                      {merchantName}
-                    </p>
+                    <div className="flex items-center gap-1.5 mb-1.5 text-blue-300 pr-12 truncate">
+                       <Tag className="w-3.5 h-3.5" />
+                       <p className="text-[10px] font-bold uppercase tracking-widest truncate">
+                         {merchantName}
+                       </p>
+                    </div>
                     <h3 className="font-bold text-lg text-white mb-2 pr-8 leading-tight">{offer.title}</h3>
                     {offer.description && (
                       <p className="text-slate-400 text-sm mb-4 line-clamp-2">{offer.description}</p>
                     )}
                     
                     {hasPrices && (
-                      <div className="mt-auto bg-slate-950/80 rounded-xl p-3 border border-slate-800/80">
+                      <div className="mt-auto bg-black/20 rounded-2xl p-3 border border-white/5 shadow-inner">
                         <div className="flex justify-between items-center mb-1">
-                          <span className="text-xs text-slate-500">Precio Normal</span>
+                          <span className="text-xs text-slate-500 font-medium">Precio Normal</span>
                           <span className="text-sm text-slate-400 line-through">${offer.original_price.toLocaleString('es-AR')}</span>
                         </div>
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-xs text-emerald-400 font-medium">Precio con App</span>
+                        <div className="flex justify-between items-baseline mb-2">
+                          <span className="text-xs text-blue-400 font-bold uppercase">Precio App</span>
                           <span className="text-xl text-white font-black">${offer.final_price.toLocaleString('es-AR')}</span>
                         </div>
-                        <div className="text-xs text-emerald-950 bg-emerald-400 py-1.5 px-2 rounded-lg text-center font-bold uppercase tracking-wider shadow-sm shadow-emerald-900/50">
+                        <div className="text-[11px] text-emerald-100 bg-emerald-500/20 border border-emerald-500/30 py-1.5 px-2 rounded-xl text-center font-bold tracking-wide shadow-inner">
                           ¡Ahorrás ${savings?.toLocaleString('es-AR')}!
                         </div>
                       </div>
@@ -194,19 +259,22 @@ export default async function ClientQRPage() {
         </section>
 
         {/* Sección: Mis Descuentos Usados */}
-        <section className="space-y-4 pt-4 border-t border-slate-800/50">
-          <div>
-            <h2 className="text-xl font-bold text-white">Mis Descuentos Usados</h2>
-            <p className="text-sm text-slate-400">Historial de tus últimas compras con descuento.</p>
+        <section className="space-y-4 pt-6 border-t border-white/10">
+          <div className="flex items-center gap-2 mb-2">
+            <Clock className="w-5 h-5 text-emerald-400" />
+            <div>
+              <h2 className="text-xl font-bold text-white tracking-tight">Mis Descuentos Usados</h2>
+              <p className="text-xs text-slate-400 font-medium">Historial de tus últimas compras.</p>
+            </div>
           </div>
 
           {(!clientHistory || clientHistory.length === 0) ? (
-            <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-8 text-center">
-              <p className="text-slate-400">Todavía no usaste ningún descuento.</p>
-              <p className="text-slate-500 text-sm mt-1">Mostrá tu código en un comercio adherido para empezar a ahorrar.</p>
+            <div className="glass-panel rounded-3xl p-8 text-center border-dashed border-white/20">
+              <p className="text-slate-400 font-medium">Todavía no usaste ningún descuento.</p>
+              <p className="text-slate-500 text-sm mt-1">Visitá un comercio adherido para empezar a ahorrar.</p>
             </div>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-3">
               {clientHistory.map((tx: any) => {
                 const scanner = tx.scanner as { business_name?: string; full_name?: string } | null;
                 const offer = tx.offer as { title?: string } | null;
@@ -214,15 +282,14 @@ export default async function ClientQRPage() {
                 const saved = (tx.original_amount || 0) - (tx.final_amount || 0);
 
                 return (
-                  <div key={tx.id} className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between gap-3">
+                  <div key={tx.id} className="glass-panel rounded-2xl p-4 flex items-center justify-between gap-3 hover:bg-white/5 transition-colors">
                     <div className="min-w-0">
-                      <p className="text-white font-medium text-sm truncate">{merchantName}</p>
-                      <p className="text-slate-500 text-xs truncate">{offer?.title || 'Descuento general'}</p>
-                      <p className="text-slate-600 text-xs mt-0.5">
+                      <p className="text-white font-bold text-sm truncate tracking-tight">{merchantName}</p>
+                      <p className="text-blue-300/80 font-medium text-xs truncate mt-0.5">{offer?.title || 'Descuento general'}</p>
+                      <p className="text-slate-500 text-[11px] mt-1 font-medium">
                         {new Date(tx.applied_at).toLocaleString('es-AR', {
                           day: '2-digit',
                           month: 'short',
-                          year: 'numeric',
                           hour: '2-digit',
                           minute: '2-digit',
                           timeZone: 'America/Argentina/Buenos_Aires',
@@ -230,15 +297,17 @@ export default async function ClientQRPage() {
                       </p>
                     </div>
                     <div className="text-right flex-shrink-0">
-                      <p className="text-emerald-400 font-bold text-sm">-{tx.discount_pct}%</p>
+                      <div className="inline-flex items-center px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-bold text-sm mb-1">
+                        -{tx.discount_pct}%
+                      </div>
                       {saved > 0 && (
-                        <p className="text-xs text-emerald-600">
-                          Ahorraste ${saved.toLocaleString('es-AR')}
+                        <p className="text-[11px] font-bold text-emerald-400/80 uppercase tracking-wide">
+                          Ahorro ${saved.toLocaleString('es-AR')}
                         </p>
                       )}
                       {tx.final_amount && (
-                        <p className="text-xs text-slate-400">
-                          ${tx.final_amount.toLocaleString('es-AR')} pagado
+                        <p className="text-xs font-semibold text-slate-300 mt-0.5">
+                          ${tx.final_amount.toLocaleString('es-AR')}
                         </p>
                       )}
                     </div>
