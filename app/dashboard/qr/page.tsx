@@ -2,12 +2,11 @@ export const dynamic = 'force-dynamic';
 
 import { createClient, createAdminClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
-import { QRDisplay } from '@/components/dashboard/QRDisplay';
-import { encodeQRPayload } from '@/lib/qr-utils';
-import { Store } from 'lucide-react';
+import { Store, Scan, Tag, Banknote, MapPin, Sparkles } from 'lucide-react';
+import Link from 'next/link';
 
 export const metadata = {
-  title: 'Mi QR & Beneficios | RedBeneficios',
+  title: 'Comprar (B2B) | RedBeneficios',
 };
 
 export default async function QRPage() {
@@ -25,33 +24,7 @@ export default async function QRPage() {
 
   if (!profile) redirect('/auth/login');
 
-  // Obtener o crear el código QR del usuario
-  let { data: qrCode } = await adminClient
-    .from('qr_codes')
-    .select('*')
-    .eq('user_id', user.id)
-    .eq('is_active', true)
-    .single();
 
-  if (!qrCode) {
-    const { generateQRToken } = await import('@/lib/qr-utils');
-    const token = generateQRToken();
-    const { data: newQR } = await adminClient
-      .from('qr_codes')
-      .insert({ user_id: user.id, qr_token: token })
-      .select()
-      .single();
-    qrCode = newQR;
-  }
-
-  const qrValue = qrCode
-    ? encodeQRPayload({
-        userId: user.id,
-        role: profile.role,
-        token: qrCode.qr_token,
-        version: 1,
-      })
-    : '';
 
   // Ofertas disponibles para comercios (merchant o all) de otros comercios
   const { data: merchantOffers } = await adminClient
@@ -85,9 +58,9 @@ export default async function QRPage() {
 
       {/* Encabezado */}
       <div>
-        <h1 className="text-2xl font-bold text-white">Mi QR & Beneficios B2B</h1>
+        <h1 className="text-2xl font-bold text-white">Comprar (Beneficios B2B)</h1>
         <p className="text-slate-400 mt-1">
-          Mostrá tu QR cuando vayas a comprar en otro local de la red y accedé a descuentos exclusivos para comercios.
+          Escaneá el QR del comercio al que estás visitando y accedé a descuentos exclusivos para comercios.
         </p>
       </div>
 
@@ -97,32 +70,12 @@ export default async function QRPage() {
         <span className="text-violet-300 text-sm font-medium">Comercio adherido — Beneficios B2B activos</span>
       </div>
 
-      {/* QR */}
-      <QRDisplay
-        qrValue={qrValue}
-        userName={profile.full_name ?? user.email ?? 'Usuario'}
-        businessName={profile.business_name}
-        size={240}
-      />
-
-      {/* Instrucciones */}
-      <div className="rounded-2xl border border-slate-700 bg-slate-800/40 p-5 space-y-3">
-        <h3 className="text-white font-semibold">¿Cómo usar tu descuento B2B?</h3>
-        <ol className="space-y-2 text-sm text-slate-400">
-          {[
-            'Andá a cualquier local de la red como comprador.',
-            'Abrí esta pantalla y mostrá tu QR al dueño del local.',
-            'El sistema detecta que sos comercio y aplica el descuento B2B automáticamente.',
-            'El descuento para comercios es mayor que el de clientes regulares.',
-          ].map((step, i) => (
-            <li key={i} className="flex gap-2">
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-violet-900 text-violet-300 text-xs font-bold flex-shrink-0 mt-0.5">
-                {i + 1}
-              </span>
-              {step}
-            </li>
-          ))}
-        </ol>
+      {/* Acción Principal - Escanear */}
+      <div className="w-full">
+        <Link href="/dashboard/scan" className="btn-primary flex items-center justify-center gap-3 w-full py-5 rounded-2xl text-white font-black text-xl transition-all relative overflow-hidden group">
+          <Scan className="h-7 w-7 relative z-10" />
+          <span className="relative z-10 tracking-wide">Escanear QR del Local</span>
+        </Link>
       </div>
 
       {/* Ofertas para comercios */}

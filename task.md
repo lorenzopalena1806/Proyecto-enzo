@@ -1,5 +1,6 @@
-- [x] Modificar `toggleMerchantSubscriptionServer` en `app/actions/admin.ts` para sincronizar `is_active` en perfiles.
-- [x] Crear `deleteMerchantServer` en `app/actions/admin.ts` para eliminar usuarios usando Supabase Auth Admin.
-- [x] Filtrar ofertas por comercios activos en `app/client/qr/page.tsx`.
-- [x] Agregar el botón de Eliminar con confirmación visual en `app/admin/merchants/page.tsx`.
-- [x] Actualizar el walkthrough.
+- [ ] Ocultar `/dashboard/scanner` de `Sidebar.tsx`.
+- [ ] Renombrar `/dashboard/pos` a "Cobrar con QR (POS)" y `/dashboard/qr` a "Comprar / B2B" en `Sidebar.tsx`.
+- [ ] Eliminar `QRDisplay` de `app/dashboard/qr/page.tsx` y reemplazarlo con un botón de escaneo hacia `/dashboard/scan`.
+- [ ] Copiar `/client/scanner/page.tsx` a `/dashboard/scan/page.tsx` para que los comercios puedan escanear el QR fijo.
+- [ ] Validar los cambios en el menú lateral.
+- [ ] Actualizar el walkthrough.
