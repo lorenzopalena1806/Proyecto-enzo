@@ -1,65 +1,74 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { Html5QrcodeScanner } from 'html5-qrcode';
+import { Html5Qrcode } from 'html5-qrcode';
 import { useRouter } from 'next/navigation';
-import { Scan, AlertTriangle } from 'lucide-react';
+import { Scan, AlertTriangle, Loader2 } from 'lucide-react';
 
 export function ClientScanner() {
   const router = useRouter();
   const [error, setError] = useState<string>('');
-  const scannerRef = useRef<Html5QrcodeScanner | null>(null);
+  const [isStarting, setIsStarting] = useState(true);
+  const scannerRef = useRef<Html5Qrcode | null>(null);
 
   useEffect(() => {
-    // Inicializar el escáner solo una vez
-    if (!scannerRef.current) {
-      const scanner = new Html5QrcodeScanner(
-        "reader",
-        { fps: 10, qrbox: { width: 250, height: 250 } },
-        /* verbose= */ false
-      );
-      
-      scannerRef.current = scanner;
+    let isMounted = true;
+    const scanner = new Html5Qrcode("reader");
+    scannerRef.current = scanner;
 
-      scanner.render(
-        (decodedText) => {
-          // Si el texto decodificado contiene '/pay?m=', redirigimos al cliente
-          if (decodedText.includes('/pay?m=')) {
-            // Extraer solo la parte de la ruta relativa para evitar salir de la app si es otro dominio
-            try {
-              const url = new URL(decodedText);
-              scanner.clear();
-              router.push(url.pathname + url.search);
-            } catch (e) {
-              // Si falla el parseo de URL, intentamos usar el texto crudo si es relativo
-              if (decodedText.startsWith('/pay')) {
-                scanner.clear();
-                router.push(decodedText);
-              } else {
-                setError('El código QR no pertenece a RedBeneficios.');
-              }
+    scanner.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: { width: 250, height: 250 } },
+      (decodedText) => {
+        if (decodedText.includes('/pay?m=')) {
+          try {
+            const url = new URL(decodedText);
+            scanner.stop().then(() => {
+              if (isMounted) router.push(url.pathname + url.search);
+            });
+          } catch (e) {
+            if (decodedText.startsWith('/pay')) {
+              scanner.stop().then(() => {
+                if (isMounted) router.push(decodedText);
+              });
+            } else {
+              setError('El código QR no pertenece a RedBeneficios.');
             }
-          } else {
-            setError('Código QR no válido o de otra aplicación.');
           }
-        },
-        (errorMessage) => {
-          // Ignorar errores de "no se detectó QR"
+        } else {
+          setError('Código QR no válido o de otra aplicación.');
         }
-      );
-    }
+      },
+      (errorMessage) => {
+        // Ignore normal scan errors
+      }
+    ).then(() => {
+      if (isMounted) setIsStarting(false);
+    }).catch((err) => {
+      if (isMounted) {
+        setIsStarting(false);
+        setError('No se pudo acceder a la cámara. Por favor, dale permisos al navegador.');
+        console.error(err);
+      }
+    });
 
     return () => {
-      if (scannerRef.current) {
-        scannerRef.current.clear().catch(console.error);
-        scannerRef.current = null;
+      isMounted = false;
+      if (scannerRef.current && scannerRef.current.isScanning) {
+        scannerRef.current.stop().catch(console.error);
       }
     };
   }, [router]);
 
   return (
     <div className="w-full max-w-md mx-auto space-y-6">
-      <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 shadow-2xl overflow-hidden">
+      <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 shadow-2xl overflow-hidden relative">
+        {isStarting && !error && (
+          <div className="absolute inset-0 z-10 bg-slate-900 flex flex-col items-center justify-center space-y-3">
+            <Loader2 className="w-8 h-8 text-violet-500 animate-spin" />
+            <p className="text-slate-400 text-sm font-medium animate-pulse">Iniciando cámara...</p>
+          </div>
+        )}
         <div id="reader" className="w-full rounded-2xl overflow-hidden [&>div]:!border-none [&_video]:rounded-2xl"></div>
         
         <div className="mt-6 text-center space-y-2">
