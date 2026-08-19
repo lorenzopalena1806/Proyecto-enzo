@@ -44,8 +44,12 @@ export function POSView({
   offers: Offer[];
 }) {
   const supabase = createClient();
-  const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-  const qrUrl = `${baseUrl}/pay?m=${merchantId}`;
+
+  // Generar URL completa SOLO en el cliente (después de hidratación)
+  const [qrUrl, setQrUrl] = useState('');
+  useEffect(() => {
+    setQrUrl(`${window.location.origin}/pay?m=${merchantId}`);
+  }, [merchantId]);
 
   // Estado del formulario
   const [selectedOfferId, setSelectedOfferId] = useState('');
