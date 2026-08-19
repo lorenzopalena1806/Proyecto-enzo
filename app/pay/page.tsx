@@ -25,7 +25,7 @@ export default async function PayPage({
     );
   }
 
-  const amount = parseFloat(a);
+  const amount = a ? parseFloat(a) : 0;
 
   // Requerir autenticación
   const supabase = await createClient();
@@ -71,7 +71,24 @@ export default async function PayPage({
 
   const merchantName = merchantUser.business_name || merchantUser.full_name || 'Comercio';
 
-  // 3. Calcular el descuento simulado para mostrar en la UI
+  // 3. Si falta el monto o el método de pago, mostramos el formulario para que el cliente lo ingrese
+  if (!a || !method) {
+    return (
+      <div className="min-h-screen bg-slate-950 p-4 pt-12 flex flex-col items-center max-w-md mx-auto">
+        <div className="w-full flex flex-col items-center mb-8">
+          <div className="h-16 w-16 bg-violet-600 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-violet-900/50">
+            <Store className="h-8 w-8 text-white" />
+          </div>
+          <h1 className="text-2xl font-bold text-white text-center leading-tight">
+            Estás pagando en <br/> <span className="text-violet-400">{merchantName}</span>
+          </h1>
+        </div>
+        <ClientInputAmountForm merchantId={m} merchantName={merchantName} />
+      </div>
+    );
+  }
+
+  // 4. Calcular el descuento simulado para mostrar en la UI
   let outcome = { valid: false, discount_pct: 0, final_amount: amount, reason: '', offerTitle: '' };
 
   if (offerId) {
@@ -104,23 +121,6 @@ export default async function PayPage({
       reason: defaultOutcome.valid ? '' : defaultOutcome.reason,
       offerTitle: '' 
     };
-  }
-
-  // 4. Si falta el monto o el método de pago, mostramos el formulario para que el cliente lo ingrese
-  if (!a || !method) {
-    return (
-      <div className="min-h-screen bg-slate-950 p-4 pt-12 flex flex-col items-center max-w-md mx-auto">
-        <div className="w-full flex flex-col items-center mb-8">
-          <div className="h-16 w-16 bg-violet-600 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-violet-900/50">
-            <Store className="h-8 w-8 text-white" />
-          </div>
-          <h1 className="text-2xl font-bold text-white text-center leading-tight">
-            Estás pagando en <br/> <span className="text-violet-400">{merchantName}</span>
-          </h1>
-        </div>
-        <ClientInputAmountForm merchantId={m} merchantName={merchantName} />
-      </div>
-    );
   }
 
   return (
