@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { CheckCircle2, Loader2, XCircle } from 'lucide-react';
+import { CheckCircle2, Loader2, XCircle, ShieldCheck } from 'lucide-react';
 import { confirmScannedPaymentServer } from '@/app/actions/charge';
 import { completePendingCharge } from '@/app/actions/pending-charges';
 import type { PaymentMethod } from '@/types';
@@ -42,7 +42,6 @@ export function ClientConfirmForm({
     setErrorMsg('');
 
     try {
-      // 1. Confirmar el pago (guarda la transacción)
       const res = await confirmScannedPaymentServer(
         merchantId,
         amount,
@@ -56,7 +55,6 @@ export function ClientConfirmForm({
         return;
       }
 
-      // 2. Marcar el pending_charge como completado con info del cliente
       const resolvedFinal = 'finalAmount' in res ? res.finalAmount : finalAmount;
       const resolvedPct   = 'discountPct'  in res ? res.discountPct  : discountPct;
       await completePendingCharge(chargeId, clientName, resolvedFinal, resolvedPct);
@@ -70,36 +68,64 @@ export function ClientConfirmForm({
 
   if (status === 'success') {
     return (
-      <div className="w-full rounded-2xl bg-emerald-950/40 border border-emerald-700 p-8 flex flex-col items-center text-center space-y-4">
-        <div className="h-20 w-20 bg-emerald-900 border border-emerald-600 rounded-full flex items-center justify-center">
-          <CheckCircle2 className="h-10 w-10 text-emerald-400" />
+      <div
+        className="w-full rounded-3xl p-8 flex flex-col items-center text-center space-y-5"
+        style={{
+          background: 'rgba(16,185,129,0.08)',
+          backdropFilter: 'blur(24px)',
+          border: '1px solid rgba(16,185,129,0.25)',
+          boxShadow: '0 0 60px rgba(16,185,129,0.15), 0 8px 32px rgba(0,0,0,0.4)',
+        }}
+      >
+        <div
+          className="h-24 w-24 rounded-3xl flex items-center justify-center"
+          style={{
+            background: 'linear-gradient(135deg, rgba(16,185,129,0.3), rgba(5,150,105,0.2))',
+            border: '1px solid rgba(16,185,129,0.4)',
+            boxShadow: '0 0 40px rgba(16,185,129,0.3)',
+          }}
+        >
+          <CheckCircle2 className="h-12 w-12 text-emerald-400" />
         </div>
-        <h2 className="text-2xl font-black text-emerald-300">¡Listo!</h2>
-        {offerTitle && (
-          <p className="text-emerald-400 font-medium">{offerTitle}</p>
-        )}
-        <div className="w-full bg-slate-900/60 rounded-xl p-4 border border-emerald-800/30 space-y-1 text-sm">
-          <div className="flex justify-between text-slate-400">
-            <span>Precio original</span>
-            <span>{formatARS(amount)}</span>
-          </div>
+
+        <div>
+          <h2 className="text-3xl font-black text-white mb-1">¡Listo!</h2>
+          {offerTitle && (
+            <p className="text-emerald-400 font-semibold">{offerTitle}</p>
+          )}
+        </div>
+
+        <div className="w-full rounded-2xl p-4 space-y-2"
+          style={{ background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.06)' }}>
           {discountPct > 0 && (
-            <div className="flex justify-between text-emerald-400">
-              <span>Descuento</span>
-              <span>−{discountPct}%</span>
+            <div className="flex justify-between text-sm">
+              <span className="text-slate-400">Precio original</span>
+              <span className="text-slate-400 line-through">{formatARS(amount)}</span>
             </div>
           )}
-          <div className="flex justify-between text-white font-black text-lg pt-2 border-t border-slate-700/50">
-            <span>Pagaste</span>
-            <span>{formatARS(finalAmount)}</span>
+          {discountPct > 0 && (
+            <div className="flex justify-between text-sm">
+              <span className="text-emerald-400">Descuento</span>
+              <span className="text-emerald-400 font-bold">−{discountPct}%</span>
+            </div>
+          )}
+          <div className="flex justify-between items-baseline pt-2 border-t border-white/[0.06]">
+            <span className="text-white font-bold">Pagaste</span>
+            <span className="text-3xl font-black text-emerald-400">{formatARS(finalAmount)}</span>
           </div>
         </div>
+
         <p className="text-slate-400 text-sm">
-          Mostrále esta pantalla a <strong className="text-white">{merchantName}</strong>.
+          Mostrále esta pantalla a <strong className="text-white">{merchantName}</strong>
         </p>
+
         <button
           onClick={() => router.push('/client/qr')}
-          className="mt-2 px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-medium transition-colors w-full"
+          className="w-full py-3.5 rounded-2xl font-semibold text-white transition-all"
+          style={{
+            background: 'rgba(255,255,255,0.08)',
+            border: '1px solid rgba(255,255,255,0.12)',
+          }}
         >
           Volver al inicio
         </button>
@@ -110,7 +136,10 @@ export function ClientConfirmForm({
   return (
     <div className="w-full space-y-3">
       {status === 'error' && (
-        <div className="flex items-start gap-2 rounded-xl bg-red-950/50 border border-red-800 p-4">
+        <div
+          className="flex items-start gap-3 rounded-2xl p-4"
+          style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)' }}
+        >
           <XCircle className="h-5 w-5 text-red-400 mt-0.5 flex-shrink-0" />
           <p className="text-sm text-red-300">{errorMsg}</p>
         </div>
@@ -119,16 +148,16 @@ export function ClientConfirmForm({
       <button
         onClick={handleConfirm}
         disabled={status === 'loading'}
-        className="w-full py-5 rounded-2xl bg-violet-600 hover:bg-violet-500 active:bg-violet-700 text-white font-black text-xl transition-all shadow-xl shadow-violet-900/50 disabled:opacity-50 flex items-center justify-center gap-3"
+        className="confirm-btn w-full py-5 rounded-2xl text-white font-black text-xl disabled:opacity-60 flex items-center justify-center gap-3"
       >
         {status === 'loading' ? (
           <><Loader2 className="h-6 w-6 animate-spin" /> Confirmando...</>
         ) : (
-          <>✅ Confirmar Pago</>
+          <><ShieldCheck className="h-6 w-6" /> Confirmar Pago</>
         )}
       </button>
 
-      <p className="text-center text-xs text-slate-500">
+      <p className="text-center text-xs text-slate-600">
         Al confirmar, el descuento queda registrado automáticamente.
       </p>
     </div>
