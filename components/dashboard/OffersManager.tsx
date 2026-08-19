@@ -2,11 +2,15 @@
 
 import React, { useState } from 'react';
 import { createOffer, toggleOfferStatus, deleteOffer } from '@/app/actions/offers';
-import { Plus, Tag, Trash2, Power, PowerOff, Loader2 } from 'lucide-react';
+import { Plus, Tag, Trash2, Power, PowerOff, Loader2, QrCode as QrCodeIcon, X } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 
 export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
   const [isCreating, setIsCreating] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [qrOffer, setQrOffer] = useState<any | null>(null);
+
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
 
   const handleCreate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -145,12 +149,22 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
                 </div>
 
                 <div className="flex justify-between items-center pt-4 border-t border-slate-800/50">
-                  <button 
-                    onClick={() => handleToggle(offer.id, offer.is_active)}
-                    className={`flex items-center gap-1.5 text-sm font-medium ${offer.is_active ? 'text-amber-400 hover:text-amber-300' : 'text-emerald-400 hover:text-emerald-300'}`}
-                  >
-                    {offer.is_active ? <><PowerOff className="w-4 h-4"/> Pausar</> : <><Power className="w-4 h-4"/> Activar</>}
-                  </button>
+                  <div className="flex gap-4">
+                    <button 
+                      onClick={() => handleToggle(offer.id, offer.is_active)}
+                      className={`flex items-center gap-1.5 text-sm font-medium ${offer.is_active ? 'text-amber-400 hover:text-amber-300' : 'text-emerald-400 hover:text-emerald-300'}`}
+                    >
+                      {offer.is_active ? <><PowerOff className="w-4 h-4"/> Pausar</> : <><Power className="w-4 h-4"/> Activar</>}
+                    </button>
+                    {offer.is_active && (
+                      <button 
+                        onClick={() => setQrOffer(offer)}
+                        className="text-violet-400 hover:text-violet-300 flex items-center gap-1.5 text-sm font-medium"
+                      >
+                        <QrCodeIcon className="w-4 h-4" /> QR
+                      </button>
+                    )}
+                  </div>
                   <button 
                     onClick={() => handleDelete(offer.id)}
                     className="text-red-400 hover:text-red-300 flex items-center gap-1.5 text-sm font-medium"
@@ -163,6 +177,40 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
           );
         })}
       </div>
+
+      {qrOffer && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+          <div className="bg-slate-900 border border-slate-700 rounded-3xl p-8 max-w-sm w-full relative flex flex-col items-center shadow-2xl">
+            <button 
+              onClick={() => setQrOffer(null)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white bg-slate-800 rounded-full p-1 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <h3 className="text-xl font-bold text-white text-center mb-2">{qrOffer.title}</h3>
+            <p className="text-sm text-slate-400 text-center mb-8">
+              Mostrá este QR al cliente para que aplique esta oferta específica.
+            </p>
+            <div className="bg-white p-6 rounded-2xl shadow-lg mb-6">
+              <QRCodeSVG 
+                value={`${baseUrl}/pay?m=${qrOffer.merchant_id}&offer=${qrOffer.id}${qrOffer.final_price ? `&a=${qrOffer.original_price}` : ''}`}
+                size={220} 
+                level="M" 
+              />
+            </div>
+            {qrOffer.final_price && (
+              <p className="text-emerald-400 font-bold bg-emerald-950/50 px-4 py-2 rounded-xl text-center w-full border border-emerald-900/50">
+                Paga: ${qrOffer.final_price.toLocaleString('es-AR')}
+              </p>
+            )}
+            {!qrOffer.final_price && (
+              <p className="text-violet-400 font-bold bg-violet-950/50 px-4 py-2 rounded-xl text-center w-full border border-violet-900/50">
+                -{qrOffer.discount_pct}% de descuento
+              </p>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

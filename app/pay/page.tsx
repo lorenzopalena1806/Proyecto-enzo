@@ -71,8 +71,22 @@ export default async function PayPage({
 
   const merchantName = merchantUser.business_name || merchantUser.full_name || 'Comercio';
 
-  // 3. Si falta el monto o el método de pago, mostramos el formulario para que el cliente lo ingrese
+  // 3. Fetch offer if offerId is present
+  let offerDetails = null;
+  if (offerId) {
+    const { data: offer } = await adminClient
+      .from('merchant_offers')
+      .select('*')
+      .eq('id', offerId)
+      .eq('merchant_id', m)
+      .single();
+    offerDetails = offer;
+  }
+
+  // 4. Si falta el monto o el método de pago, mostramos el formulario para que el cliente lo ingrese
   if (!a || !method) {
+    const initialAmount = offerDetails?.original_price ? offerDetails.original_price.toString() : null;
+    
     return (
       <div className="min-h-screen bg-slate-950 p-4 pt-12 flex flex-col items-center max-w-md mx-auto">
         <div className="w-full flex flex-col items-center mb-8">
@@ -82,36 +96,43 @@ export default async function PayPage({
           <h1 className="text-2xl font-bold text-white text-center leading-tight">
             Estás pagando en <br/> <span className="text-violet-400">{merchantName}</span>
           </h1>
+          {offerDetails?.title && (
+            <p className="text-emerald-400 font-medium mt-2">Oferta seleccionada: {offerDetails.title}</p>
+          )}
         </div>
-        <ClientInputAmountForm merchantId={m} merchantName={merchantName} />
+        <ClientInputAmountForm 
+          merchantId={m} 
+          merchantName={merchantName} 
+          offerId={offerId}
+          initialAmount={initialAmount}
+          urlAmount={a}
+        />
       </div>
     );
   }
 
-  // 4. Calcular el descuento simulado para mostrar en la UI
+  // 5. Calcular el descuento simulado para mostrar en la UI
   let outcome = { valid: false, discount_pct: 0, final_amount: amount, reason: '', offerTitle: '' };
 
-  if (offerId) {
-    const { data: offer } = await adminClient
-      .from('merchant_offers')
-      .select('*')
-      .eq('id', offerId)
-      .eq('merchant_id', m)
-      .single();
-
-    if (!offer || !offer.is_active) {
+  if (offerId && offerDetails) {
+    if (!offerDetails.is_active) {
       outcome = { valid: false, discount_pct: 0, final_amount: amount, reason: 'La oferta ya no está disponible.', offerTitle: '' };
-    } else if (offer.target_role !== 'all' && offer.target_role !== clientUser.role) {
-      outcome = { valid: false, discount_pct: 0, final_amount: amount, reason: `Esta oferta es exclusiva para ${offer.target_role === 'client' ? 'Clientes' : 'Comercios'}.`, offerTitle: '' };
+    } else if (offerDetails.target_role !== 'all' && offerDetails.target_role !== clientUser.role) {
+      outcome = { valid: false, discount_pct: 0, final_amount: amount, reason: `Esta oferta es exclusiva para ${offerDetails.target_role === 'client' ? 'Clientes' : 'Comercios'}.`, offerTitle: '' };
     } else {
+      const isFixedPrice = !!offerDetails.final_price && !!offerDetails.original_price;
+      const computedFinalAmount = isFixedPrice ? offerDetails.final_price : amount - (amount * (offerDetails.discount_pct / 100));
+
       outcome = { 
         valid: true, 
-        discount_pct: offer.discount_pct, 
-        final_amount: amount - (amount * (offer.discount_pct / 100)), 
+        discount_pct: offerDetails.discount_pct, 
+        final_amount: computedFinalAmount, 
         reason: '',
-        offerTitle: offer.title
+        offerTitle: offerDetails.title
       };
     }
+  } else if (offerId && !offerDetails) {
+    outcome = { valid: false, discount_pct: 0, final_amount: amount, reason: 'La oferta no existe.', offerTitle: '' };
   } else {
     const defaultOutcome = calculateDiscount(clientUser.role, method, amount);
     outcome = { 

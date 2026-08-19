@@ -4,14 +4,28 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Banknote, ArrowLeftRight, DollarSign } from 'lucide-react';
 
-export function ClientInputAmountForm({ merchantId, merchantName }: { merchantId: string, merchantName: string }) {
-  const [amount, setAmount] = useState('');
+export function ClientInputAmountForm({ 
+  merchantId, 
+  merchantName,
+  offerId,
+  initialAmount,
+  urlAmount
+}: { 
+  merchantId: string; 
+  merchantName: string;
+  offerId?: string | null;
+  initialAmount?: string | null;
+  urlAmount?: string | null;
+}) {
+  const [amount, setAmount] = useState(urlAmount || initialAmount || '');
   const [method, setMethod] = useState<'cash' | 'transfer'>('cash');
   const router = useRouter();
 
   const handleContinue = () => {
     if (!amount || parseFloat(amount) <= 0) return;
-    router.push(`/pay?m=${merchantId}&a=${amount}&method=${method}`);
+    let url = `/pay?m=${merchantId}&a=${amount}&method=${method}`;
+    if (offerId) url += `&offer=${offerId}`;
+    router.push(url);
   };
 
   return (
@@ -30,7 +44,8 @@ export function ClientInputAmountForm({ merchantId, merchantName }: { merchantId
             placeholder="0.00"
             min="1"
             step="0.01"
-            className="w-full pl-8 pr-4 py-4 rounded-xl bg-slate-950 border border-slate-600 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all text-xl font-bold"
+            readOnly={!!initialAmount}
+            className={`w-full pl-8 pr-4 py-4 rounded-xl bg-slate-950 border text-white placeholder-slate-500 focus:outline-none transition-all text-xl font-bold ${initialAmount ? 'border-violet-800/50 text-slate-300 cursor-not-allowed opacity-80' : 'border-slate-600 focus:ring-2 focus:ring-violet-500'}`}
           />
         </div>
       </div>
