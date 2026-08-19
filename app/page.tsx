@@ -63,15 +63,15 @@ export default async function Home() {
 
             {/* Headline */}
             <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight max-w-4xl mx-auto leading-[1.1]">
-              <span className="text-white">Tu red exclusiva de </span>
+              <span className="text-white">Más ventas para tu local. </span>
               <br className="hidden sm:block" />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-cyan-400">
-                descuentos inteligentes
+                Más ahorro para la gente.
               </span>
             </h1>
 
             <p className="text-lg lg:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-              Uní tu comercio a la red que transforma cada venta. Fidelizá clientes, accedé a descuentos B2B y hacé crecer tu negocio con tecnología QR en segundos.
+              Nuestra misión es simple: que los comercios vendan más y los clientes paguen menos. Uní tu local, escaneá el QR y sumate al club de beneficios de la ciudad.
             </p>
 
             {/* CTAs */}
