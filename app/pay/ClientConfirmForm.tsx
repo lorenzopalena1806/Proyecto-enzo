@@ -12,6 +12,7 @@ interface Props {
   chargeId: string;
   merchantId: string;
   merchantName: string;
+  clientName: string;
   amount: number;
   finalAmount: number;
   discountPct: number;
@@ -24,6 +25,7 @@ export function ClientConfirmForm({
   chargeId,
   merchantId,
   merchantName,
+  clientName,
   amount,
   finalAmount,
   discountPct,
@@ -54,8 +56,10 @@ export function ClientConfirmForm({
         return;
       }
 
-      // 2. Marcar el pending_charge como completado (via server action con admin client)
-      await completePendingCharge(chargeId);
+      // 2. Marcar el pending_charge como completado con info del cliente
+      const resolvedFinal = 'finalAmount' in res ? res.finalAmount : finalAmount;
+      const resolvedPct   = 'discountPct'  in res ? res.discountPct  : discountPct;
+      await completePendingCharge(chargeId, clientName, resolvedFinal, resolvedPct);
 
       setStatus('success');
     } catch (err: any) {

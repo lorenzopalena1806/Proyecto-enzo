@@ -66,12 +66,22 @@ export async function cancelPendingCharge(chargeId: string) {
   return { success: true };
 }
 
-// Called by the CLIENT after confirming payment — marks the charge as completed
-export async function completePendingCharge(chargeId: string) {
+// Called by the CLIENT after confirming payment — marks the charge as completed with result info
+export async function completePendingCharge(
+  chargeId: string,
+  completedByName: string,
+  finalAmountPaid: number,
+  discountAppliedPct: number,
+) {
   const adminClient = createAdminClient();
   const { error } = await adminClient
     .from('pending_charges')
-    .update({ status: 'completed' })
+    .update({
+      status: 'completed',
+      completed_by_name: completedByName,
+      final_amount_paid: finalAmountPaid,
+      discount_applied_pct: discountAppliedPct,
+    })
     .eq('id', chargeId);
 
   if (error) {

@@ -224,6 +224,7 @@ export default async function PayPage({
           chargeId={pendingCharge.id}
           merchantId={m}
           merchantName={merchantName}
+          clientName={clientProfile.full_name || user.email || 'Cliente'}
           amount={amount}
           finalAmount={finalAmount}
           discountPct={discountPct}

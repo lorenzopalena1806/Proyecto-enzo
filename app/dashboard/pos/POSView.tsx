@@ -79,7 +79,7 @@ export function POSView({
     return () => clearInterval(interval);
   }, [activeCharge]);
 
-  // Escuchar cobros completados en tiempo real
+  // Escuchar cuando el cliente confirma el cobro en tiempo real
   useEffect(() => {
     const channel = supabase
       .channel(`pos-merchant-${merchantId}`)
@@ -92,35 +92,21 @@ export function POSView({
           filter: `merchant_id=eq.${merchantId}`,
         },
         (payload) => {
-          if (payload.new.status === 'completed') {
-            // Cobro confirmado por el cliente
+          const updated = payload.new as any;
+          if (updated.status === 'completed') {
+            // Cobro confirmado por el cliente → mostrar notificación
             setActiveCharge(null);
+            setRecentTx({
+              original_amount: updated.amount,
+              discount_pct: updated.discount_applied_pct ?? 0,
+              final_amount: updated.final_amount_paid ?? updated.amount,
+              client_name: updated.completed_by_name ?? undefined,
+              offer_title: updated.offer_title ?? undefined,
+            });
+
+            try { new Audio('/success.mp3').play().catch(() => {}); } catch (_) {}
+            setTimeout(() => setRecentTx(null), 25000);
           }
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'discount_transactions',
-          filter: `scanner_id=eq.${merchantId}`,
-        },
-        (payload) => {
-          const tx = payload.new as any;
-          setRecentTx({
-            original_amount: tx.original_amount,
-            discount_pct: tx.discount_pct,
-            final_amount: tx.final_amount,
-            client_name: tx.client_name,
-            offer_title: tx.offer_title,
-          });
-
-          try {
-            new Audio('/success.mp3').play().catch(() => {});
-          } catch (_) {}
-
-          setTimeout(() => setRecentTx(null), 20000);
         }
       )
       .subscribe();
