@@ -1,5 +1,5 @@
-- [ ] Actualizar tipos de TypeScript (`types/index.ts`) para incluir `maps_url`.
-- [ ] Modificar formulario de perfil del comerciante (`components/dashboard/ProfileEditForm.tsx`) para incluir campos de URL de logo y URL de Maps.
-- [ ] Revisar y modificar el Server Action que actualiza el perfil, si es necesario, para que soporte los nuevos campos.
-- [ ] Actualizar el panel del cliente (`app/client/qr/page.tsx`) para mostrar la lista de locales adheridos con sus logos y botón de "Cómo llegar".
-- [ ] Crear el walkthrough indicando al usuario que corra el comando SQL en Supabase.
+- [x] Actualizar tipos de TypeScript (`types/index.ts`) para incluir `maps_url`.
+- [x] Modificar formulario de perfil del comerciante (`components/dashboard/ProfileEditForm.tsx`) para incluir campos de URL de logo y URL de Maps.
+- [x] Revisar y modificar el Server Action que actualiza el perfil, si es necesario, para que soporte los nuevos campos.
+- [x] Actualizar el panel del cliente (`app/client/qr/page.tsx`) para mostrar la lista de locales adheridos con sus logos y botón de "Cómo llegar".
+- [x] Crear el walkthrough indicando al usuario que corra el comando SQL en Supabase.

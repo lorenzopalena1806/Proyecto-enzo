@@ -175,34 +175,17 @@ export default async function ClientQRPage() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col p-4 space-y-8 max-w-lg mx-auto w-full pt-8 pb-24 relative z-10">
         
-        {/* Acción Principal - Escanear */}
-        <div className="w-full">
-          <Link href="/client/scanner" className="scan-btn flex items-center justify-center gap-3 w-full py-5 rounded-2xl text-white font-black text-xl transition-all relative overflow-hidden group">
-            <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-            <Scan className="h-7 w-7 relative z-10" />
-            <span className="relative z-10 tracking-wide">Escanear QR del Local</span>
-          </Link>
-        </div>
-
-        {/* Sección: Bienvenida y Código Corto */}
+        {/* Sección: Bienvenida */}
         <section className="space-y-4">
-          <div className="text-center space-y-1 mb-6">
+          <div className="text-center space-y-1 mb-2">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-semibold uppercase tracking-widest mb-2">
               <Sparkles className="w-3.5 h-3.5" />
               Club de Beneficios
             </div>
             <h1 className="text-2xl font-black text-white tracking-tight">Hola, {profile?.full_name || 'Cliente'}</h1>
             <p className="text-slate-400 text-sm max-w-sm mx-auto">
-              Escaneá el QR en la caja del local, o dictales este código corto de ser necesario.
+              Descubrí los mejores locales y ofertas cerca tuyo.
             </p>
-          </div>
-
-          <div className="glass-card-blue rounded-3xl p-6 text-center relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-2xl rounded-full" />
-            <p className="text-blue-300/80 text-xs font-bold uppercase tracking-widest mb-2">Tu Código Personal</p>
-            <div className="text-5xl font-black text-white tracking-[0.2em] bg-black/20 py-4 rounded-2xl border border-white/5 shadow-inner">
-              {qrData.qr_token.substring(0, 6).toUpperCase()}
-            </div>
           </div>
         </section>
 
@@ -312,6 +295,34 @@ export default async function ClientQRPage() {
               })}
             </div>
           )}
+        </section>
+
+        {/* Sección: Escáner y Código Corto */}
+        <section className="space-y-4 pt-6 border-t border-white/10">
+          <div className="flex items-center gap-2 mb-2">
+             <Scan className="w-5 h-5 text-fuchsia-400" />
+             <div>
+               <h2 className="text-xl font-bold text-white tracking-tight">Canjear Descuento</h2>
+               <p className="text-xs text-slate-400 font-medium">Usá estas opciones en el local para pagar.</p>
+             </div>
+          </div>
+          
+          <div className="w-full">
+            <Link href="/client/scanner" className="scan-btn flex items-center justify-center gap-3 w-full py-5 rounded-2xl text-white font-black text-xl transition-all relative overflow-hidden group">
+              <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+              <Scan className="h-7 w-7 relative z-10" />
+              <span className="relative z-10 tracking-wide">Escanear QR del Local</span>
+            </Link>
+          </div>
+
+          <div className="glass-card-blue rounded-3xl p-6 text-center relative overflow-hidden mt-4">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-2xl rounded-full" />
+            <p className="text-blue-300/80 text-xs font-bold uppercase tracking-widest mb-2">Tu Código Personal</p>
+            <p className="text-slate-400 text-xs mb-3">Dictalo en caja si no podés escanear el QR</p>
+            <div className="text-5xl font-black text-white tracking-[0.2em] bg-black/20 py-4 rounded-2xl border border-white/5 shadow-inner">
+              {qrData.qr_token.substring(0, 6).toUpperCase()}
+            </div>
+          </div>
         </section>
 
         {/* Sección: Mis Descuentos Usados */}
