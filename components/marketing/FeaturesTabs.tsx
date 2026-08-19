@@ -1,0 +1,137 @@
+'use client';
+
+import { useState } from 'react';
+import { QrCode, ShieldCheck, TrendingUp, Zap, Gift, Wallet, Smartphone } from 'lucide-react';
+
+export function FeaturesTabs() {
+  const [activeTab, setActiveTab] = useState<'comercio' | 'cliente'>('comercio');
+
+  return (
+    <section id="features" className="py-24 relative">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="text-center mb-10">
+          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">Diseñado para todos</h2>
+          <p className="text-slate-400 text-lg max-w-2xl mx-auto">Beneficios reales tanto para los dueños de locales como para los compradores del barrio.</p>
+        </div>
+
+        {/* Custom Tabs Switcher */}
+        <div className="flex justify-center mb-16">
+          <div className="inline-flex items-center p-1.5 rounded-2xl bg-white/5 border border-cyan-500/20 backdrop-blur-sm">
+            <button
+              onClick={() => setActiveTab('comercio')}
+              className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${activeTab === 'comercio' ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-900/30' : 'text-slate-400 hover:text-white'}`}
+            >
+              Para Comercios
+            </button>
+            <button
+              onClick={() => setActiveTab('cliente')}
+              className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${activeTab === 'cliente' ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-900/30' : 'text-slate-400 hover:text-white'}`}
+            >
+              Para Clientes
+            </button>
+          </div>
+        </div>
+
+        {/* Tab Content */}
+        <div className="transition-all duration-500">
+          {activeTab === 'comercio' ? (
+            <div className="grid md:grid-cols-3 gap-6 animate-fade-in">
+              <div className="md:col-span-2 group relative overflow-hidden rounded-3xl bg-white/3 border border-cyan-500/15 p-8 hover:border-cyan-400/40 transition-all backdrop-blur-sm hover:shadow-[0_0_40px_-10px_rgba(6,182,212,0.15)]">
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative z-10 h-full flex flex-col justify-between">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-cyan-500/15 text-cyan-400 mb-6 border border-cyan-500/25">
+                    <QrCode className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-2">Mostrá tu código y listo</h3>
+                    <p className="text-slate-400">No necesitás comprar aparatos raros. Solo mostrá tu código QR (impreso o en el celu) para que el cliente lo escanee. La app se encarga de aplicar el descuento al instante.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="group relative overflow-hidden rounded-3xl bg-white/3 border border-emerald-500/15 p-8 hover:border-emerald-400/40 transition-all backdrop-blur-sm hover:shadow-[0_0_40px_-10px_rgba(52,211,153,0.15)]">
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative z-10 h-full flex flex-col justify-between">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-emerald-500/15 text-emerald-400 mb-6 border border-emerald-500/25">
+                    <ShieldCheck className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white mb-2">Seguro y sin trampas</h3>
+                    <p className="text-slate-400 text-sm">Cada código QR cambia todo el tiempo. Nadie puede usar el descuento de otra persona ni hacer capturas falsas.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="group relative overflow-hidden rounded-3xl bg-white/3 border border-blue-500/15 p-8 hover:border-blue-400/40 transition-all backdrop-blur-sm hover:shadow-[0_0_40px_-10px_rgba(96,165,250,0.15)]">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative z-10 h-full flex flex-col justify-between">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-500/15 text-blue-400 mb-6 border border-blue-500/25">
+                    <TrendingUp className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white mb-2">Controlá tus ventas</h3>
+                    <p className="text-slate-400 text-sm">Mirá cuántos descuentos diste y cuánta plata entró a tu local, todo fácil y al momento desde tu pantalla.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="md:col-span-2 group relative overflow-hidden rounded-3xl bg-white/3 border border-cyan-500/15 p-8 hover:border-cyan-400/40 transition-all backdrop-blur-sm hover:shadow-[0_0_40px_-10px_rgba(6,182,212,0.15)]">
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative z-10 h-full flex flex-col justify-between">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-cyan-500/15 text-cyan-400 mb-6 border border-cyan-500/25">
+                    <Zap className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-2">Beneficios para dueños</h3>
+                    <p className="text-slate-400">Por ser parte de la red, tenés descuentos especiales (mucho más altos) cuando vas a comprar como cliente a otros locales del club. Nos ayudamos entre todos.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-3 gap-6 animate-fade-in">
+              <div className="md:col-span-2 group relative overflow-hidden rounded-3xl bg-white/3 border border-pink-500/15 p-8 hover:border-pink-400/40 transition-all backdrop-blur-sm hover:shadow-[0_0_40px_-10px_rgba(236,72,153,0.15)]">
+                <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative z-10 h-full flex flex-col justify-between">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-pink-500/15 text-pink-400 mb-6 border border-pink-500/25">
+                    <Wallet className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-2">Ahorrá en cada compra</h3>
+                    <p className="text-slate-400">Olvidate de esperar a fin de mes. Sumate y empezá a descontar el 10% o 15% todos los días en la verdulería, peluquería o gimnasio pagando en efectivo o transferencia.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="group relative overflow-hidden rounded-3xl bg-white/3 border border-cyan-500/15 p-8 hover:border-cyan-400/40 transition-all backdrop-blur-sm hover:shadow-[0_0_40px_-10px_rgba(6,182,212,0.15)]">
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative z-10 h-full flex flex-col justify-between">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-cyan-500/15 text-cyan-400 mb-6 border border-cyan-500/25">
+                    <Smartphone className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white mb-2">Una app, mil lugares</h3>
+                    <p className="text-slate-400 text-sm">Descubrí todos los locales adheridos en tu ciudad desde un solo lugar y armá tu recorrido de compras.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="group relative overflow-hidden rounded-3xl bg-white/3 border border-violet-500/15 p-8 hover:border-violet-400/40 transition-all backdrop-blur-sm hover:shadow-[0_0_40px_-10px_rgba(139,92,246,0.15)]">
+                <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative z-10 h-full flex flex-col justify-between">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-violet-500/15 text-violet-400 mb-6 border border-violet-500/25">
+                    <Gift className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white mb-2">Completamente Gratis</h3>
+                    <p className="text-slate-400 text-sm">Ser parte de la comunidad como cliente no tiene ningún costo oculto. Solo te registrás y empezás a disfrutar.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}

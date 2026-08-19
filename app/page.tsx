@@ -2,6 +2,9 @@ import Link from 'next/link';
 import { ArrowRight, QrCode, Store, TrendingUp, Users, Star, CheckCircle2, ShieldCheck, Zap } from 'lucide-react';
 import { Navbar } from '@/components/marketing/Navbar';
 import { createAdminClient } from '@/lib/supabase-server';
+import { AnimatedStats } from '@/components/marketing/AnimatedStats';
+import { FeaturesTabs } from '@/components/marketing/FeaturesTabs';
+import { FloatingWhatsApp } from '@/components/marketing/FloatingWhatsApp';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,10 +32,10 @@ export default async function Home() {
   const displayTxCount = (txCount || 0) + 1850;
 
   const stats = [
-    { label: 'Comercios Adheridos', value: `+${displayMerchantCount}` },
-    { label: 'Usuarios Activos', value: `+${displayClientCount}` },
-    { label: 'Descuento Promedio', value: `${avgDiscount}%` },
-    { label: 'Transacciones', value: `+${displayTxCount.toLocaleString('es-AR')}` },
+    { label: 'Comercios Adheridos', value: displayMerchantCount, prefix: '+' },
+    { label: 'Usuarios Activos', value: displayClientCount, prefix: '+' },
+    { label: 'Descuento Promedio', value: avgDiscount, suffix: '%' },
+    { label: 'Transacciones', value: displayTxCount, prefix: '+' },
   ];
 
   return (
@@ -136,91 +139,27 @@ export default async function Home() {
             </div>
 
             {/* Stats Ribbon */}
-            <div className="pt-16 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-4xl mx-auto border-t border-cyan-500/10">
-              {stats.map((stat, i) => (
-                <div key={i} className="flex flex-col items-center justify-center space-y-1 p-4 rounded-2xl bg-white/3 border border-cyan-500/10 backdrop-blur-sm">
-                  <span className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 tracking-tight">{stat.value}</span>
-                  <span className="text-xs text-slate-500 font-medium uppercase tracking-wider text-center">{stat.label}</span>
-                </div>
-              ))}
-            </div>
+            <AnimatedStats stats={stats} />
           </div>
         </section>
 
         {/* ✨ FEATURES ✨ */}
         <section id="features" className="py-24 relative">
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">Diseñado para impulsar tu comercio</h2>
-              <p className="text-slate-400 text-lg max-w-2xl mx-auto">Todo lo que necesitás para gestionar beneficios, en una sola plataforma ultra rápida.</p>
-            </div>
+            <FeaturesTabs />
+          </div>
+        </section>
 
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="md:col-span-2 group relative overflow-hidden rounded-3xl bg-white/3 border border-cyan-500/15 p-8 hover:border-cyan-400/40 transition-all backdrop-blur-sm hover:shadow-[0_0_40px_-10px_rgba(6,182,212,0.15)]">
-                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative z-10 h-full flex flex-col justify-between">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-cyan-500/15 text-cyan-400 mb-6 border border-cyan-500/25">
-                    <QrCode className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-white mb-2">Mostrá tu código y listo</h3>
-                    <p className="text-slate-400">No necesitás comprar aparatos raros. Solo mostrá tu código QR (impreso o en el celu) para que el cliente lo escanee. La app se encarga de aplicar el descuento al instante.</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-3xl bg-white/3 border border-cyan-500/15 p-8 hover:border-emerald-400/40 transition-all backdrop-blur-sm hover:shadow-[0_0_40px_-10px_rgba(52,211,153,0.15)]">
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative z-10 h-full flex flex-col justify-between">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-emerald-500/15 text-emerald-400 mb-6 border border-emerald-500/25">
-                    <ShieldCheck className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white mb-2">Seguro y sin trampas</h3>
-                    <p className="text-slate-400 text-sm">Cada código QR cambia todo el tiempo. Nadie puede usar el descuento de otra persona ni hacer capturas falsas.</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-3xl bg-white/3 border border-cyan-500/15 p-8 hover:border-blue-400/40 transition-all backdrop-blur-sm hover:shadow-[0_0_40px_-10px_rgba(96,165,250,0.15)]">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative z-10 h-full flex flex-col justify-between">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-500/15 text-blue-400 mb-6 border border-blue-500/25">
-                    <TrendingUp className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white mb-2">Controlá tus ventas</h3>
-                    <p className="text-slate-400 text-sm">Mirá cuántos descuentos diste y cuánta plata entró a tu local, todo fácil y al momento desde tu pantalla.</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="md:col-span-2 group relative overflow-hidden rounded-3xl bg-white/3 border border-cyan-500/15 p-8 hover:border-cyan-400/40 transition-all backdrop-blur-sm hover:shadow-[0_0_40px_-10px_rgba(6,182,212,0.15)]">
-                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative z-10 h-full flex flex-col justify-between">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-cyan-500/15 text-cyan-400 mb-6 border border-cyan-500/25">
-                    <Zap className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-white mb-2">Beneficios para dueños</h3>
-                    <p className="text-slate-400">Por ser parte de la red, tenés descuentos especiales (mucho más altos) cuando vas a comprar como cliente a otros locales del club. Nos ayudamos entre todos.</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Feature 5 - Full Width */}
-              <div className="md:col-span-3 group relative overflow-hidden rounded-3xl bg-white/3 border border-purple-500/15 p-8 hover:border-purple-400/40 transition-all backdrop-blur-sm hover:shadow-[0_0_40px_-10px_rgba(168,85,247,0.15)]">
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative z-10 h-full flex flex-col md:flex-row items-center gap-8">
-                  <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-purple-500/15 text-purple-400 border border-purple-500/25 shrink-0">
-                    <Store className="h-8 w-8" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-white mb-2">Tu propia página web</h3>
-                    <p className="text-slate-400">Al sumarte como local adherido, el sistema te crea automáticamente un perfil público (una página web para tu negocio). Ahí los clientes pueden ver tu ubicación, fotos de tu local y todas las ofertas que tenés activas. Es tu nueva vidriera digital para atraer más gente todos los días.</p>
-                  </div>
-                </div>
-              </div>
+        {/* ✨ PURPOSE ✨ */}
+        <section className="py-24 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-[#060D1A] via-cyan-900/10 to-[#060D1A]" />
+          <div className="relative mx-auto max-w-4xl px-4 sm:px-6 text-center">
+            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">Nuestro Propósito</h2>
+            <div className="relative p-8 md:p-12 rounded-3xl bg-white/5 border border-cyan-500/20 backdrop-blur-md shadow-2xl">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-full blur-2xl opacity-50" />
+              <p className="text-lg md:text-xl text-slate-300 leading-relaxed font-medium">
+                Creemos que los comercios de barrio son el corazón de la ciudad. Nacimos para darles la misma tecnología que usan las grandes cadenas, pero a un costo accesible. Nuestro objetivo es que <strong className="text-cyan-400 font-bold">los locales vendan más</strong> y <strong className="text-cyan-400 font-bold">los vecinos ahorren todos los días</strong>. Así crecemos todos.
+              </p>
             </div>
           </div>
         </section>
@@ -410,6 +349,7 @@ export default async function Home() {
           </div>
         </div>
       </footer>
+      <FloatingWhatsApp />
     </div>
   );
 }
