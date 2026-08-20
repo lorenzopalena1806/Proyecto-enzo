@@ -52,14 +52,11 @@ export default function LoginPage() {
       <div className="w-full max-w-md space-y-6">
 
         {/* Logo */}
-        <div className="text-center space-y-3">
-          <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-600 shadow-2xl shadow-violet-900/60">
-            <Store className="h-7 w-7 text-white" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-white">Lazoo</h1>
-            <p className="text-slate-400 text-sm">Ingresá a tu panel</p>
-          </div>
+        <div className="text-center flex flex-col items-center space-y-3">
+          <Link href="/">
+            <img src="/logo.jpg" alt="Lazoo" className="h-16 w-auto rounded-xl shadow-2xl shadow-blue-900/40 object-contain" />
+          </Link>
+          <p className="text-slate-400 text-sm">Ingresá a tu panel</p>
         </div>
 
         {/* Card */}

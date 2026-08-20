@@ -116,14 +116,10 @@ export function Sidebar({ profile }: SidebarProps) {
   const renderSidebarContent = () => (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="flex items-center gap-3 px-4 py-5 border-b border-slate-800">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-600 flex-shrink-0">
-          <Store className="h-4 w-4 text-white" />
-        </div>
-        <div className="min-w-0">
-          <p className="text-white font-bold text-sm truncate">Lazoo</p>
-          <p className="text-slate-500 text-xs">Panel Comerciante</p>
-        </div>
+      <div className="px-4 py-5 border-b border-slate-800 flex justify-center">
+        <Link href="/dashboard">
+          <img src="/logo.jpg" alt="Lazoo" className="h-10 w-auto rounded-lg object-contain" />
+        </Link>
       </div>
 
       {/* Perfil */}
@@ -191,12 +187,9 @@ export function Sidebar({ profile }: SidebarProps) {
 
       {/* Mobile Header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-30 flex items-center justify-between px-4 py-3 bg-slate-900/95 backdrop-blur-sm border-b border-slate-800">
-        <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-violet-600">
-            <Store className="h-3.5 w-3.5 text-white" />
-          </div>
-          <span className="text-white font-bold text-sm">Lazoo</span>
-        </div>
+        <Link href="/dashboard" className="flex items-center">
+          <img src="/logo.jpg" alt="Lazoo" className="h-8 w-auto rounded-md object-contain" />
+        </Link>
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
           className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-800 text-slate-400"

@@ -335,11 +335,8 @@ export default async function Home() {
 
       <footer className="border-t border-cyan-500/10 bg-black/40 backdrop-blur-lg">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600">
-              <Store className="h-4 w-4 text-white" />
-            </div>
-            <span className="text-white font-bold text-xl tracking-tight">Lazoo</span>
+          <div className="flex items-center">
+            <img src="/logo.jpg" alt="Lazoo" className="h-8 w-auto rounded-md object-contain" />
           </div>
           <p className="text-slate-500 text-sm">© {new Date().getFullYear()} Lazoo. Todos los derechos reservados.</p>
           <div className="flex gap-6 text-sm font-medium text-slate-400">
