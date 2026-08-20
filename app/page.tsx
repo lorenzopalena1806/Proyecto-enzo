@@ -209,7 +209,7 @@ export default async function Home() {
                 { name: 'Sofía R.', biz: 'Peluquería Style', text: '"Lo que más me gusta es el descuento B2B. Cuando voy a comprar la comida para el local a la fiambrería de enfrente, uso mi descuento de dueña."' }
               ].map((t, i) => (
                 <div key={i} className="rounded-3xl border border-cyan-500/15 bg-white/3 p-8 backdrop-blur-sm relative">
-                  <div className="text-cyan-500/20 absolute top-4 right-6 text-6xl font-serif">"</div>
+                  <div className="text-cyan-500/20 absolute top-4 right-6 text-6xl font-serif">&quot;</div>
                   <p className="text-slate-300 italic mb-6 relative z-10">{t.text}</p>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold">{t.name.charAt(0)}</div>

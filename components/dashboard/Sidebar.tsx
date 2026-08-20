@@ -113,7 +113,7 @@ export function Sidebar({ profile }: SidebarProps) {
     router.refresh();
   };
 
-  const SidebarContent = () => (
+  const renderSidebarContent = () => (
     <div className="flex flex-col h-full">
       {/* Logo */}
       <div className="flex items-center gap-3 px-4 py-5 border-b border-slate-800">
@@ -186,7 +186,7 @@ export function Sidebar({ profile }: SidebarProps) {
     <>
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex flex-col w-60 flex-shrink-0 bg-slate-900 border-r border-slate-800 h-screen sticky top-0">
-        <SidebarContent />
+        {renderSidebarContent()}
       </aside>
 
       {/* Mobile Header */}
@@ -213,7 +213,7 @@ export function Sidebar({ profile }: SidebarProps) {
             onClick={() => setMobileOpen(false)}
           />
           <aside className="relative z-50 w-72 bg-slate-900 border-r border-slate-800 h-full overflow-y-auto shadow-2xl">
-            <SidebarContent />
+            {renderSidebarContent()}
           </aside>
         </div>
       )}
