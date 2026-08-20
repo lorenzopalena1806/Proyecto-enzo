@@ -54,7 +54,7 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="text-center flex flex-col items-center space-y-3">
           <Link href="/">
-            <img src="/logo.jpg" alt="Lazoo" className="h-16 w-auto rounded-xl shadow-2xl shadow-blue-900/40 object-contain" />
+            <img src="/logo.jpg" alt="Lazoo" className="h-20 sm:h-24 w-auto rounded-xl shadow-2xl shadow-blue-900/40 object-contain" />
           </Link>
           <p className="text-slate-400 text-sm">Ingresá a tu panel</p>
         </div>
