@@ -92,8 +92,42 @@ export default function RegisterPage() {
   };
 
   if (success) {
+    if (formData.role === 'merchant') {
+      const waLink = "https://wa.me/5493512388658?text=" + encodeURIComponent("Hola, me creé una cuenta de comerciante. Quiero saber sobre el sistema.");
+      
+      // Auto-redirección después de 3 segundos
+      setTimeout(() => {
+        window.location.href = waLink;
+      }, 3000);
+
+      return (
+        <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
+          <div className="w-full max-w-md text-center space-y-4">
+            <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-900 border border-emerald-700 mb-2">
+              <span className="text-3xl">✅</span>
+            </div>
+            <h2 className="text-xl font-bold text-white">¡Registro exitoso!</h2>
+            <p className="text-slate-400 text-sm">
+              Tu cuenta ha sido creada. Para activarla y configurar tu comercio en la red, serás redirigido a nuestro WhatsApp...
+            </p>
+            <a
+              href={waLink}
+              className="inline-block mt-4 px-6 py-3 rounded-xl bg-[#25D366] hover:bg-[#20b858] text-white font-bold transition-all w-full shadow-lg shadow-[#25D366]/20"
+            >
+              Ir a WhatsApp ahora
+            </a>
+            <div className="pt-4">
+              <Link href="/auth/login" className="text-slate-600 text-sm hover:text-slate-400">
+                O ir al Login
+              </Link>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
         <div className="w-full max-w-md text-center space-y-4">
           <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-900 border border-emerald-700">
             <span className="text-3xl">✅</span>

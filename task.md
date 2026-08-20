@@ -1,6 +1,6 @@
-- [ ] Ocultar `/dashboard/scanner` de `Sidebar.tsx`.
-- [ ] Renombrar `/dashboard/pos` a "Cobrar con QR (POS)" y `/dashboard/qr` a "Comprar / B2B" en `Sidebar.tsx`.
-- [ ] Eliminar `QRDisplay` de `app/dashboard/qr/page.tsx` y reemplazarlo con un botón de escaneo hacia `/dashboard/scan`.
-- [ ] Copiar `/client/scanner/page.tsx` a `/dashboard/scan/page.tsx` para que los comercios puedan escanear el QR fijo.
-- [ ] Validar los cambios en el menú lateral.
-- [ ] Actualizar el walkthrough.
+- [x] Ocultar `/dashboard/scanner` de `Sidebar.tsx`.
+- [x] Renombrar `/dashboard/pos` a "Cobrar con QR (POS)" y `/dashboard/qr` a "Comprar / B2B" en `Sidebar.tsx`.
+- [x] Eliminar `QRDisplay` de `app/dashboard/qr/page.tsx` y reemplazarlo con un botón de escaneo hacia `/dashboard/scan`.
+- [x] Copiar `/client/scanner/page.tsx` a `/dashboard/scan/page.tsx` para que los comercios puedan escanear el QR fijo.
+- [x] Validar los cambios en el menú lateral.
+- [x] Actualizar el walkthrough.
