@@ -121,7 +121,7 @@ export function Sidebar({ profile }: SidebarProps) {
           <Store className="h-4 w-4 text-white" />
         </div>
         <div className="min-w-0">
-          <p className="text-white font-bold text-sm truncate">RedBeneficios</p>
+          <p className="text-white font-bold text-sm truncate">Lazoo</p>
           <p className="text-slate-500 text-xs">Panel Comerciante</p>
         </div>
       </div>
@@ -195,7 +195,7 @@ export function Sidebar({ profile }: SidebarProps) {
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-violet-600">
             <Store className="h-3.5 w-3.5 text-white" />
           </div>
-          <span className="text-white font-bold text-sm">RedBeneficios</span>
+          <span className="text-white font-bold text-sm">Lazoo</span>
         </div>
         <button
           onClick={() => setMobileOpen(!mobileOpen)}

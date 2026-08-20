@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import { ClientScanner } from '@/components/client/ClientScanner';
 
 export const metadata = {
-  title: 'Escanear Local | RedBeneficios',
+  title: 'Escanear Local | Lazoo',
 };
 
 export default async function ClientScannerPage() {

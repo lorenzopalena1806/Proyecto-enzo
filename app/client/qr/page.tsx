@@ -163,7 +163,7 @@ export default async function ClientQRPage() {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-900/40">
             <User className="h-4 w-4 text-white" />
           </div>
-          <span className="text-white font-bold text-sm tracking-wide">RedBeneficios</span>
+          <span className="text-white font-bold text-sm tracking-wide">Lazoo</span>
         </div>
         <div className="flex items-center gap-2">
           <Link href="/client/profile" className="flex items-center gap-1.5 text-xs text-slate-300 hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5">

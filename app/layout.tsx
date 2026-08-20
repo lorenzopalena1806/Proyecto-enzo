@@ -10,8 +10,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'RedBeneficios — Red de Descuentos B2B para Comercios',
-    template: '%s | RedBeneficios',
+    default: 'Lazoo — Lazoo - Red de Descuentos B2B para Comercios',
+    template: '%s | Lazoo',
   },
   description:
     'La plataforma SaaS que conecta comercios locales con una red de descuentos inteligente. QR dinámico, escáner de descuentos y marketing personalizado.',

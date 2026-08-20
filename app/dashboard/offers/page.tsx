@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { OffersManager } from '@/components/dashboard/OffersManager';
 
 export const metadata = {
-  title: 'Mis Ofertas | RedBeneficios',
+  title: 'Mis Ofertas | Lazoo',
   description: 'Gestioná los descuentos que ofrecés en la red.',
 };
 

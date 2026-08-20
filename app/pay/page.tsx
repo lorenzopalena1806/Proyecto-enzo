@@ -106,7 +106,7 @@ export default async function PayPage({
               <div className="absolute -inset-2 rounded-3xl bg-blue-500/20 blur-xl -z-10" />
             </div>
             <h1 className="text-2xl font-black text-white">{merchantName}</h1>
-            <p className="text-blue-400 text-sm font-medium mt-1 tracking-wide">RedBeneficios</p>
+            <p className="text-blue-400 text-sm font-medium mt-1 tracking-wide">Lazoo</p>
           </div>
 
           <div className="glass-card rounded-3xl p-8 text-center space-y-5">
@@ -229,7 +229,7 @@ export default async function PayPage({
           <h1 className="text-2xl font-black text-white tracking-tight">{merchantName}</h1>
           <div className="flex items-center gap-1.5 mt-1">
             <Sparkles className="h-3.5 w-3.5 text-blue-400" />
-            <p className="text-blue-400 text-xs font-semibold uppercase tracking-widest">RedBeneficios</p>
+            <p className="text-blue-400 text-xs font-semibold uppercase tracking-widest">Lazoo</p>
           </div>
         </div>
 

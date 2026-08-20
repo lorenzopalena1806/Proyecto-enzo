@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { QrCode, ScanLine, ImageIcon, TrendingUp, ArrowRight, AlertTriangle } from 'lucide-react';
 
 export const metadata = {
-  title: 'Panel Principal | RedBeneficios',
-  description: 'Tu panel de control en RedBeneficios.',
+  title: 'Panel Principal | Lazoo',
+  description: 'Tu panel de control en Lazoo.',
 };
 
 export default async function DashboardPage() {

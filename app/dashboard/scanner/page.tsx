@@ -3,7 +3,7 @@ import { ChargeGenerator } from '@/components/dashboard/ChargeGenerator';
 import { redirect } from 'next/navigation';
 
 export const metadata = {
-  title: 'Generar Cobro | RedBeneficios',
+  title: 'Generar Cobro | Lazoo',
   description: 'Generá un código QR o pedí el código del cliente para aplicar descuentos automáticamente.',
 };
 

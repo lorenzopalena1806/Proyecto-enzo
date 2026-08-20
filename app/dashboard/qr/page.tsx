@@ -6,7 +6,7 @@ import { Store, Scan, Tag, Banknote, MapPin, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Comprar (B2B) | RedBeneficios',
+  title: 'Comprar (B2B) | Lazoo',
 };
 
 export default async function QRPage() {

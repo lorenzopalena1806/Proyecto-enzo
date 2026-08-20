@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { MarketingGallery } from '@/components/dashboard/MarketingGallery';
 
 export const metadata = {
-  title: 'Marketing | RedBeneficios',
+  title: 'Marketing | Lazoo',
   description: 'Descargá tus materiales de marketing para redes sociales.',
 };
 

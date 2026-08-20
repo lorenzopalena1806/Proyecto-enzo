@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import { POSView } from './POSView';
 
 export const metadata = {
-  title: 'Mi QR de Cobro | RedBeneficios',
+  title: 'Mi QR de Cobro | Lazoo',
 };
 
 export default async function POSPage() {

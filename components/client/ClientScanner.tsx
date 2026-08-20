@@ -32,7 +32,7 @@ export function ClientScanner() {
                 if (isMounted) router.push(decodedText);
               });
             } else {
-              setError('El código QR no pertenece a RedBeneficios.');
+              setError('El código QR no pertenece a Lazoo.');
             }
           }
         } else {

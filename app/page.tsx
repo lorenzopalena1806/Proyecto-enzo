@@ -318,7 +318,7 @@ export default async function Home() {
           <div className="relative mx-auto max-w-4xl px-4 sm:px-6 text-center space-y-8">
             <h2 className="text-4xl md:text-5xl font-extrabold text-white">¿Listo para transformar tu negocio?</h2>
             <p className="text-xl text-slate-300 max-w-2xl mx-auto">
-              Sumate a cientos de comercios que ya están escalando sus ventas con RedBeneficios.
+              Sumate a cientos de comercios que ya están escalando sus ventas con Lazoo.
             </p>
             <div className="pt-4">
               <Link
@@ -339,9 +339,9 @@ export default async function Home() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600">
               <Store className="h-4 w-4 text-white" />
             </div>
-            <span className="text-white font-bold text-xl tracking-tight">RedBeneficios</span>
+            <span className="text-white font-bold text-xl tracking-tight">Lazoo</span>
           </div>
-          <p className="text-slate-500 text-sm">© {new Date().getFullYear()} RedBeneficios. Todos los derechos reservados.</p>
+          <p className="text-slate-500 text-sm">© {new Date().getFullYear()} Lazoo. Todos los derechos reservados.</p>
           <div className="flex gap-6 text-sm font-medium text-slate-400">
             <a href="#" className="hover:text-cyan-400 transition-colors">Privacidad</a>
             <a href="#" className="hover:text-cyan-400 transition-colors">Términos</a>
