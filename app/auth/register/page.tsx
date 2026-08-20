@@ -61,7 +61,13 @@ export default function RegisterPage() {
     });
 
     if (signUpError) {
-      setError(signUpError.message);
+      let errorMsg = signUpError.message;
+      if (errorMsg.includes('already registered')) {
+        errorMsg = 'Este correo electrónico ya está registrado. Por favor, iniciá sesión.';
+      } else if (errorMsg.includes('Password should be at least')) {
+        errorMsg = 'La contraseña debe tener al menos 6 caracteres.';
+      }
+      setError(errorMsg);
       setLoading(false);
       return;
     }
@@ -93,7 +99,8 @@ export default function RegisterPage() {
 
   if (success) {
     if (formData.role === 'merchant') {
-      const waLink = "https://wa.me/5493512388658?text=" + encodeURIComponent("Hola, me creé una cuenta de comerciante. Quiero saber sobre el sistema.");
+      const message = `Hola, me creé una cuenta de comerciante.\nNombre: ${formData.fullName}\nComercio: ${formData.businessName}\nQuiero saber más sobre el sistema.`;
+      const waLink = "https://wa.me/5493512388658?text=" + encodeURIComponent(message);
       
       // Auto-redirección después de 3 segundos
       setTimeout(() => {
