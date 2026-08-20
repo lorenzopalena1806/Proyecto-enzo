@@ -12,7 +12,7 @@ export function Navbar() {
               <Store className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
             </div>
             <span className="text-xl sm:text-2xl font-black tracking-tight text-white">
-              Red<span className="text-cyan-400">Beneficios</span>
+              Laz<span className="text-cyan-400">oo</span>
             </span>
           </div>
 
