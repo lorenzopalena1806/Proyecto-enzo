@@ -8,7 +8,7 @@ export function Navbar() {
         <div className="flex h-16 sm:h-20 items-center justify-between">
           
           <Link href="/" className="flex items-center gap-2">
-            <img src="/logo.jpg" alt="Lazoo" className="h-12 sm:h-14 w-auto rounded-lg object-contain" />
+            <img src="/logo.png" alt="Lazoo" className="h-12 sm:h-14 w-auto rounded-lg object-contain" />
           </Link>
 
           <div className="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">

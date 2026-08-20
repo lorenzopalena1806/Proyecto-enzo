@@ -118,7 +118,7 @@ export function Sidebar({ profile }: SidebarProps) {
       {/* Logo */}
       <div className="px-4 py-5 border-b border-slate-800 flex justify-center">
         <Link href="/dashboard">
-          <img src="/logo.jpg" alt="Lazoo" className="h-12 w-auto rounded-lg object-contain" />
+          <img src="/logo.png" alt="Lazoo" className="h-12 w-auto rounded-lg object-contain" />
         </Link>
       </div>
 
@@ -188,7 +188,7 @@ export function Sidebar({ profile }: SidebarProps) {
       {/* Mobile Header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-30 flex items-center justify-between px-4 py-3 bg-slate-900/95 backdrop-blur-sm border-b border-slate-800">
         <Link href="/dashboard" className="flex items-center">
-          <img src="/logo.jpg" alt="Lazoo" className="h-10 w-auto rounded-md object-contain" />
+          <img src="/logo.png" alt="Lazoo" className="h-10 w-auto rounded-md object-contain" />
         </Link>
         <button
           onClick={() => setMobileOpen(!mobileOpen)}

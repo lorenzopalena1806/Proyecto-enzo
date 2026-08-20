@@ -161,7 +161,7 @@ export default function RegisterPage() {
         {/* Logo */}
         <div className="text-center flex flex-col items-center space-y-3">
           <Link href="/">
-            <img src="/logo.jpg" alt="Lazoo" className="h-20 sm:h-24 w-auto rounded-xl shadow-2xl shadow-blue-900/40 object-contain" />
+            <img src="/logo.png" alt="Lazoo" className="h-20 sm:h-24 w-auto rounded-xl shadow-2xl shadow-blue-900/40 object-contain" />
           </Link>
           <p className="text-slate-400 text-sm">Únete a la red de descuentos</p>
         </div>
