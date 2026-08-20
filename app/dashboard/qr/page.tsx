@@ -37,7 +37,6 @@ export default async function QRPage() {
       )
     `)
     .eq('is_active', true)
-    .in('target_role', ['merchant', 'all'])
     .neq('merchant_id', user.id) // Excluir sus propias ofertas
     .order('discount_pct', { ascending: false });
 
@@ -104,9 +103,11 @@ export default async function QRPage() {
                     -{offer.discount_pct}%
                   </div>
                   {/* B2B Badge */}
-                  <div className="absolute top-0 left-0 bg-amber-500 text-black font-bold px-2 py-0.5 rounded-br-lg text-xs">
-                    B2B
-                  </div>
+                  {(offer.target_role === 'merchant' || offer.target_role === 'all') && (
+                    <div className="absolute top-0 left-0 bg-amber-500 text-black font-bold px-2 py-0.5 rounded-br-lg text-xs">
+                      B2B
+                    </div>
+                  )}
                   <p className="text-xs text-violet-400 font-medium uppercase tracking-wider mb-1 mt-4 pr-12 truncate">
                     {merchantName}
                   </p>
@@ -122,7 +123,9 @@ export default async function QRPage() {
                         <span className="text-sm text-slate-400 line-through">${offer.original_price.toLocaleString('es-AR')}</span>
                       </div>
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-xs text-amber-400 font-medium">Precio B2B</span>
+                        <span className="text-xs text-amber-400 font-medium">
+                          {(offer.target_role === 'merchant' || offer.target_role === 'all') ? 'Precio B2B' : 'Precio con app'}
+                        </span>
                         <span className="text-xl text-white font-black">${offer.final_price.toLocaleString('es-AR')}</span>
                       </div>
                       <div className="text-xs text-amber-950 bg-amber-400 py-1.5 px-2 rounded-lg text-center font-bold uppercase tracking-wider">
