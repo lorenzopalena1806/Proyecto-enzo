@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight, QrCode, Store, TrendingUp, Users, Star, CheckCircle2, ShieldCheck, Zap } from 'lucide-react';
 import { Navbar } from '@/components/marketing/Navbar';
+import { ClientDownloadButton } from '@/components/shared/ClientDownloadButton';
 import { createAdminClient } from '@/lib/supabase-server';
 import { AnimatedStats } from '@/components/marketing/AnimatedStats';
 import { FeaturesTabs } from '@/components/marketing/FeaturesTabs';
@@ -93,6 +94,10 @@ export default async function Home() {
               >
                 Ya tengo cuenta
               </Link>
+              <ClientDownloadButton 
+                text="Descargá Lazoo" 
+                className="group flex items-center justify-center gap-2 px-8 py-4 w-full sm:w-auto rounded-2xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 text-white font-semibold text-lg transition-all backdrop-blur-sm shadow-lg" 
+              />
             </div>
 
             {/* QR Hero visual */}

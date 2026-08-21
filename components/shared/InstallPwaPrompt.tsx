@@ -53,10 +53,19 @@ export function InstallPwaPrompt() {
       setIsInstallable(true);
     };
 
+    const handleCustomTrigger = () => {
+      setIsDismissed(false);
+      setIsInstallable(true);
+      // We don't call prompt() directly here because it requires a user gesture,
+      // but showing the banner allows them to click the banner's button (which is a valid user gesture).
+    };
+
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('trigger-pwa-install', handleCustomTrigger);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('trigger-pwa-install', handleCustomTrigger);
     };
   }, []);
 
@@ -104,7 +113,7 @@ export function InstallPwaPrompt() {
             <Download className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h3 className="text-white font-bold text-sm">Instalá Lazoo</h3>
+            <h3 className="text-white font-bold text-sm">Descargá la app y empezá en Lazoo</h3>
             <p className="text-slate-400 text-xs mt-0.5">Agregá la app a tu inicio para una experiencia más rápida y completa.</p>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Store, User } from 'lucide-react';
+import { ClientDownloadButton } from '@/components/shared/ClientDownloadButton';
 
 export function Navbar() {
   return (
@@ -25,6 +26,9 @@ export function Navbar() {
               <User className="h-4 w-4" />
               Ingresar
             </Link>
+            
+            <ClientDownloadButton className="hidden md:flex px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-sm font-bold hover:bg-slate-700 transition-colors items-center gap-2" />
+
             <Link
               href="/auth/register"
               className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-bold hover:from-cyan-400 hover:to-blue-500 transition-colors shadow-[0_0_20px_rgba(6,182,212,0.3)]"
