@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { createClient } from '@/lib/supabase';
-import { createPendingCharge, cancelPendingCharge } from '@/app/actions/pending-charges';
+import { createPendingCharge, cancelPendingCharge, completePendingChargeWithCode } from '@/app/actions/pending-charges';
 import {
   Store, BellRing, Banknote, ArrowLeftRight,
   Loader2, QrCode, X, Tag, DollarSign, CheckCircle2, Clock, Sparkles
@@ -57,6 +57,11 @@ export function POSView({
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'transfer'>('cash');
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState('');
+
+  // Estado para el código manual
+  const [manualCode, setManualCode] = useState('');
+  const [manualCodeLoading, setManualCodeLoading] = useState(false);
+  const [manualCodeError, setManualCodeError] = useState('');
 
   // Estado del cobro activo
   const [activeCharge, setActiveCharge] = useState<PendingCharge | null>(null);
@@ -178,6 +183,30 @@ export function POSView({
     setActiveCharge(null);
   };
 
+  const handleManualCodeSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setManualCodeError('');
+    
+    if (!manualCode || manualCode.length < 6) {
+      setManualCodeError('El código debe tener al menos 6 caracteres.');
+      return;
+    }
+    if (!activeCharge) return;
+
+    setManualCodeLoading(true);
+    const res = await completePendingChargeWithCode(activeCharge.id, manualCode);
+    setManualCodeLoading(false);
+
+    if (!res.success) {
+      setManualCodeError(res.error || 'Código inválido o error al cobrar.');
+      return;
+    }
+    
+    // Si es exitoso, el websocket automáticamente capturará el cambio de estado a 'completed' 
+    // y mostrará la pantalla de éxito.
+    setManualCode('');
+  };
+
   const formatTime = (secs: number) => {
     const m = Math.floor(secs / 60).toString().padStart(2, '0');
     const s = (secs % 60).toString().padStart(2, '0');
@@ -296,6 +325,32 @@ export function POSView({
                   <span className="text-2xl font-black text-white tracking-tight">{formatARS(activeCharge.amount)}</span>
                 </div>
               </div>
+
+              {/* Formulario de Código Manual */}
+              <form onSubmit={handleManualCodeSubmit} className="w-full mt-4 bg-slate-900/80 border border-slate-700 rounded-2xl p-4 shadow-lg">
+                <label className="block text-xs font-medium text-slate-400 mb-2">¿El cliente no puede escanear?</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Código de 6 dígitos"
+                    value={manualCode}
+                    onChange={(e) => setManualCode(e.target.value.toUpperCase())}
+                    maxLength={6}
+                    className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono uppercase focus:border-blue-500 focus:outline-none"
+                    disabled={manualCodeLoading}
+                  />
+                  <button
+                    type="submit"
+                    disabled={manualCodeLoading || manualCode.length < 6}
+                    className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-4 py-2 rounded-xl font-medium transition-colors"
+                  >
+                    {manualCodeLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Cobrar'}
+                  </button>
+                </div>
+                {manualCodeError && (
+                  <p className="text-red-400 text-xs mt-2">{manualCodeError}</p>
+                )}
+              </form>
 
               <button
                 onClick={handleCancelCharge}

@@ -90,3 +90,73 @@ export async function completePendingCharge(
   }
   return { success: true };
 }
+
+export async function completePendingChargeWithCode(chargeId: string, shortCode: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { success: false, error: 'No autorizado' };
+
+  const adminClient = createAdminClient();
+  
+  // 1. Get the pending charge
+  const { data: charge } = await adminClient
+    .from('pending_charges')
+    .select('*')
+    .eq('id', chargeId)
+    .eq('merchant_id', user.id)
+    .eq('status', 'active')
+    .single();
+
+  if (!charge) {
+    return { success: false, error: 'Cobro activo no encontrado.' };
+  }
+
+  // 2. Find client by short code
+  const { data: qrRecords } = await adminClient
+    .from('qr_codes')
+    .select('user_id, is_active, profiles:user_id(full_name)')
+    .ilike('qr_token', `${shortCode}%`)
+    .limit(1);
+
+  if (!qrRecords || qrRecords.length === 0) {
+    return { success: false, error: 'Código de cliente no encontrado.' };
+  }
+
+  const clientData = qrRecords[0];
+  if (!clientData.is_active) {
+    return { success: false, error: 'El código de este cliente está desactivado.' };
+  }
+
+  // 3. Process payment using the existing logic
+  const { processPaymentByShortCodeServer } = await import('./charge');
+  const paymentRes = await processPaymentByShortCodeServer(
+    user.id, 
+    charge.amount, 
+    charge.payment_method as any, 
+    shortCode, 
+    charge.offer_id || undefined
+  );
+
+  if (!paymentRes.success) {
+    return { success: false, error: paymentRes.reason || 'Error al procesar el pago.' };
+  }
+
+  // 4. Update the pending charge to completed to trigger the real-time UI
+  const clientProfile = clientData.profiles as any;
+  const { error: updateError } = await adminClient
+    .from('pending_charges')
+    .update({
+      status: 'completed',
+      completed_by_name: clientProfile?.full_name || 'Cliente',
+      final_amount_paid: (paymentRes as any).finalAmount,
+      discount_applied_pct: (paymentRes as any).discountPct,
+    })
+    .eq('id', chargeId);
+
+  if (updateError) {
+    console.error('Error updating pending charge status:', updateError);
+    return { success: false, error: 'Pago registrado, pero no se pudo actualizar la pantalla.' };
+  }
+
+  return { success: true };
+}
