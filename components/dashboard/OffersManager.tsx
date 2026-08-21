@@ -2,7 +2,17 @@
 
 import React, { useState } from 'react';
 import { createOffer, updateOffer, toggleOfferStatus, deleteOffer, resetOfferStock } from '@/app/actions/offers';
-import { Plus, Tag, Trash2, Power, PowerOff, Loader2, AlertTriangle, Edit2 } from 'lucide-react';
+import { Plus, Tag, Trash2, Power, PowerOff, Loader2, AlertTriangle, Edit2, CalendarDays } from 'lucide-react';
+
+const DAYS = [
+  { value: '1', label: 'L' },
+  { value: '2', label: 'M' },
+  { value: '3', label: 'M' },
+  { value: '4', label: 'J' },
+  { value: '5', label: 'V' },
+  { value: '6', label: 'S' },
+  { value: '0', label: 'D' },
+];
 
 export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -123,6 +133,30 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
             <label className="block text-sm font-medium text-slate-400 mb-1">Límite de Stock (opcional)</label>
             <input type="number" name="stock_limit" defaultValue={editingOffer?.stock_limit} min="1" placeholder="Ej: 50" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none" />
             <p className="text-xs text-slate-500 mt-1">Si querés que la oferta se agote automáticamente al llegar a un límite, ponelo acá.</p>
+          </div>
+
+          <div className="bg-slate-950/50 p-4 rounded-xl border border-slate-800/50">
+            <div className="flex items-center gap-2 mb-3">
+              <CalendarDays className="w-4 h-4 text-violet-400" />
+              <label className="text-sm font-medium text-slate-300">Días Válidos (Opcional)</label>
+            </div>
+            <p className="text-xs text-slate-400 mb-3">Seleccioná qué días de la semana aplica esta oferta. Si no marcás ninguno, estará disponible <b>todos los días</b>.</p>
+            <div className="flex gap-2">
+              {DAYS.map(day => (
+                <label key={day.value} className="flex-1 cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    name="valid_days" 
+                    value={day.value} 
+                    defaultChecked={editingOffer && Array.isArray(editingOffer.valid_days) ? editingOffer.valid_days.includes(day.value) : false}
+                    className="peer hidden" 
+                  />
+                  <div className="w-full py-2 rounded-xl border border-slate-700 bg-slate-900 text-slate-400 text-center text-sm font-bold peer-checked:bg-violet-600 peer-checked:border-violet-500 peer-checked:text-white transition-all shadow-sm">
+                    {day.label}
+                  </div>
+                </label>
+              ))}
+            </div>
           </div>
 
           <button type="submit" disabled={loading} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl py-3 font-medium transition-colors flex items-center justify-center gap-2">

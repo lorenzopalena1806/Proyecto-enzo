@@ -17,6 +17,7 @@ export async function createOffer(formData: FormData) {
   const target_role = formData.get('target_role') as string;
   const stock_limit_raw = formData.get('stock_limit') as string;
   const stock_limit = stock_limit_raw ? parseInt(stock_limit_raw, 10) : null;
+  const valid_days = formData.getAll('valid_days') as string[];
   
   const original_price_raw = formData.get('original_price') as string;
   const final_price_raw = formData.get('final_price') as string;
@@ -48,6 +49,7 @@ export async function createOffer(formData: FormData) {
     target_role,
     image_url,
     stock_limit,
+    valid_days,
     is_active: true
   });
 
@@ -75,6 +77,7 @@ export async function updateOffer(offerId: string, formData: FormData) {
   const target_role = formData.get('target_role') as string;
   const stock_limit_raw = formData.get('stock_limit') as string;
   const stock_limit = stock_limit_raw ? parseInt(stock_limit_raw, 10) : null;
+  const valid_days = formData.getAll('valid_days') as string[];
   
   const original_price_raw = formData.get('original_price') as string;
   const final_price_raw = formData.get('final_price') as string;
@@ -105,6 +108,7 @@ export async function updateOffer(offerId: string, formData: FormData) {
     target_role,
     image_url,
     stock_limit,
+    valid_days,
   }).eq('id', offerId).eq('merchant_id', user.id);
 
   if (error) {

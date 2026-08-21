@@ -89,6 +89,22 @@ export default async function ClientQRPage() {
     .in('target_role', ['client', 'all'])
     .order('created_at', { ascending: false });
 
+  // Filtrar ofertas por día válido y stock (stock logic usually handled here or in client, but let's do day filter)
+  const argDate = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Argentina/Buenos_Aires"}));
+  const todayString = argDate.getDay().toString();
+
+  const activeOffers = (offers || []).filter((offer: any) => {
+    // Si la oferta tiene un límite de stock y ya se agotó, no mostrarla (opcional, pero buena práctica)
+    if (offer.stock_limit && offer.used_count >= offer.stock_limit) return false;
+    
+    // Si tiene días válidos configurados (array no vacío), debe incluir el día de hoy
+    if (offer.valid_days && Array.isArray(offer.valid_days) && offer.valid_days.length > 0) {
+      if (!offer.valid_days.includes(todayString)) return false;
+    }
+    
+    return true;
+  });
+
   // 2. Fetch this client's transaction history
   const { data: clientHistory } = await adminClient
     .from('discount_transactions')
@@ -205,7 +221,7 @@ export default async function ClientQRPage() {
         </section>
         <DiscoverSection 
           merchants={merchants || []} 
-          offers={offers || []} 
+          offers={activeOffers} 
           initialFavorites={initialFavorites} 
         />
 
