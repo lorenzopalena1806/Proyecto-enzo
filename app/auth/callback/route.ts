@@ -11,8 +11,29 @@ export async function GET(request: Request) {
     const supabase = await createClient();
     const { data: authData, error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error && authData.user) {
-      // Fetch role and route dynamically
-      const role = await getUserRoleById(authData.user.id);
+      // Auto-create profile for Google Auth users if it doesn't exist
+      const { createAdminClient } = await import('@/lib/supabase-server');
+      const adminClient = createAdminClient();
+      
+      let { data: profile } = await adminClient
+        .from('profiles')
+        .select('role')
+        .eq('id', authData.user.id)
+        .maybeSingle();
+
+      if (!profile) {
+        // It's a new user from Google Login, create default client profile
+        const fullName = authData.user.user_metadata?.full_name || authData.user.user_metadata?.name || 'Usuario';
+        await adminClient.from('profiles').insert({
+          id: authData.user.id,
+          role: 'client',
+          full_name: fullName,
+          is_active: true
+        });
+        profile = { role: 'client' };
+      }
+
+      const role = profile.role;
       let redirectUrl = '/client/qr';
       if (role === 'superadmin') redirectUrl = '/admin';
       else if (role === 'merchant') redirectUrl = '/dashboard';
