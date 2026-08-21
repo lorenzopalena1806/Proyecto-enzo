@@ -149,7 +149,7 @@ export default async function PayPage({
     if (offer) {
       discountPct = offer.discount_pct;
       if (offer.final_price && offer.original_price) {
-        finalAmount = offer.final_price;
+        finalAmount = amount * (offer.final_price / offer.original_price);
       } else {
         finalAmount = amount - amount * (offer.discount_pct / 100);
       }

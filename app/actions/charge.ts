@@ -108,7 +108,12 @@ async function executePaymentServer(merchantId: string, clientId: string, amount
     }
     
     finalPct = offer.discount_pct;
-    finalAmount = amount - (amount * (finalPct / 100));
+    
+    if (offer.original_price && offer.final_price) {
+      finalAmount = amount * (offer.final_price / offer.original_price);
+    } else {
+      finalAmount = amount - (amount * (finalPct / 100));
+    }
 
   } else {
     // Fallback: Descuento estándar global
