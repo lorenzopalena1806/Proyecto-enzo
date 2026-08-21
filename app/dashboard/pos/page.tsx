@@ -26,10 +26,20 @@ export default async function POSPage() {
   // Traer las ofertas activas del comercio para el selector
   const { data: offers } = await adminClient
     .from('merchant_offers')
-    .select('id, title, discount_pct, original_price, final_price')
+    .select('id, title, discount_pct, original_price, final_price, valid_days')
     .eq('merchant_id', user.id)
     .eq('is_active', true)
     .order('created_at', { ascending: false });
+
+  const argDate = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Argentina/Buenos_Aires"}));
+  const todayString = argDate.getDay().toString();
+
+  const activeOffers = (offers || []).filter((offer: any) => {
+    if (offer.valid_days && Array.isArray(offer.valid_days) && offer.valid_days.length > 0) {
+      if (!offer.valid_days.includes(todayString)) return false;
+    }
+    return true;
+  });
 
   return (
     <div className="space-y-6">
@@ -43,7 +53,7 @@ export default async function POSPage() {
       <POSView
         merchantId={user.id}
         businessName={profile.business_name || profile.full_name}
-        offers={offers || []}
+        offers={activeOffers}
       />
     </div>
   );
