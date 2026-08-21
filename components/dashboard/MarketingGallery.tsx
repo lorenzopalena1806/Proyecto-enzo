@@ -42,8 +42,8 @@ export function MarketingGallery({ assets, isLoading = false }: MarketingGallery
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center gap-3 py-16">
-        <Loader2 className="h-8 w-8 text-violet-400 animate-spin" />
-        <p className="text-slate-400 text-sm">Cargando materiales de marketing...</p>
+        <Loader2 className="h-8 w-8 text-blue-600 animate-spin" />
+        <p className="text-slate-500 text-sm font-medium">Cargando materiales de marketing...</p>
       </div>
     );
   }
@@ -53,12 +53,12 @@ export function MarketingGallery({ assets, isLoading = false }: MarketingGallery
       <div className="space-y-5">
         {/* Header */}
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-600">
-            <ImageIcon className="h-5 w-5 text-white" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 border border-blue-100">
+            <ImageIcon className="h-5 w-5 text-blue-600" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-white">Materiales de Marketing</h2>
-            <p className="text-sm text-slate-400">
+            <h2 className="text-xl font-bold text-slate-900">Materiales de Marketing</h2>
+            <p className="text-sm text-slate-500 font-medium">
               {assets.length} {assets.length === 1 ? 'archivo' : 'archivos'} disponibles
             </p>
           </div>
@@ -73,20 +73,20 @@ export function MarketingGallery({ assets, isLoading = false }: MarketingGallery
               placeholder="Buscar por título..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent text-sm transition-all"
+              className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition-all shadow-sm font-medium"
             />
           </div>
         )}
 
         {/* Galería */}
         {filteredAssets.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-3 py-16 rounded-2xl border border-dashed border-slate-700">
-            <ImageIcon className="h-12 w-12 text-slate-600" />
+          <div className="flex flex-col items-center justify-center gap-3 py-16 rounded-2xl border border-dashed border-slate-300 bg-slate-50/50">
+            <ImageIcon className="h-12 w-12 text-slate-300" />
             <div className="text-center">
-              <p className="text-slate-400 font-medium">
+              <p className="text-slate-500 font-bold">
                 {searchQuery ? 'Sin resultados para tu búsqueda' : 'Todavía no hay materiales'}
               </p>
-              <p className="text-slate-600 text-sm mt-1">
+              <p className="text-slate-400 text-sm mt-1 font-medium">
                 {searchQuery
                   ? 'Probá con otro término'
                   : 'El administrador subirá tus carruseles e imágenes aquí pronto'}
@@ -131,9 +131,9 @@ interface AssetCardProps {
 
 function AssetCard({ asset, onPreview, onDownload }: AssetCardProps) {
   return (
-    <div className="group relative rounded-xl overflow-hidden border border-slate-700 bg-slate-800/60 hover:border-violet-600/60 transition-all duration-300 hover:shadow-lg hover:shadow-violet-900/20">
+    <div className="group relative rounded-xl overflow-hidden border border-slate-200 bg-white hover:border-blue-300 transition-all duration-300 hover:shadow-lg hover:shadow-blue-900/5 shadow-sm">
       {/* Thumbnail */}
-      <div className="relative aspect-square overflow-hidden bg-slate-900">
+      <div className="relative aspect-square overflow-hidden bg-slate-100">
         <Image
           src={asset.file_url}
           alt={asset.title ?? 'Material de marketing'}
@@ -143,17 +143,17 @@ function AssetCard({ asset, onPreview, onDownload }: AssetCardProps) {
         />
 
         {/* Overlay con acciones */}
-        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
+        <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3 backdrop-blur-[2px]">
           <button
             onClick={onPreview}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 hover:bg-white/30 text-white transition-all backdrop-blur-sm"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 hover:bg-white text-slate-900 transition-all shadow-sm"
             title="Vista previa"
           >
             <Eye className="h-4 w-4" />
           </button>
           <button
             onClick={onDownload}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-violet-600 hover:bg-violet-500 text-white transition-all"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-all shadow-sm"
             title="Descargar"
           >
             <Download className="h-4 w-4" />
@@ -162,14 +162,14 @@ function AssetCard({ asset, onPreview, onDownload }: AssetCardProps) {
       </div>
 
       {/* Info */}
-      <div className="p-3">
-        <p className="text-white text-sm font-medium truncate">
+      <div className="p-3 bg-white">
+        <p className="text-slate-900 text-sm font-bold truncate">
           {asset.title ?? 'Sin título'}
         </p>
         {asset.description && (
-          <p className="text-slate-400 text-xs truncate mt-0.5">{asset.description}</p>
+          <p className="text-slate-500 text-xs truncate mt-0.5 font-medium">{asset.description}</p>
         )}
-        <p className="text-slate-600 text-xs mt-1">
+        <p className="text-slate-400 text-xs mt-1 font-medium">
           {new Date(asset.created_at).toLocaleDateString('es-AR', {
             day: '2-digit',
             month: 'short',
@@ -190,25 +190,25 @@ interface LightboxProps {
 function Lightbox({ asset, onClose, onDownload }: LightboxProps) {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4"
       onClick={onClose}
     >
       <div
-        className="relative max-w-3xl w-full max-h-[90vh] rounded-2xl overflow-hidden bg-slate-900 border border-slate-700 shadow-2xl"
+        className="relative max-w-3xl w-full max-h-[90vh] rounded-2xl overflow-hidden bg-white border border-slate-200 shadow-2xl flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Controles */}
         <div className="absolute top-3 right-3 z-10 flex gap-2">
           <button
             onClick={onDownload}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-violet-600 hover:bg-violet-500 text-white transition-all shadow-lg"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-all shadow-md"
             title="Descargar"
           >
             <Download className="h-4 w-4" />
           </button>
           <button
             onClick={onClose}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-all"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-white hover:bg-slate-50 text-slate-600 hover:text-slate-900 transition-all shadow-md"
             title="Cerrar"
           >
             <X className="h-4 w-4" />
@@ -228,10 +228,10 @@ function Lightbox({ asset, onClose, onDownload }: LightboxProps) {
 
         {/* Info */}
         {(asset.title || asset.description) && (
-          <div className="p-4 border-t border-slate-800">
-            {asset.title && <p className="text-white font-medium">{asset.title}</p>}
+          <div className="p-4 border-t border-slate-200 bg-white shrink-0">
+            {asset.title && <p className="text-slate-900 font-bold">{asset.title}</p>}
             {asset.description && (
-              <p className="text-slate-400 text-sm mt-1">{asset.description}</p>
+              <p className="text-slate-500 text-sm mt-1 font-medium">{asset.description}</p>
             )}
           </div>
         )}

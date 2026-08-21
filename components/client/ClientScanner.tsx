@@ -62,27 +62,27 @@ export function ClientScanner() {
 
   return (
     <div className="w-full max-w-md mx-auto space-y-6">
-      <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 shadow-2xl overflow-hidden relative">
+      <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm overflow-hidden relative">
         {isStarting && !error && (
-          <div className="absolute inset-0 z-10 bg-slate-900 flex flex-col items-center justify-center space-y-3">
-            <Loader2 className="w-8 h-8 text-violet-500 animate-spin" />
-            <p className="text-slate-400 text-sm font-medium animate-pulse">Iniciando cámara...</p>
+          <div className="absolute inset-0 z-10 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center space-y-3">
+            <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+            <p className="text-slate-500 text-sm font-bold animate-pulse">Iniciando cámara...</p>
           </div>
         )}
         <div id="reader" className="w-full rounded-2xl overflow-hidden [&>div]:!border-none [&_video]:rounded-2xl"></div>
         
         <div className="mt-6 text-center space-y-2">
-          <div className="flex items-center justify-center gap-2 text-violet-400 font-semibold">
+          <div className="flex items-center justify-center gap-2 text-blue-600 font-bold">
             <Scan className="w-5 h-5" />
             <span>Apuntá al QR del local</span>
           </div>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm font-medium text-slate-500">
             Alineá el código en el centro del recuadro para leerlo automáticamente.
           </p>
         </div>
 
         {error && (
-          <div className="mt-4 p-3 rounded-xl bg-red-950/50 border border-red-800 text-red-400 text-sm flex gap-2 items-start">
+          <div className="mt-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex gap-2 items-start font-bold shadow-sm">
             <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
             <span>{error}</span>
           </div>

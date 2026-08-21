@@ -94,7 +94,7 @@ export default function AdminMarketingPage() {
   if (loadingMerchants) {
     return (
       <div className="flex h-[50vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-violet-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
       </div>
     );
   }
@@ -102,23 +102,23 @@ export default function AdminMarketingPage() {
   return (
     <div className="space-y-6 max-w-3xl">
       <div>
-        <h1 className="text-3xl font-bold text-white">Subir Marketing</h1>
-        <p className="text-slate-400 mt-1">Cargá imágenes y promociones para el panel de los comercios.</p>
+        <h1 className="text-3xl font-black text-slate-900">Subir Marketing</h1>
+        <p className="text-slate-500 mt-1 font-medium">Cargá imágenes y promociones para el panel de los comercios.</p>
       </div>
 
-      <form onSubmit={handleUpload} className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6 shadow-sm space-y-6">
+      <form onSubmit={handleUpload} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-6">
         
         {/* Selección de Comercio */}
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-slate-300">
+          <label className="block text-sm font-bold text-slate-700">
             Comercio Destino
           </label>
           <div className="relative">
-            <Store className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500" />
+            <Store className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
             <select
               value={selectedMerchant}
               onChange={(e) => setSelectedMerchant(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-700 bg-slate-800 text-white focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-all appearance-none"
+              className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all appearance-none shadow-sm font-medium"
               required
             >
               <option value="" disabled>Seleccionar un comercio...</option>
@@ -134,37 +134,37 @@ export default function AdminMarketingPage() {
         {/* Título y Descripción */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-slate-300">Título</label>
+            <label className="block text-sm font-bold text-slate-700">Título</label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Ej: Promo Verano"
-              className="w-full px-4 py-3 rounded-xl border border-slate-700 bg-slate-800 text-white focus:outline-none focus:border-violet-500 transition-all"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all shadow-sm font-medium"
             />
           </div>
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-slate-300">Descripción (Opcional)</label>
+            <label className="block text-sm font-bold text-slate-700">Descripción (Opcional)</label>
             <input
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Detalles de la imagen..."
-              className="w-full px-4 py-3 rounded-xl border border-slate-700 bg-slate-800 text-white focus:outline-none focus:border-violet-500 transition-all"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all shadow-sm font-medium"
             />
           </div>
         </div>
 
         {/* Zona de subida */}
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-slate-300">Archivo de Imagen</label>
-          <div className="mt-2 flex justify-center rounded-xl border border-dashed border-slate-700 px-6 py-10 hover:border-violet-500 hover:bg-slate-800/30 transition-all">
+          <label className="block text-sm font-bold text-slate-700">Archivo de Imagen</label>
+          <div className="mt-2 flex justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50/50 px-6 py-10 hover:border-blue-400 hover:bg-slate-50 transition-all">
             <div className="text-center">
-              <ImageIcon className="mx-auto h-12 w-12 text-slate-500" aria-hidden="true" />
-              <div className="mt-4 flex text-sm leading-6 text-slate-400 justify-center">
+              <ImageIcon className="mx-auto h-12 w-12 text-slate-400" aria-hidden="true" />
+              <div className="mt-4 flex text-sm leading-6 text-slate-500 justify-center">
                 <label
                   htmlFor="file-upload"
-                  className="relative cursor-pointer rounded-md font-semibold text-violet-400 hover:text-violet-300"
+                  className="relative cursor-pointer rounded-md font-bold text-blue-600 hover:text-blue-700"
                 >
                   <span>Cargar un archivo</span>
                   <input
@@ -182,9 +182,9 @@ export default function AdminMarketingPage() {
                 </label>
                 <p className="pl-1">o arrastrar y soltar</p>
               </div>
-              <p className="text-xs leading-5 text-slate-500 mt-2">
+              <p className="text-xs leading-5 text-slate-500 mt-2 font-medium">
                 {file ? (
-                  <span className="font-semibold text-emerald-400">{file.name}</span>
+                  <span className="font-bold text-emerald-600">{file.name}</span>
                 ) : (
                   'PNG, JPG, GIF hasta 5MB'
                 )}
@@ -194,7 +194,7 @@ export default function AdminMarketingPage() {
         </div>
 
         {message && (
-          <div className={`p-4 rounded-xl text-sm font-medium ${message.type === 'error' ? 'bg-red-950/50 text-red-400 border border-red-900/50' : 'bg-emerald-950/50 text-emerald-400 border border-emerald-900/50'}`}>
+          <div className={`p-4 rounded-xl text-sm font-bold shadow-sm ${message.type === 'error' ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}`}>
             {message.text}
           </div>
         )}
@@ -203,7 +203,7 @@ export default function AdminMarketingPage() {
         <button
           type="submit"
           disabled={uploading || !file || !selectedMerchant}
-          className="w-full flex justify-center items-center gap-2 py-3.5 px-4 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-semibold shadow-lg shadow-violet-900/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full flex justify-center items-center gap-2 py-3.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {uploading ? (
             <>

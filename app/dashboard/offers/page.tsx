@@ -25,8 +25,8 @@ export default async function OffersPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white">Mis Ofertas</h1>
-        <p className="text-slate-400 mt-1">
+        <h1 className="text-2xl font-bold text-slate-900">Mis Ofertas</h1>
+        <p className="text-slate-500 mt-1 font-medium">
           Creá descuentos especiales. Estas ofertas aparecerán en la vidriera de los clientes.
         </p>
       </div>

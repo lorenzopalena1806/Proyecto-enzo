@@ -57,7 +57,7 @@ export default function MerchantsPage() {
   if (loading) {
     return (
       <div className="flex h-[50vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-violet-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
       </div>
     );
   }
@@ -65,14 +65,14 @@ export default function MerchantsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-white">Comercios</h1>
-        <p className="text-slate-400 mt-1">Gestioná las suscripciones de los comercios</p>
+        <h1 className="text-3xl font-black text-slate-900">Comercios</h1>
+        <p className="text-slate-500 mt-1 font-medium">Gestioná las suscripciones de los comercios</p>
       </div>
 
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/50 overflow-hidden">
+      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-slate-300">
-            <thead className="bg-slate-800/50 text-xs uppercase text-slate-400">
+          <table className="w-full text-left text-sm text-slate-700">
+            <thead className="bg-slate-50 text-xs uppercase text-slate-500 font-bold border-b border-slate-200">
               <tr>
                 <th className="px-6 py-4">Comercio</th>
                 <th className="px-6 py-4">Titular</th>
@@ -80,7 +80,7 @@ export default function MerchantsPage() {
                 <th className="px-6 py-4 text-right">Acción</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800">
+            <tbody className="divide-y divide-slate-200">
               {merchants.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="px-6 py-8 text-center text-slate-500">
@@ -89,22 +89,22 @@ export default function MerchantsPage() {
                 </tr>
               ) : (
                 merchants.map((merchant) => (
-                  <tr key={merchant.id} className="hover:bg-slate-800/30 transition-colors">
-                    <td className="px-6 py-4 font-medium text-white flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-lg bg-violet-900/50 flex items-center justify-center border border-violet-800">
-                        <Store className="h-4 w-4 text-violet-400" />
+                  <tr key={merchant.id} className="hover:bg-slate-50 transition-colors">
+                    <td className="px-6 py-4 font-bold text-slate-900 flex items-center gap-3">
+                      <div className="h-8 w-8 rounded-lg bg-blue-50 flex items-center justify-center border border-blue-200">
+                        <Store className="h-4 w-4 text-blue-600" />
                       </div>
                       {merchant.business_name || 'Sin nombre'}
                     </td>
-                    <td className="px-6 py-4">{merchant.full_name}</td>
+                    <td className="px-6 py-4 font-medium">{merchant.full_name}</td>
                     <td className="px-6 py-4">
                       {merchant.subscriptionStatus === 'active' ? (
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-400 border border-emerald-500/20">
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 border border-emerald-200">
                           <CheckCircle className="h-3.5 w-3.5" />
                           Activa
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-red-500/10 px-2.5 py-1 text-xs font-medium text-red-400 border border-red-500/20">
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-1 text-xs font-bold text-red-700 border border-red-200">
                           <XCircle className="h-3.5 w-3.5" />
                           {merchant.subscriptionStatus === 'none' ? 'Sin iniciar' : 'Inactiva'}
                         </span>
@@ -115,10 +115,10 @@ export default function MerchantsPage() {
                         <button
                           onClick={() => toggleSubscription(merchant.id, merchant.subscriptionStatus)}
                           disabled={processingId === merchant.id}
-                          className={`inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                          className={`inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-bold transition-all border shadow-sm ${
                             merchant.subscriptionStatus === 'active'
-                              ? 'bg-slate-800 text-slate-300 hover:bg-red-900/50 hover:text-red-400 hover:border-red-800 border border-transparent'
-                              : 'bg-violet-600 text-white hover:bg-violet-500 shadow-lg shadow-violet-900/20'
+                              ? 'bg-white border-slate-200 text-slate-700 hover:bg-red-50 hover:text-red-700 hover:border-red-200'
+                              : 'bg-blue-600 border-blue-600 text-white hover:bg-blue-700'
                           }`}
                         >
                           {processingId === merchant.id ? (
@@ -134,7 +134,7 @@ export default function MerchantsPage() {
                           onClick={() => handleDelete(merchant.id)}
                           disabled={processingId === merchant.id}
                           title="Eliminar Comercio"
-                          className="inline-flex items-center justify-center rounded-lg p-2 text-slate-400 hover:bg-red-900/30 hover:text-red-400 transition-all border border-transparent hover:border-red-800/50"
+                          className="inline-flex items-center justify-center rounded-lg p-2 text-slate-500 hover:bg-red-50 hover:text-red-700 transition-all border border-transparent hover:border-red-200"
                         >
                           <Trash2 className="h-5 w-5" />
                         </button>

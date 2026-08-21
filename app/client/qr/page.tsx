@@ -104,71 +104,26 @@ export default async function ClientQRPage() {
     .order('created_at', { ascending: false });
 
   return (
-    <div className="min-h-screen app-bg flex flex-col font-sans">
-      <style>{`
-        .app-bg {
-          background: radial-gradient(ellipse at top, #0f1f4a 0%, #060d1f 50%, #000510 100%);
-        }
-        .glass-panel {
-          background: rgba(255,255,255,0.03);
-          backdrop-filter: blur(24px);
-          -webkit-backdrop-filter: blur(24px);
-          border: 1px solid rgba(255,255,255,0.08);
-          box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
-        }
-        .glass-card-blue {
-          background: rgba(59, 130, 246, 0.05);
-          backdrop-filter: blur(24px);
-          -webkit-backdrop-filter: blur(24px);
-          border: 1px solid rgba(59,130,246,0.15);
-          box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06), 0 0 40px rgba(59,130,246,0.05);
-        }
-        .btn-primary {
-          background: linear-gradient(135deg, #2563eb, #4f46e5);
-          box-shadow: 0 0 20px rgba(37,99,235,0.3), 0 4px 10px rgba(0,0,0,0.2);
-          border: 1px solid rgba(255,255,255,0.1);
-          color: white;
-          transition: all 0.2s ease;
-        }
-        .btn-primary:hover {
-          background: linear-gradient(135deg, #3b82f6, #6366f1);
-          box-shadow: 0 0 30px rgba(59,130,246,0.4), 0 4px 15px rgba(0,0,0,0.3);
-          transform: translateY(-1px);
-        }
-        .scan-btn {
-          background: linear-gradient(135deg, #8b5cf6, #d946ef);
-          box-shadow: 0 0 30px rgba(217,70,239,0.3), 0 4px 15px rgba(0,0,0,0.2);
-          border: 1px solid rgba(255,255,255,0.2);
-        }
-        .scan-btn:hover {
-          box-shadow: 0 0 40px rgba(217,70,239,0.4), 0 4px 15px rgba(0,0,0,0.3);
-          transform: translateY(-2px);
-        }
-        @keyframes pulse-glow {
-          0%, 100% { opacity: 0.4; }
-          50% { opacity: 0.8; }
-        }
-        .glow-pulse { animation: pulse-glow 2s ease-in-out infinite; }
-      `}</style>
+    <div className="min-h-screen flex flex-col font-sans bg-slate-50 relative overflow-hidden z-0">
       
       {/* Background ambient orbs */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-blue-600/10 blur-[120px]" />
-        <div className="absolute bottom-[-10%] left-[-20%] w-[50%] h-[50%] rounded-full bg-fuchsia-600/10 blur-[120px]" />
+      <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
+        <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-blue-200/50 blur-[100px] animate-pulse" />
+        <div className="absolute bottom-[-10%] left-[-20%] w-[50%] h-[50%] rounded-full bg-cyan-200/50 blur-[100px] animate-pulse delay-1000" />
       </div>
 
       {/* Header */}
-      <header className="px-4 py-4 border-b border-white/5 flex justify-between items-center bg-black/20 backdrop-blur-md sticky top-0 z-50">
+      <header className="px-4 py-4 border-b border-slate-200 flex justify-between items-center bg-white/60 backdrop-blur-xl shadow-sm sticky top-0 z-50">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-900/40">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 shadow-md shadow-blue-500/20">
             <User className="h-4 w-4 text-white" />
           </div>
-          <span className="text-white font-bold text-sm tracking-wide">Lazoo</span>
+          <span className="text-slate-900 font-bold text-sm tracking-wide">Lazoo</span>
         </div>
         <div className="flex items-center gap-2">
-          <Link href="/client/profile" className="flex items-center gap-1.5 text-xs text-slate-300 hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5">
+          <Link href="/client/profile" className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-900 transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-100">
             <User className="h-4 w-4" />
-            <span className="hidden sm:inline font-medium">Mi Perfil</span>
+            <span className="hidden sm:inline font-semibold">Mi Perfil</span>
           </Link>
           <LogoutButton />
         </div>
@@ -180,46 +135,46 @@ export default async function ClientQRPage() {
         {/* Sección: Bienvenida */}
         <section className="space-y-4">
           <div className="text-center space-y-1 mb-2">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-semibold uppercase tracking-widest mb-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold uppercase tracking-widest mb-2 shadow-sm">
               <Sparkles className="w-3.5 h-3.5" />
               Club de Beneficios
             </div>
-            <h1 className="text-2xl font-black text-white tracking-tight">Hola, {profile?.full_name || 'Cliente'}</h1>
-            <p className="text-slate-400 text-sm max-w-sm mx-auto">
+            <h1 className="text-2xl font-black text-slate-900 tracking-tight">Hola, {profile?.full_name || 'Cliente'}</h1>
+            <p className="text-slate-500 text-sm font-medium max-w-sm mx-auto">
               Descubrí los mejores locales y ofertas cerca tuyo.
             </p>
           </div>
         </section>
 
         {/* Sección: Locales Adheridos */}
-        <section className="space-y-4 pt-6 border-t border-white/10">
+        <section className="space-y-4 pt-6 border-t border-slate-200">
           <div className="flex items-center gap-2 mb-2">
-            <Store className="w-5 h-5 text-blue-400" />
+            <Store className="w-5 h-5 text-blue-600" />
             <div>
-              <h2 className="text-xl font-bold text-white tracking-tight">Locales Adheridos</h2>
-              <p className="text-xs text-slate-400 font-medium">Comercios donde podés usar la app.</p>
+              <h2 className="text-xl font-bold text-slate-900 tracking-tight">Locales Adheridos</h2>
+              <p className="text-xs text-slate-500 font-semibold">Comercios donde podés usar la app.</p>
             </div>
           </div>
 
           {(!merchants || merchants.length === 0) ? (
-            <div className="glass-panel rounded-3xl p-8 text-center border-dashed border-white/20">
-              <p className="text-slate-400 font-medium">Por ahora no hay locales adheridos activos.</p>
+            <div className="glass-panel rounded-3xl p-8 text-center border-dashed border-slate-300">
+              <p className="text-slate-500 font-medium">Por ahora no hay locales adheridos activos.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {merchants.map((merchant: any) => (
-                <div key={merchant.id} className="glass-panel rounded-3xl p-4 flex items-center justify-between gap-4 hover:border-blue-500/30 transition-all hover:bg-white/5 shadow-lg group">
+                <div key={merchant.id} className="glass-panel rounded-3xl p-4 flex items-center justify-between gap-4 hover:border-blue-300 transition-all hover:bg-white/80 shadow-sm group">
                   <div className="flex items-center gap-4 min-w-0">
-                    <div className="w-14 h-14 rounded-2xl bg-black/40 border border-white/10 flex-shrink-0 flex items-center justify-center overflow-hidden">
+                    <div className="w-14 h-14 rounded-2xl bg-slate-100 border border-slate-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
                       {merchant.avatar_url ? (
                         <img src={merchant.avatar_url} alt={merchant.business_name || 'Logo'} className="w-full h-full object-cover" />
                       ) : (
-                        <Store className="w-6 h-6 text-slate-500" />
+                        <Store className="w-6 h-6 text-slate-400" />
                       )}
                     </div>
                     <div className="min-w-0">
-                      <h3 className="font-bold text-white truncate">{merchant.business_name || 'Comercio Adherido'}</h3>
-                      <p className="text-xs text-slate-400 truncate">Comercio verificado</p>
+                      <h3 className="font-bold text-slate-900 truncate">{merchant.business_name || 'Comercio Adherido'}</h3>
+                      <p className="text-xs text-slate-500 font-medium truncate">Comercio verificado</p>
                     </div>
                   </div>
                   {merchant.maps_url && (
@@ -227,7 +182,7 @@ export default async function ClientQRPage() {
                       href={merchant.maps_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-shrink-0 flex flex-col items-center justify-center w-10 h-10 rounded-full bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white transition-colors"
+                      className="flex-shrink-0 flex flex-col items-center justify-center w-10 h-10 rounded-full bg-blue-50 text-blue-600 border border-blue-100 hover:bg-blue-600 hover:text-white transition-colors"
                       title="Cómo llegar"
                     >
                       <MapPin className="w-5 h-5" />
@@ -240,18 +195,18 @@ export default async function ClientQRPage() {
         </section>
 
         {/* Sección: Vidriera de Ofertas */}
-        <section className="space-y-4 pt-6 border-t border-white/10">
+        <section className="space-y-4 pt-6 border-t border-slate-200">
           <div className="flex items-center gap-2 mb-2">
-            <ShoppingBag className="w-5 h-5 text-fuchsia-400" />
+            <ShoppingBag className="w-5 h-5 text-blue-600" />
             <div>
-              <h2 className="text-xl font-bold text-white tracking-tight">Ofertas Disponibles</h2>
-              <p className="text-xs text-slate-400 font-medium">Aprovechá estos descuentos hoy.</p>
+              <h2 className="text-xl font-bold text-slate-900 tracking-tight">Ofertas Disponibles</h2>
+              <p className="text-xs text-slate-500 font-semibold">Aprovechá estos descuentos hoy.</p>
             </div>
           </div>
 
           {(!offers || offers.length === 0) ? (
-            <div className="glass-panel rounded-3xl p-8 text-center border-dashed border-white/20">
-              <p className="text-slate-400 font-medium">Por ahora no hay ofertas especiales disponibles.</p>
+            <div className="glass-panel rounded-3xl p-8 text-center border-dashed border-slate-300">
+              <p className="text-slate-500 font-medium">Por ahora no hay ofertas especiales disponibles.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -262,39 +217,39 @@ export default async function ClientQRPage() {
                 const savings = hasPrices ? offer.original_price - offer.final_price : null;
 
                 return (
-                  <div key={offer.id} className="glass-panel rounded-3xl p-5 flex flex-col relative overflow-hidden group hover:border-blue-500/30 transition-all hover:bg-white/5 shadow-lg">
-                    <div className="absolute top-0 right-0 bg-gradient-to-l from-blue-600 to-indigo-600 text-white font-bold px-3 py-1.5 rounded-bl-2xl text-sm z-10 shadow-md">
+                  <div key={offer.id} className="glass-panel rounded-3xl p-5 flex flex-col relative overflow-hidden group hover:border-blue-300 transition-all hover:bg-white/80 shadow-sm">
+                    <div className="absolute top-0 right-0 bg-gradient-to-l from-blue-500 to-cyan-500 text-white font-bold px-3 py-1.5 rounded-bl-2xl text-sm z-10 shadow-sm">
                       -{offer.discount_pct}%
                     </div>
                     {offer.image_url && (
-                      <div className="absolute inset-0 z-0 opacity-20 group-hover:opacity-30 transition-opacity">
+                      <div className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition-opacity">
                         <img src={offer.image_url} alt={offer.title} className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-transparent"></div>
                       </div>
                     )}
                     <div className="relative z-10 flex flex-col h-full">
-                      <div className="flex items-center gap-1.5 mb-1.5 text-blue-300 pr-12 truncate drop-shadow-md">
+                      <div className="flex items-center gap-1.5 mb-1.5 text-blue-600 pr-12 truncate drop-shadow-sm">
                          <Tag className="w-3.5 h-3.5" />
                          <p className="text-[10px] font-bold uppercase tracking-widest truncate">
                            {merchantName}
                          </p>
                       </div>
-                      <h3 className="font-bold text-lg text-white mb-2 pr-8 leading-tight drop-shadow-md">{offer.title}</h3>
+                      <h3 className="font-bold text-lg text-slate-900 mb-2 pr-8 leading-tight">{offer.title}</h3>
                       {offer.description && (
-                        <p className="text-slate-400 text-sm mb-4 line-clamp-2">{offer.description}</p>
+                        <p className="text-slate-600 font-medium text-sm mb-4 line-clamp-2">{offer.description}</p>
                       )}
                     
                     {hasPrices && (
-                      <div className="mt-auto bg-black/20 rounded-2xl p-3 border border-white/5 shadow-inner">
+                      <div className="mt-auto bg-slate-50 rounded-2xl p-3 border border-slate-200 shadow-inner">
                         <div className="flex justify-between items-center mb-1">
-                          <span className="text-xs text-slate-500 font-medium">Precio Normal</span>
+                          <span className="text-xs text-slate-500 font-semibold">Precio Normal</span>
                           <span className="text-sm text-slate-400 line-through">${offer.original_price.toLocaleString('es-AR')}</span>
                         </div>
                         <div className="flex justify-between items-baseline mb-2">
-                          <span className="text-xs text-blue-400 font-bold uppercase">Precio App</span>
-                          <span className="text-xl text-white font-black">${offer.final_price.toLocaleString('es-AR')}</span>
+                          <span className="text-xs text-blue-600 font-bold uppercase">Precio App</span>
+                          <span className="text-xl text-slate-900 font-black">${offer.final_price.toLocaleString('es-AR')}</span>
                         </div>
-                        <div className="text-[11px] text-emerald-100 bg-emerald-500/20 border border-emerald-500/30 py-1.5 px-2 rounded-xl text-center font-bold tracking-wide shadow-inner">
+                        <div className="text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-200 py-1.5 px-2 rounded-xl text-center font-bold tracking-wide shadow-sm">
                           ¡Ahorrás ${savings?.toLocaleString('es-AR')}!
                         </div>
                       </div>
@@ -308,31 +263,31 @@ export default async function ClientQRPage() {
         </section>
 
         {/* Sección: Tu Código Corto (Movida arriba o mantenida) */}
-        <section className="space-y-4 pt-6 border-t border-white/10">
-          <div className="glass-card-blue rounded-3xl p-6 text-center relative overflow-hidden mt-4">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-2xl rounded-full" />
-            <p className="text-blue-300/80 text-xs font-bold uppercase tracking-widest mb-2">Tu Código Personal</p>
-            <p className="text-slate-400 text-xs mb-3">Dictalo en caja si no podés escanear el QR</p>
-            <div className="text-5xl font-black text-white tracking-[0.2em] bg-black/20 py-4 rounded-2xl border border-white/5 shadow-inner font-montserrat">
+        <section className="space-y-4 pt-6 border-t border-slate-200">
+          <div className="glass-panel rounded-3xl p-6 text-center relative overflow-hidden mt-4">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-100 blur-2xl rounded-full" />
+            <p className="text-blue-600 text-xs font-bold uppercase tracking-widest mb-2">Tu Código Personal</p>
+            <p className="text-slate-500 font-medium text-xs mb-3">Dictalo en caja si no podés escanear el QR</p>
+            <div className="text-5xl font-black text-slate-900 tracking-[0.2em] bg-white/60 py-4 rounded-2xl border border-slate-200 shadow-inner font-montserrat">
               {qrData.qr_token.substring(0, 6).toUpperCase()}
             </div>
           </div>
         </section>
 
         {/* Sección: Mis Descuentos Usados */}
-        <section className="space-y-4 pt-6 border-t border-white/10 mb-8">
+        <section className="space-y-4 pt-6 border-t border-slate-200 mb-8">
           <div className="flex items-center gap-2 mb-2">
-            <Clock className="w-5 h-5 text-emerald-400" />
+            <Clock className="w-5 h-5 text-emerald-500" />
             <div>
-              <h2 className="text-xl font-bold text-white tracking-tight font-montserrat">Mis Descuentos Usados</h2>
-              <p className="text-xs text-slate-400 font-medium">Historial de tus últimas compras.</p>
+              <h2 className="text-xl font-bold text-slate-900 tracking-tight font-montserrat">Mis Descuentos Usados</h2>
+              <p className="text-xs text-slate-500 font-semibold">Historial de tus últimas compras.</p>
             </div>
           </div>
 
           {(!clientHistory || clientHistory.length === 0) ? (
-            <div className="glass-panel rounded-3xl p-8 text-center border-dashed border-white/20">
-              <p className="text-slate-400 font-medium">Todavía no usaste ningún descuento.</p>
-              <p className="text-slate-500 text-sm mt-1">Visitá un comercio adherido para empezar a ahorrar.</p>
+            <div className="glass-panel rounded-3xl p-8 text-center border-dashed border-slate-300">
+              <p className="text-slate-500 font-medium">Todavía no usaste ningún descuento.</p>
+              <p className="text-slate-400 text-sm mt-1 font-medium">Visitá un comercio adherido para empezar a ahorrar.</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -343,11 +298,11 @@ export default async function ClientQRPage() {
                 const saved = (tx.original_amount || 0) - (tx.final_amount || 0);
 
                 return (
-                  <div key={tx.id} className="glass-panel rounded-2xl p-4 flex items-center justify-between gap-3 hover:bg-white/5 transition-colors">
+                  <div key={tx.id} className="glass-panel rounded-2xl p-4 flex items-center justify-between gap-3 hover:bg-white/80 transition-colors shadow-sm">
                     <div className="min-w-0">
-                      <p className="text-white font-bold text-sm truncate tracking-tight">{merchantName}</p>
-                      <p className="text-blue-300/80 font-medium text-xs truncate mt-0.5">{offer?.title || 'Descuento general'}</p>
-                      <p className="text-slate-500 text-[11px] mt-1 font-medium">
+                      <p className="text-slate-900 font-bold text-sm truncate tracking-tight">{merchantName}</p>
+                      <p className="text-blue-600 font-medium text-xs truncate mt-0.5">{offer?.title || 'Descuento general'}</p>
+                      <p className="text-slate-500 text-[11px] mt-1 font-semibold">
                         {new Date(tx.applied_at).toLocaleString('es-AR', {
                           day: '2-digit',
                           month: 'short',
@@ -358,16 +313,16 @@ export default async function ClientQRPage() {
                       </p>
                     </div>
                     <div className="text-right flex-shrink-0">
-                      <div className="inline-flex items-center px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-bold text-sm mb-1">
+                      <div className="inline-flex items-center px-2 py-0.5 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold text-sm mb-1">
                         -{tx.discount_pct}%
                       </div>
                       {saved > 0 && (
-                        <p className="text-[11px] font-bold text-emerald-400/80 uppercase tracking-wide">
+                        <p className="text-[11px] font-bold text-emerald-600 uppercase tracking-wide">
                           Ahorro ${saved.toLocaleString('es-AR')}
                         </p>
                       )}
                       {tx.final_amount && (
-                        <p className="text-xs font-semibold text-slate-300 mt-0.5">
+                        <p className="text-xs font-bold text-slate-700 mt-0.5">
                           ${tx.final_amount.toLocaleString('es-AR')}
                         </p>
                       )}
@@ -382,15 +337,15 @@ export default async function ClientQRPage() {
       </main>
 
       {/* Floating Bottom Navigation Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-6 pt-4 bg-gradient-to-t from-slate-950 via-slate-950/90 to-transparent pointer-events-none">
+      <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-6 pt-4 bg-gradient-to-t from-slate-50 via-slate-50/90 to-transparent pointer-events-none">
         <div className="max-w-lg mx-auto relative flex justify-center pointer-events-auto">
           
           <Link href="/client/scanner" className="group relative flex items-center justify-center">
             {/* Anillo exterior animado */}
-            <div className="absolute inset-0 bg-fuchsia-500/30 rounded-full blur-xl group-hover:blur-2xl group-hover:bg-fuchsia-500/40 transition-all duration-300 animate-pulse" />
+            <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-xl group-hover:blur-2xl group-hover:bg-blue-500/30 transition-all duration-300 animate-pulse" />
             
             {/* Botón principal */}
-            <div className="relative flex flex-col items-center justify-center w-20 h-20 bg-gradient-to-b from-blue-600 to-indigo-700 rounded-full border-[4px] border-slate-950 shadow-[0_0_30px_rgba(59,130,246,0.5)] group-hover:scale-105 transition-transform duration-300">
+            <div className="relative flex flex-col items-center justify-center w-20 h-20 bg-gradient-to-b from-blue-600 to-cyan-500 rounded-full border-[4px] border-slate-50 shadow-lg shadow-blue-500/40 group-hover:scale-105 transition-transform duration-300">
               <Scan className="w-8 h-8 text-white mb-0.5" />
               <span className="text-[10px] font-bold text-white tracking-widest uppercase font-montserrat">Pagar</span>
             </div>

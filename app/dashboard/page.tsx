@@ -50,24 +50,24 @@ export default async function DashboardPage() {
     <div className="space-y-6">
       {/* Saludo */}
       <div>
-        <h1 className="text-2xl font-bold text-white">
+        <h1 className="text-2xl font-bold text-slate-900">
           ¡Hola, {profile.business_name ?? profile.full_name ?? 'Comerciante'}! 👋
         </h1>
-        <p className="text-slate-400 mt-1">
+        <p className="text-slate-500 mt-1 font-medium">
           {today.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}
         </p>
       </div>
 
       {/* Alerta de día */}
       <div className={`
-        flex items-center gap-3 rounded-xl p-4 border
+        flex items-center gap-3 rounded-xl p-4 border shadow-sm
         ${isDiscountDay
-          ? 'bg-emerald-950/40 border-emerald-800 text-emerald-300'
-          : 'bg-amber-950/40 border-amber-800 text-amber-300'
+          ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+          : 'bg-amber-50 border-amber-200 text-amber-800'
         }
       `}>
-        <AlertTriangle className={`h-5 w-5 flex-shrink-0 ${isDiscountDay ? 'text-emerald-400' : 'text-amber-400'}`} />
-        <p className="text-sm font-medium">
+        <AlertTriangle className={`h-5 w-5 flex-shrink-0 ${isDiscountDay ? 'text-emerald-600' : 'text-amber-600'}`} />
+        <p className="text-sm font-semibold">
           {isDiscountDay
             ? '✅ Hoy los descuentos están ACTIVOS. ¡Podés escanear QRs!'
             : '⚠️ Hoy los descuentos están INACTIVOS (solo Lunes a Jueves).'}
@@ -115,21 +115,21 @@ export default async function DashboardPage() {
 
       {/* Últimas transacciones */}
       {recentTransactions && recentTransactions.length > 0 && (
-        <div className="rounded-2xl border border-slate-700 bg-slate-800/60 p-5 space-y-4">
-          <h2 className="text-white font-semibold">Últimos escaneos</h2>
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 space-y-4 shadow-sm">
+          <h2 className="text-slate-900 font-bold">Últimos escaneos</h2>
           <div className="space-y-2">
             {recentTransactions.map((tx: any) => {
               const su = tx.scanned_user as { full_name?: string; business_name?: string; role?: string } | null;
               return (
                 <div
                   key={tx.id}
-                  className="flex items-center justify-between py-2 border-b border-slate-700 last:border-0"
+                  className="flex items-center justify-between py-2 border-b border-slate-100 last:border-0"
                 >
                   <div>
-                    <p className="text-white text-sm font-medium">
+                    <p className="text-slate-900 text-sm font-bold">
                       {su?.business_name ?? su?.full_name ?? 'Usuario'}
                     </p>
-                    <p className="text-slate-500 text-xs">
+                    <p className="text-slate-500 text-xs font-medium">
                       {new Date(tx.applied_at).toLocaleString('es-AR', {
                         day: '2-digit',
                         month: 'short',
@@ -140,10 +140,10 @@ export default async function DashboardPage() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-emerald-400 text-sm font-bold">
+                    <p className="text-emerald-600 text-sm font-black">
                       −{tx.discount_pct}%
                     </p>
-                    <p className="text-slate-400 text-xs">
+                    <p className="text-slate-500 text-xs font-semibold">
                       {new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(tx.final_amount)}
                     </p>
                   </div>
@@ -175,16 +175,16 @@ function StatCard({
   className?: string;
 }) {
   const colors = {
-    violet: 'bg-violet-950/40 border-violet-800 text-violet-400',
-    blue: 'bg-blue-950/40 border-blue-800 text-blue-400',
-    emerald: 'bg-emerald-950/40 border-emerald-800 text-emerald-400',
+    violet: 'bg-violet-50 border-violet-200 text-violet-700',
+    blue: 'bg-blue-50 border-blue-200 text-blue-700',
+    emerald: 'bg-emerald-50 border-emerald-200 text-emerald-700',
   };
 
   return (
-    <div className={`rounded-xl border p-4 space-y-2 ${colors[color]} ${className}`}>
-      <Icon className="h-5 w-5 opacity-70" />
-      <p className="text-2xl font-bold text-white">{value}</p>
-      <p className="text-xs opacity-70">{label}</p>
+    <div className={`rounded-xl border p-4 space-y-2 shadow-sm ${colors[color]} ${className}`}>
+      <Icon className="h-5 w-5 opacity-80" />
+      <p className="text-2xl font-black text-slate-900">{value}</p>
+      <p className="text-xs font-semibold opacity-80">{label}</p>
     </div>
   );
 }
@@ -203,16 +203,16 @@ function QuickLink({
   return (
     <Link
       href={href}
-      className="group flex items-center gap-4 rounded-xl border border-slate-700 bg-slate-800/60 p-4 hover:border-violet-600/60 hover:bg-slate-800 transition-all duration-200"
+      className="group flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 hover:border-blue-300 hover:bg-slate-50 transition-all duration-200 shadow-sm"
     >
-      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-violet-900/60 border border-violet-800 group-hover:bg-violet-700 transition-colors">
-        <Icon className="h-5 w-5 text-violet-300" />
+      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-blue-50 border border-blue-100 group-hover:bg-blue-100 transition-colors">
+        <Icon className="h-5 w-5 text-blue-600" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-white font-medium group-hover:text-violet-200 transition-colors">{title}</p>
-        <p className="text-slate-500 text-sm truncate">{description}</p>
+        <p className="text-slate-900 font-bold group-hover:text-blue-700 transition-colors">{title}</p>
+        <p className="text-slate-500 text-sm font-medium truncate">{description}</p>
       </div>
-      <ArrowRight className="h-4 w-4 text-slate-600 group-hover:text-violet-400 group-hover:translate-x-0.5 transition-all" />
+      <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-0.5 transition-all" />
     </Link>
   );
 }
