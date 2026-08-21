@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { createOffer, toggleOfferStatus, deleteOffer } from '@/app/actions/offers';
-import { Plus, Tag, Trash2, Power, PowerOff, Loader2, QrCode as QrCodeIcon, X } from 'lucide-react';
+import { createOffer, toggleOfferStatus, deleteOffer, resetOfferStock } from '@/app/actions/offers';
+import { Plus, Tag, Trash2, Power, PowerOff, Loader2, QrCode as QrCodeIcon, X, AlertTriangle } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 
 export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
@@ -34,6 +34,12 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
   const handleDelete = async (id: string) => {
     if (confirm('¿Seguro que querés eliminar esta oferta?')) {
       await deleteOffer(id);
+    }
+  };
+
+  const handleResetStock = async (id: string) => {
+    if (confirm('¿Querés renovar el stock de esta oferta? Esto reiniciará el contador a 0 y la volverá a activar automáticamente.')) {
+      await resetOfferStock(id);
     }
   };
 
@@ -127,9 +133,10 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
         {initialOffers.map(offer => {
           const hasPrices = offer.original_price && offer.final_price;
           const savings = hasPrices ? offer.original_price - offer.final_price : null;
+          const isDepleted = offer.stock_limit && offer.used_count >= offer.stock_limit;
 
           return (
-            <div key={offer.id} className={`border rounded-2xl p-5 relative overflow-hidden flex flex-col ${offer.is_active ? 'bg-slate-900 border-slate-700' : 'bg-slate-900/50 border-slate-800 opacity-60'}`}>
+            <div key={offer.id} className={`border rounded-2xl p-5 relative overflow-hidden flex flex-col ${offer.is_active && !isDepleted ? 'bg-slate-900 border-slate-700' : 'bg-slate-900/50 border-slate-800 opacity-80'}`}>
               <div className="flex justify-between items-start mb-2 relative z-10">
                 <h3 className="font-bold text-lg text-white pr-16 drop-shadow-md">{offer.title}</h3>
                 <span className="absolute top-0 right-0 bg-emerald-950/80 backdrop-blur-sm text-emerald-400 text-sm font-bold px-3 py-1.5 rounded-bl-xl border-b border-l border-emerald-900/50 shadow-sm">
@@ -180,13 +187,22 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
 
                 <div className="flex justify-between items-center pt-4 border-t border-slate-800/50">
                   <div className="flex gap-4">
-                    <button 
-                      onClick={() => handleToggle(offer.id, offer.is_active)}
-                      className={`flex items-center gap-1.5 text-sm font-medium ${offer.is_active ? 'text-amber-400 hover:text-amber-300' : 'text-emerald-400 hover:text-emerald-300'}`}
-                    >
-                      {offer.is_active ? <><PowerOff className="w-4 h-4"/> Pausar</> : <><Power className="w-4 h-4"/> Activar</>}
-                    </button>
-                    {offer.is_active && (
+                    {isDepleted ? (
+                      <button 
+                        onClick={() => handleResetStock(offer.id)}
+                        className="text-amber-400 hover:text-amber-300 flex items-center gap-1.5 text-sm font-medium border border-amber-900/50 bg-amber-950/30 px-3 py-1.5 rounded-lg shadow-sm"
+                      >
+                        <AlertTriangle className="w-4 h-4"/> ¡Agotada! Reactivar
+                      </button>
+                    ) : (
+                      <button 
+                        onClick={() => handleToggle(offer.id, offer.is_active)}
+                        className={`flex items-center gap-1.5 text-sm font-medium ${offer.is_active ? 'text-amber-400 hover:text-amber-300' : 'text-emerald-400 hover:text-emerald-300'}`}
+                      >
+                        {offer.is_active ? <><PowerOff className="w-4 h-4"/> Pausar</> : <><Power className="w-4 h-4"/> Activar</>}
+                      </button>
+                    )}
+                    {offer.is_active && !isDepleted && (
                       <button 
                         onClick={() => setQrOffer(offer)}
                         className="text-violet-400 hover:text-violet-300 flex items-center gap-1.5 text-sm font-medium"

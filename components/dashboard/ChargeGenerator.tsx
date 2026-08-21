@@ -20,6 +20,7 @@ import {
   Keyboard,
   Tag,
 } from 'lucide-react';
+import { UndoChargeButton } from './UndoChargeButton';
 
 interface ChargeGeneratorProps {
   merchantId: string;
@@ -35,7 +36,7 @@ export function ChargeGenerator({ merchantId, activeOffers = [] }: ChargeGenerat
   const [selectedOffer, setSelectedOffer] = useState<string>('');
   const [status, setStatus] = useState<'idle' | 'waiting' | 'success' | 'error' | 'processing'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
-  const [successData, setSuccessData] = useState<{ amount: number; final: number } | null>(null);
+  const [successData, setSuccessData] = useState<{ amount: number; final: number; transactionId?: string } | null>(null);
 
   // Generar URL para el QR
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
@@ -65,6 +66,7 @@ export function ChargeGenerator({ merchantId, activeOffers = [] }: ChargeGenerat
             setSuccessData({
               amount: newTx.original_amount,
               final: newTx.final_amount,
+              transactionId: newTx.id,
             });
             setStatus('success');
           }
@@ -108,6 +110,7 @@ export function ChargeGenerator({ merchantId, activeOffers = [] }: ChargeGenerat
         setSuccessData({
           amount: parseFloat(amount),
           final: (res as any).finalAmount,
+          transactionId: (res as any).transactionId,
         });
         setStatus('success');
       } else {
@@ -311,13 +314,21 @@ export function ChargeGenerator({ merchantId, activeOffers = [] }: ChargeGenerat
             </div>
           </div>
 
-          <button
-            onClick={handleReset}
-            className="w-full py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-medium transition-all flex items-center justify-center gap-2"
-          >
-            <RefreshCw className="h-4 w-4" />
-            Nuevo Cobro
-          </button>
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={handleReset}
+              className="w-full py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-medium transition-all flex items-center justify-center gap-2"
+            >
+              <RefreshCw className="h-4 w-4" />
+              Nuevo Cobro
+            </button>
+            
+            {successData.transactionId && (
+              <div className="flex justify-center mt-2">
+                <UndoChargeButton transactionId={successData.transactionId} isRecent={true} isCancelled={false} />
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

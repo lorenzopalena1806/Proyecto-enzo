@@ -100,3 +100,23 @@ export async function deleteOffer(offerId: string) {
   revalidatePath('/dashboard/scanner');
   return { success: true };
 }
+
+export async function resetOfferStock(offerId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) return { success: false, error: 'No autorizado' };
+
+  const adminClient = createAdminClient();
+  const { error } = await adminClient
+    .from('merchant_offers')
+    .update({ is_active: true, used_count: 0 })
+    .eq('id', offerId)
+    .eq('merchant_id', user.id);
+
+  if (error) return { success: false, error: error.message };
+
+  revalidatePath('/dashboard/offers');
+  revalidatePath('/dashboard/scanner');
+  return { success: true };
+}
