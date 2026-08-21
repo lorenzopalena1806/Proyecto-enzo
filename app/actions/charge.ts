@@ -213,3 +213,16 @@ export async function undoChargeServer(transactionId: string) {
 
   return { success: true };
 }
+
+export async function getLastTransactionServer(merchantId: string) {
+  const adminClient = createAdminClient();
+  const { data } = await adminClient
+    .from('discount_transactions')
+    .select('id')
+    .eq('scanner_id', merchantId)
+    .order('applied_at', { ascending: false })
+    .limit(1)
+    .single();
+
+  return data ? data.id : null;
+}

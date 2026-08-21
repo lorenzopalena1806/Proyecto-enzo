@@ -8,6 +8,8 @@ import {
   Store, BellRing, Banknote, ArrowLeftRight,
   Loader2, QrCode, X, Tag, DollarSign, CheckCircle2, Clock, Sparkles
 } from 'lucide-react';
+import { UndoChargeButton } from '@/components/dashboard/UndoChargeButton';
+import { getLastTransactionServer } from '@/app/actions/charge';
 import { formatARS } from '@/lib/discount-logic';
 
 interface Offer {
@@ -27,6 +29,7 @@ interface PendingCharge {
 }
 
 interface RecentTx {
+  id?: string;
   original_amount: number;
   discount_pct: number;
   final_amount: number;
@@ -103,33 +106,36 @@ export function POSView({
         (payload) => {
           const updated = payload.new as any;
           if (updated.status === 'completed') {
-            // Cobro confirmado por el cliente → mostrar notificación
-            setActiveCharge(null);
-            setRecentTx({
-              original_amount: updated.amount,
-              discount_pct: updated.discount_applied_pct ?? 0,
-              final_amount: updated.final_amount_paid ?? updated.amount,
-              client_name: updated.completed_by_name ?? undefined,
-              offer_title: updated.offer_title ?? undefined,
-            });
-
-            // Gamificación: Sonido, Confeti y Vibración
-            try { new Audio('/success.mp3').play().catch(() => {}); } catch (_) {}
-            
-            import('canvas-confetti').then((confetti) => {
-              confetti.default({
-                particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#3b82f6', '#8b5cf6', '#d946ef', '#10b981']
+            // Obtener el ID de la transacción insertada para poder deshacerla
+            getLastTransactionServer(merchantId).then((txId) => {
+              setActiveCharge(null);
+              setRecentTx({
+                id: txId || undefined,
+                original_amount: updated.amount,
+                discount_pct: updated.discount_applied_pct ?? 0,
+                final_amount: updated.final_amount_paid ?? updated.amount,
+                client_name: updated.completed_by_name ?? undefined,
+                offer_title: updated.offer_title ?? undefined,
               });
+
+              // Gamificación: Sonido, Confeti y Vibración
+              try { new Audio('/success.mp3').play().catch(() => {}); } catch (_) {}
+              
+              import('canvas-confetti').then((confetti) => {
+                confetti.default({
+                  particleCount: 150,
+                  spread: 70,
+                  origin: { y: 0.6 },
+                  colors: ['#3b82f6', '#8b5cf6', '#d946ef', '#10b981']
+                });
+              });
+
+              if (typeof navigator !== 'undefined' && navigator.vibrate) {
+                navigator.vibrate([200, 100, 200]);
+              }
+
+              setTimeout(() => setRecentTx(null), 25000);
             });
-
-            if (typeof navigator !== 'undefined' && navigator.vibrate) {
-              navigator.vibrate([200, 100, 200]);
-            }
-
-            setTimeout(() => setRecentTx(null), 25000);
           }
         }
       )
@@ -271,12 +277,19 @@ export function POSView({
             </div>
           </div>
 
-          <button
-            onClick={() => setRecentTx(null)}
-            className="w-full mt-5 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white font-bold transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)]"
-          >
-            Entendido
-          </button>
+          <div className="mt-5 space-y-3">
+            <button
+              onClick={() => setRecentTx(null)}
+              className="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white font-bold transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)]"
+            >
+              Entendido
+            </button>
+            {recentTx.id && (
+              <div className="flex justify-center">
+                <UndoChargeButton transactionId={recentTx.id} onUndoSuccess={() => setRecentTx(null)} />
+              </div>
+            )}
+          </div>
         </div>
       )}
 
