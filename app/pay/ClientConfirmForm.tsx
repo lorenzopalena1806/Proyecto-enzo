@@ -59,6 +59,22 @@ export function ClientConfirmForm({
       const resolvedPct   = ('discountPct' in res && res.discountPct !== undefined) ? res.discountPct : discountPct;
       await completePendingCharge(chargeId, clientName, resolvedFinal, resolvedPct);
 
+      // Gamificación
+      try { new Audio('/success.mp3').play().catch(() => {}); } catch (_) {}
+      
+      import('canvas-confetti').then((confetti) => {
+        confetti.default({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#10b981', '#34d399', '#059669', '#3b82f6'] // Colores más verdes (éxito)
+        });
+      });
+
+      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        navigator.vibrate([200, 100, 200]);
+      }
+
       setStatus('success');
     } catch (err: any) {
       setStatus('error');

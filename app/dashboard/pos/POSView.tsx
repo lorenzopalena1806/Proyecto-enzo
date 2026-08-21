@@ -113,7 +113,22 @@ export function POSView({
               offer_title: updated.offer_title ?? undefined,
             });
 
+            // Gamificación: Sonido, Confeti y Vibración
             try { new Audio('/success.mp3').play().catch(() => {}); } catch (_) {}
+            
+            import('canvas-confetti').then((confetti) => {
+              confetti.default({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#3b82f6', '#8b5cf6', '#d946ef', '#10b981']
+              });
+            });
+
+            if (typeof navigator !== 'undefined' && navigator.vibrate) {
+              navigator.vibrate([200, 100, 200]);
+            }
+
             setTimeout(() => setRecentTx(null), 25000);
           }
         }
