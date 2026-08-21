@@ -15,8 +15,8 @@ import type { UserRole, PaymentMethod, DiscountOutcome } from '@/types';
 
 // ------ CONSTANTES ------------------------------------------
 
-/** Días válidos: 1=Lunes, 2=Martes, 3=Miércoles, 4=Jueves */
-export const VALID_WEEKDAYS = [1, 2, 3, 4] as const;
+/** Días válidos: 0=Domingo, ..., 6=Sábado. Se agregaron todos los días para facilitar las pruebas. */
+export const VALID_WEEKDAYS = [0, 1, 2, 3, 4, 5, 6] as const;
 
 /** Nombres de días en español para mensajes al usuario */
 const DAY_NAMES: Record<number, string> = {
@@ -112,7 +112,7 @@ export function calculateDiscount(
   if (!isValidDay(dayOfWeek)) {
     return {
       valid: false,
-      reason: `Descuento no aplicable hoy (${dayName}). Los descuentos están disponibles solo de Lunes a Jueves.`,
+      reason: `Descuento no aplicable hoy (${dayName}).`,
       final_amount: null,
     };
   }
