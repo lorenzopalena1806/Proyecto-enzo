@@ -314,8 +314,18 @@ export default function RegisterPage() {
           <button
             type="button"
             className="w-full py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-900 font-semibold transition-all duration-200 flex items-center justify-center gap-3 shadow-md active:scale-[0.99]"
-            onClick={() => {
-              alert('La autenticación con Google se activará muy pronto.');
+            onClick={async () => {
+              const { createClient } = await import('@/lib/supabase');
+              const supabase = createClient();
+              const { error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                  redirectTo: `${window.location.origin}/auth/callback`,
+                },
+              });
+              if (error) {
+                alert('Error al conectar con Google: ' + error.message);
+              }
             }}
           >
             <svg className="h-5 w-5" viewBox="0 0 24 24">
