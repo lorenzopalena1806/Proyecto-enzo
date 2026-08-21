@@ -1,7 +1,18 @@
 'use client';
 
 import React, { useState } from 'react';
-import { User, Store, Phone, Mail, KeyRound, Loader2, CheckCircle2 } from 'lucide-react';
+import { User, Store, Phone, Mail, KeyRound, Loader2, CheckCircle2, Tag } from 'lucide-react';
+
+// Categorías sugeridas para que el dueño elija o se guíe
+const SUGGESTED_CATEGORIES = [
+  'Gastronomía',
+  'Indumentaria',
+  'Kiosco',
+  'Servicios',
+  'Tecnología',
+  'Salud y Belleza',
+  'Entretenimiento',
+];
 
 interface ProfileEditFormProps {
   profile: any;
@@ -15,6 +26,7 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
     phone: profile.phone || '',
     avatar_url: profile.avatar_url || '',
     maps_url: profile.maps_url || '',
+    category: profile.category || '',
   });
 
   const [passwordData, setPasswordData] = useState({
@@ -53,6 +65,7 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
       phone: formData.phone || null,
       avatar_url: formData.avatar_url || null,
       maps_url: formData.maps_url || null,
+      category: formData.category || null,
     });
 
     if (result.success) {
@@ -138,6 +151,28 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
                   className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
                 />
               </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-slate-300">Categoría o Rubro</label>
+              <div className="relative">
+                <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                <input
+                  name="category"
+                  type="text"
+                  value={formData.category}
+                  onChange={handleProfileChange}
+                  list="category-suggestions"
+                  placeholder="Ej: Gastronomía, Indumentaria..."
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
+                />
+                <datalist id="category-suggestions">
+                  {SUGGESTED_CATEGORIES.map(cat => (
+                    <option key={cat} value={cat} />
+                  ))}
+                </datalist>
+              </div>
+              <p className="text-xs text-slate-500 mt-1">Elegí una sugerencia o escribí la tuya libremente.</p>
             </div>
 
             <div className="space-y-1.5">

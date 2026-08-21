@@ -103,7 +103,7 @@ export default async function ClientQRPage() {
   // 3. Fetch Locales Adheridos (active merchants)
   const { data: merchants } = await adminClient
     .from('profiles')
-    .select('id, business_name, avatar_url, maps_url')
+    .select('id, business_name, avatar_url, maps_url, category')
     .eq('role', 'merchant')
     .eq('is_active', true)
     .order('created_at', { ascending: false });
@@ -224,7 +224,10 @@ export default async function ClientQRPage() {
                     </div>
                     <div className="min-w-0">
                       <h3 className="font-bold text-white truncate">{merchant.business_name || 'Comercio Adherido'}</h3>
-                      <p className="text-xs text-slate-400 truncate">Comercio verificado</p>
+                      <p className="text-xs text-slate-400 truncate mt-0.5 flex items-center gap-1">
+                        <Tag className="w-3 h-3" />
+                        {merchant.category || 'Comercio adherido'}
+                      </p>
                     </div>
                   </div>
                   {merchant.maps_url && (
