@@ -307,40 +307,24 @@ export default async function ClientQRPage() {
           )}
         </section>
 
-        {/* Sección: Escáner y Código Corto */}
+        {/* Sección: Tu Código Corto (Movida arriba o mantenida) */}
         <section className="space-y-4 pt-6 border-t border-white/10">
-          <div className="flex items-center gap-2 mb-2">
-             <Scan className="w-5 h-5 text-fuchsia-400" />
-             <div>
-               <h2 className="text-xl font-bold text-white tracking-tight">Canjear Descuento</h2>
-               <p className="text-xs text-slate-400 font-medium">Usá estas opciones en el local para pagar.</p>
-             </div>
-          </div>
-          
-          <div className="w-full">
-            <Link href="/client/scanner" className="scan-btn flex items-center justify-center gap-3 w-full py-5 rounded-2xl text-white font-black text-xl transition-all relative overflow-hidden group">
-              <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-              <Scan className="h-7 w-7 relative z-10" />
-              <span className="relative z-10 tracking-wide">Escanear QR del Local</span>
-            </Link>
-          </div>
-
           <div className="glass-card-blue rounded-3xl p-6 text-center relative overflow-hidden mt-4">
             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-2xl rounded-full" />
             <p className="text-blue-300/80 text-xs font-bold uppercase tracking-widest mb-2">Tu Código Personal</p>
             <p className="text-slate-400 text-xs mb-3">Dictalo en caja si no podés escanear el QR</p>
-            <div className="text-5xl font-black text-white tracking-[0.2em] bg-black/20 py-4 rounded-2xl border border-white/5 shadow-inner">
+            <div className="text-5xl font-black text-white tracking-[0.2em] bg-black/20 py-4 rounded-2xl border border-white/5 shadow-inner font-montserrat">
               {qrData.qr_token.substring(0, 6).toUpperCase()}
             </div>
           </div>
         </section>
 
         {/* Sección: Mis Descuentos Usados */}
-        <section className="space-y-4 pt-6 border-t border-white/10">
+        <section className="space-y-4 pt-6 border-t border-white/10 mb-8">
           <div className="flex items-center gap-2 mb-2">
             <Clock className="w-5 h-5 text-emerald-400" />
             <div>
-              <h2 className="text-xl font-bold text-white tracking-tight">Mis Descuentos Usados</h2>
+              <h2 className="text-xl font-bold text-white tracking-tight font-montserrat">Mis Descuentos Usados</h2>
               <p className="text-xs text-slate-400 font-medium">Historial de tus últimas compras.</p>
             </div>
           </div>
@@ -396,6 +380,25 @@ export default async function ClientQRPage() {
         </section>
 
       </main>
+
+      {/* Floating Bottom Navigation Bar */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-6 pt-4 bg-gradient-to-t from-slate-950 via-slate-950/90 to-transparent pointer-events-none">
+        <div className="max-w-lg mx-auto relative flex justify-center pointer-events-auto">
+          
+          <Link href="/client/scanner" className="group relative flex items-center justify-center">
+            {/* Anillo exterior animado */}
+            <div className="absolute inset-0 bg-fuchsia-500/30 rounded-full blur-xl group-hover:blur-2xl group-hover:bg-fuchsia-500/40 transition-all duration-300 animate-pulse" />
+            
+            {/* Botón principal */}
+            <div className="relative flex flex-col items-center justify-center w-20 h-20 bg-gradient-to-b from-blue-600 to-indigo-700 rounded-full border-[4px] border-slate-950 shadow-[0_0_30px_rgba(59,130,246,0.5)] group-hover:scale-105 transition-transform duration-300">
+              <Scan className="w-8 h-8 text-white mb-0.5" />
+              <span className="text-[10px] font-bold text-white tracking-widest uppercase font-montserrat">Pagar</span>
+            </div>
+          </Link>
+          
+        </div>
+      </div>
+
     </div>
   );
 }

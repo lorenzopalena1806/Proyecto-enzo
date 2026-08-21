@@ -87,3 +87,36 @@ input[type="number"] {
 .animate-scale-in {
   animation: scale-in 0.2s ease-out forwards;
 }
+
+/* ── TIPOGRAFÍAS SECUNDARIAS ──────────────────────────────────── */
+.font-montserrat {
+  font-family: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ── PREMIUM GLASSMORPHISM ────────────────────────────────────── */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-panel-hover {
+  transition: all 0.3s ease;
+}
+
+.glass-panel-hover:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Utilidad para gradiente neón */
+.text-neon-gradient {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6, #d946ef);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
