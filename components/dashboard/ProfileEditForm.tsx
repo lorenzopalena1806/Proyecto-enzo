@@ -12,6 +12,7 @@ const SUGGESTED_CATEGORIES = [
   '🍰 Pastelería',
   '🧀 Fiambrería',
   '🛒 Almacén / Despensa',
+  '🍽️ Restaurante',
   '🍕 Pizzería',
   '🍔 Hamburguesería',
   '☕ Cafetería',
