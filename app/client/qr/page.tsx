@@ -4,9 +4,10 @@ import React from 'react';
 import { createClient, createAdminClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import { LogoutButton } from '@/components/dashboard/LogoutButton';
-import { User, Sparkles } from 'lucide-react';
+import { User, Sparkles, Clock, Scan } from 'lucide-react';
 import Link from 'next/link';
 import { encodeQRPayload } from '@/lib/qr-utils';
+import { CopyCodeButton } from '@/components/client/CopyCodeButton';
 import { DiscoverSection } from '@/components/client/DiscoverSection';
 
 export default async function ClientQRPage() {
