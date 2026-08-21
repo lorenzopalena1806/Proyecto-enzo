@@ -4,10 +4,10 @@ import React from 'react';
 import { createClient, createAdminClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import { LogoutButton } from '@/components/dashboard/LogoutButton';
-import { User, Scan, Sparkles, Tag, ShoppingBag, Clock, Store, MapPin } from 'lucide-react';
+import { User, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { encodeQRPayload } from '@/lib/qr-utils';
-import { CopyCodeButton } from '@/components/client/CopyCodeButton';
+import { DiscoverSection } from '@/components/client/DiscoverSection';
 
 export default async function ClientQRPage() {
   const supabase = await createClient();
@@ -108,6 +108,13 @@ export default async function ClientQRPage() {
     .eq('is_active', true)
     .order('created_at', { ascending: false });
 
+  // 4. Fetch Favorites for current user
+  const { data: favoritesData } = await adminClient
+    .from('favorites')
+    .select('merchant_id')
+    .eq('client_id', user.id);
+  const initialFavorites = favoritesData?.map((f: any) => f.merchant_id) || [];
+
   return (
     <div className="min-h-screen app-bg flex flex-col font-sans">
       <style>{`
@@ -195,125 +202,11 @@ export default async function ClientQRPage() {
             </p>
           </div>
         </section>
-
-        {/* Sección: Locales Adheridos */}
-        <section className="space-y-4 pt-6 border-t border-white/10">
-          <div className="flex items-center gap-2 mb-2">
-            <Store className="w-5 h-5 text-blue-400" />
-            <div>
-              <h2 className="text-xl font-bold text-white tracking-tight">Locales Adheridos</h2>
-              <p className="text-xs text-slate-400 font-medium">Comercios donde podés usar la app.</p>
-            </div>
-          </div>
-
-          {(!merchants || merchants.length === 0) ? (
-            <div className="glass-panel rounded-3xl p-8 text-center border-dashed border-white/20">
-              <p className="text-slate-400 font-medium">Por ahora no hay locales adheridos activos.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {merchants.map((merchant: any) => (
-                <div key={merchant.id} className="glass-panel rounded-3xl p-4 flex items-center justify-between gap-4 hover:border-blue-500/30 transition-all hover:bg-white/5 shadow-lg group">
-                  <div className="flex items-center gap-4 min-w-0">
-                    <div className="w-14 h-14 rounded-2xl bg-black/40 border border-white/10 flex-shrink-0 flex items-center justify-center overflow-hidden">
-                      {merchant.avatar_url ? (
-                        <img src={merchant.avatar_url} alt={merchant.business_name || 'Logo'} className="w-full h-full object-cover" />
-                      ) : (
-                        <Store className="w-6 h-6 text-slate-500" />
-                      )}
-                    </div>
-                    <div className="min-w-0">
-                      <h3 className="font-bold text-white truncate">{merchant.business_name || 'Comercio Adherido'}</h3>
-                      <p className="text-xs text-slate-400 truncate mt-0.5 flex items-center gap-1">
-                        <Tag className="w-3 h-3" />
-                        {merchant.category || 'Comercio adherido'}
-                      </p>
-                    </div>
-                  </div>
-                  {merchant.maps_url && (
-                    <a
-                      href={merchant.maps_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-shrink-0 flex flex-col items-center justify-center w-10 h-10 rounded-full bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white transition-colors"
-                      title="Cómo llegar"
-                    >
-                      <MapPin className="w-5 h-5" />
-                    </a>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
-
-        {/* Sección: Vidriera de Ofertas */}
-        <section className="space-y-4 pt-6 border-t border-white/10">
-          <div className="flex items-center gap-2 mb-2">
-            <ShoppingBag className="w-5 h-5 text-fuchsia-400" />
-            <div>
-              <h2 className="text-xl font-bold text-white tracking-tight">Ofertas Disponibles</h2>
-              <p className="text-xs text-slate-400 font-medium">Aprovechá estos descuentos hoy.</p>
-            </div>
-          </div>
-
-          {(!offers || offers.length === 0) ? (
-            <div className="glass-panel rounded-3xl p-8 text-center border-dashed border-white/20">
-              <p className="text-slate-400 font-medium">Por ahora no hay ofertas especiales disponibles.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {offers.map((offer: any) => {
-                const merchant = offer.merchant as { business_name?: string; full_name?: string };
-                const merchantName = merchant?.business_name || merchant?.full_name || 'Comercio Adherido';
-                const hasPrices = offer.original_price && offer.final_price;
-                const savings = hasPrices ? offer.original_price - offer.final_price : null;
-
-                return (
-                  <div key={offer.id} className="glass-panel rounded-3xl p-5 flex flex-col relative overflow-hidden group hover:border-blue-500/30 transition-all hover:bg-white/5 shadow-lg">
-                    <div className="absolute top-0 right-0 bg-gradient-to-l from-blue-600 to-indigo-600 text-white font-bold px-3 py-1.5 rounded-bl-2xl text-sm z-10 shadow-md">
-                      -{offer.discount_pct}%
-                    </div>
-                    {offer.image_url && (
-                      <div className="absolute inset-0 z-0 opacity-20 group-hover:opacity-30 transition-opacity">
-                        <img src={offer.image_url} alt={offer.title} className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
-                      </div>
-                    )}
-                    <div className="relative z-10 flex flex-col h-full">
-                      <div className="flex items-center gap-1.5 mb-1.5 text-blue-300 pr-12 truncate drop-shadow-md">
-                         <Tag className="w-3.5 h-3.5" />
-                         <p className="text-[10px] font-bold uppercase tracking-widest truncate">
-                           {merchantName}
-                         </p>
-                      </div>
-                      <h3 className="font-bold text-lg text-white mb-2 pr-8 leading-tight drop-shadow-md">{offer.title}</h3>
-                      {offer.description && (
-                        <p className="text-slate-400 text-sm mb-4 line-clamp-2">{offer.description}</p>
-                      )}
-                    
-                    {hasPrices && (
-                      <div className="mt-auto bg-black/20 rounded-2xl p-3 border border-white/5 shadow-inner">
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="text-xs text-slate-500 font-medium">Precio Normal</span>
-                          <span className="text-sm text-slate-400 line-through">${offer.original_price.toLocaleString('es-AR')}</span>
-                        </div>
-                        <div className="flex justify-between items-baseline mb-2">
-                          <span className="text-xs text-blue-400 font-bold uppercase">Precio App</span>
-                          <span className="text-xl text-white font-black">${offer.final_price.toLocaleString('es-AR')}</span>
-                        </div>
-                        <div className="text-[11px] text-emerald-100 bg-emerald-500/20 border border-emerald-500/30 py-1.5 px-2 rounded-xl text-center font-bold tracking-wide shadow-inner">
-                          ¡Ahorrás ${savings?.toLocaleString('es-AR')}!
-                        </div>
-                      </div>
-                    )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </section>
+        <DiscoverSection 
+          merchants={merchants || []} 
+          offers={offers || []} 
+          initialFavorites={initialFavorites} 
+        />
 
         {/* Sección: Tu Código Corto (Movida arriba o mantenida) */}
         <section className="space-y-4 pt-6 border-t border-white/10">
