@@ -18,9 +18,10 @@ export function SuspendUserButton({ userId, isActive, role }: { userId: string, 
     
     setLoading(true);
     const res = await toggleUserActiveStatusServer(userId, !isActive);
+    setLoading(false);
+
     if (!res.success) {
       alert(res.error || `Error al ${action} el usuario`);
-      setLoading(false);
     } else {
       router.refresh();
     }
