@@ -5,7 +5,14 @@ import { Undo2, Loader2 } from 'lucide-react';
 import { undoChargeServer } from '@/app/actions/charge';
 import { useRouter } from 'next/navigation';
 
-export function UndoChargeButton({ transactionId, isRecent, isCancelled }: { transactionId: string, isRecent: boolean, isCancelled: boolean }) {
+interface Props {
+  transactionId: string;
+  isRecent?: boolean;
+  isCancelled?: boolean;
+  onUndoSuccess?: () => void;
+}
+
+export function UndoChargeButton({ transactionId, isRecent = true, isCancelled = false, onUndoSuccess }: Props) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -24,11 +31,16 @@ export function UndoChargeButton({ transactionId, isRecent, isCancelled }: { tra
     
     setLoading(true);
     const res = await undoChargeServer(transactionId);
+    setLoading(false); // Siempre quitamos el loading
+    
     if (!res.success) {
       alert(res.reason || 'Error al deshacer el cobro');
-      setLoading(false);
     } else {
-      router.refresh();
+      if (onUndoSuccess) {
+        onUndoSuccess();
+      } else {
+        router.refresh();
+      }
     }
   };
 

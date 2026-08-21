@@ -325,7 +325,15 @@ export function ChargeGenerator({ merchantId, activeOffers = [] }: ChargeGenerat
             
             {successData.transactionId && (
               <div className="flex justify-center mt-2">
-                <UndoChargeButton transactionId={successData.transactionId} isRecent={true} isCancelled={false} />
+                <UndoChargeButton 
+                  transactionId={successData.transactionId} 
+                  isRecent={true} 
+                  isCancelled={false} 
+                  onUndoSuccess={() => {
+                    handleReset();
+                    alert('Cobro revertido correctamente.');
+                  }}
+                />
               </div>
             )}
           </div>
