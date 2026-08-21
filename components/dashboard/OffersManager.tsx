@@ -62,8 +62,9 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1">Foto del Producto (opcional pero recomendado)</label>
-            <input type="file" name="image" accept="image/*" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-600 file:text-white hover:file:bg-violet-500" />
+            <label className="block text-sm font-medium text-slate-400 mb-1">Enlace (URL) de la Foto (opcional pero recomendado)</label>
+            <input type="url" name="image_url" placeholder="Ej: https://misitio.com/foto.jpg" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none" />
+            <p className="text-xs text-slate-500 mt-1">Pegá el link de una imagen que ya esté en internet (para no gastar espacio en el servidor).</p>
           </div>
 
           <div className="bg-slate-950/50 p-4 rounded-xl border border-slate-800/50 space-y-4">
