@@ -104,13 +104,20 @@ export default async function QRPage() {
                   </div>
                   {/* B2B Badge */}
                   {(offer.target_role === 'merchant' || offer.target_role === 'all') && (
-                    <div className="absolute top-0 left-0 bg-amber-500 text-black font-bold px-2 py-0.5 rounded-br-lg text-xs">
+                    <div className="absolute top-0 left-0 bg-amber-500 text-black font-bold px-2 py-0.5 rounded-br-lg text-xs z-10">
                       B2B
                     </div>
                   )}
-                  <p className="text-xs text-violet-400 font-medium uppercase tracking-wider mb-1 mt-4 pr-12 truncate">
-                    {merchantName}
-                  </p>
+                  {offer.image_url && (
+                    <div className="absolute inset-0 z-0 opacity-20 group-hover:opacity-30 transition-opacity">
+                      <img src={offer.image_url} alt={offer.title} className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
+                    </div>
+                  )}
+                  <div className="relative z-10 flex flex-col h-full">
+                    <p className="text-xs text-violet-400 font-medium uppercase tracking-wider mb-1 mt-4 pr-12 truncate drop-shadow-md">
+                      {merchantName}
+                    </p>
                   <h3 className="font-bold text-lg text-white mb-2 pr-8 leading-tight">{offer.title}</h3>
                   {offer.description && (
                     <p className="text-slate-400 text-sm mb-4 line-clamp-2">{offer.description}</p>
@@ -133,6 +140,7 @@ export default async function QRPage() {
                       </div>
                     </div>
                   )}
+                  </div>
                 </div>
               );
             })}

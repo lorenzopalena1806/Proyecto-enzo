@@ -61,6 +61,11 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
             <input name="description" placeholder="Ej: Válido llevando dos remeras lisas" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none" />
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-slate-400 mb-1">Foto del Producto (opcional pero recomendado)</label>
+            <input type="file" name="image" accept="image/*" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-600 file:text-white hover:file:bg-violet-500" />
+          </div>
+
           <div className="bg-slate-950/50 p-4 rounded-xl border border-slate-800/50 space-y-4">
             <h4 className="text-sm font-medium text-violet-400">Precios y Descuento</h4>
             <p className="text-xs text-slate-400 mb-2">Completá los precios para mostrarle al cliente el ahorro exacto. Si no, poné solo el % de descuento.</p>
@@ -118,14 +123,21 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
 
           return (
             <div key={offer.id} className={`border rounded-2xl p-5 relative overflow-hidden flex flex-col ${offer.is_active ? 'bg-slate-900 border-slate-700' : 'bg-slate-900/50 border-slate-800 opacity-60'}`}>
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="font-bold text-lg text-white pr-16">{offer.title}</h3>
-                <span className="absolute top-0 right-0 bg-emerald-950 text-emerald-400 text-sm font-bold px-3 py-1.5 rounded-bl-xl border-b border-l border-emerald-900/50">
+              <div className="flex justify-between items-start mb-2 relative z-10">
+                <h3 className="font-bold text-lg text-white pr-16 drop-shadow-md">{offer.title}</h3>
+                <span className="absolute top-0 right-0 bg-emerald-950/80 backdrop-blur-sm text-emerald-400 text-sm font-bold px-3 py-1.5 rounded-bl-xl border-b border-l border-emerald-900/50 shadow-sm">
                   -{offer.discount_pct}%
                 </span>
               </div>
               
-              {offer.description && <p className="text-slate-400 text-sm mb-4">{offer.description}</p>}
+              {offer.image_url && (
+                <div className="w-full h-32 mb-4 rounded-xl overflow-hidden relative border border-slate-700/50">
+                  <img src={offer.image_url} alt={offer.title} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
+                </div>
+              )}
+              
+              {offer.description && <p className="text-slate-400 text-sm mb-4 relative z-10">{offer.description}</p>}
               
               {hasPrices && (
                 <div className="mb-4 bg-slate-950/50 rounded-xl p-3 border border-slate-800/50">

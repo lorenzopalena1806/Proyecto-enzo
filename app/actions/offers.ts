@@ -32,6 +32,37 @@ export async function createOffer(formData: FormData) {
     return { success: false, error: 'Datos inválidos. Asegurate de poner el descuento o los precios.' };
   }
 
+  const imageFile = formData.get('image') as File | null;
+  let image_url = null;
+
+  if (imageFile && imageFile.size > 0) {
+    const adminClient = createAdminClient();
+    const fileExt = imageFile.name.split('.').pop();
+    const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+    
+    const { data: uploadData, error: uploadError } = await adminClient
+      .storage
+      .from('offers')
+      .upload(fileName, imageFile, {
+        cacheControl: '3600',
+        upsert: false
+      });
+      
+    if (uploadError) {
+      console.error("Error uploading image:", uploadError);
+      return { success: false, error: 'No se pudo subir la imagen.' };
+    }
+    
+    if (uploadData) {
+      const { data: { publicUrl } } = adminClient
+        .storage
+        .from('offers')
+        .getPublicUrl(uploadData.path);
+        
+      image_url = publicUrl;
+    }
+  }
+
   const adminClient = createAdminClient();
   const { error } = await adminClient.from('merchant_offers').insert({
     merchant_id: user.id,
@@ -41,6 +72,7 @@ export async function createOffer(formData: FormData) {
     original_price,
     final_price,
     target_role,
+    image_url,
     is_active: true
   });
 

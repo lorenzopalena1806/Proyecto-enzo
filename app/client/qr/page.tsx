@@ -266,16 +266,23 @@ export default async function ClientQRPage() {
                     <div className="absolute top-0 right-0 bg-gradient-to-l from-blue-600 to-indigo-600 text-white font-bold px-3 py-1.5 rounded-bl-2xl text-sm z-10 shadow-md">
                       -{offer.discount_pct}%
                     </div>
-                    <div className="flex items-center gap-1.5 mb-1.5 text-blue-300 pr-12 truncate">
-                       <Tag className="w-3.5 h-3.5" />
-                       <p className="text-[10px] font-bold uppercase tracking-widest truncate">
-                         {merchantName}
-                       </p>
-                    </div>
-                    <h3 className="font-bold text-lg text-white mb-2 pr-8 leading-tight">{offer.title}</h3>
-                    {offer.description && (
-                      <p className="text-slate-400 text-sm mb-4 line-clamp-2">{offer.description}</p>
+                    {offer.image_url && (
+                      <div className="absolute inset-0 z-0 opacity-20 group-hover:opacity-30 transition-opacity">
+                        <img src={offer.image_url} alt={offer.title} className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
+                      </div>
                     )}
+                    <div className="relative z-10 flex flex-col h-full">
+                      <div className="flex items-center gap-1.5 mb-1.5 text-blue-300 pr-12 truncate drop-shadow-md">
+                         <Tag className="w-3.5 h-3.5" />
+                         <p className="text-[10px] font-bold uppercase tracking-widest truncate">
+                           {merchantName}
+                         </p>
+                      </div>
+                      <h3 className="font-bold text-lg text-white mb-2 pr-8 leading-tight drop-shadow-md">{offer.title}</h3>
+                      {offer.description && (
+                        <p className="text-slate-400 text-sm mb-4 line-clamp-2">{offer.description}</p>
+                      )}
                     
                     {hasPrices && (
                       <div className="mt-auto bg-black/20 rounded-2xl p-3 border border-white/5 shadow-inner">
@@ -292,6 +299,7 @@ export default async function ClientQRPage() {
                         </div>
                       </div>
                     )}
+                    </div>
                   </div>
                 );
               })}
