@@ -1,6 +1,11 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter, Montserrat } from 'next/font/google';
 import './globals.css';
+import { InstallPwaPrompt } from '@/components/shared/InstallPwaPrompt';
+
+export const viewport: Viewport = {
+  themeColor: '#020617',
+};
 
 const inter = Inter({
   variable: '--font-inter',
@@ -33,6 +38,7 @@ export default function RootLayout({
     <html lang="es" className={`${inter.variable} ${montserrat.variable} h-full`}>
       <body className="min-h-full antialiased font-sans bg-slate-950 text-slate-100">
         {children}
+        <InstallPwaPrompt />
       </body>
     </html>
   );
