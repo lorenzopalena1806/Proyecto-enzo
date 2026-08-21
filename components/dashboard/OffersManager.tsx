@@ -123,7 +123,6 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
           const savings = hasPrices ? offer.original_price - offer.final_price : null;
 
           return (
-          return (
             <div key={offer.id} className={`border rounded-2xl p-5 relative overflow-hidden flex flex-col shadow-sm transition-all ${offer.is_active ? 'bg-white border-slate-200 hover:shadow-md' : 'bg-slate-50 border-slate-200 opacity-70'}`}>
               <div className="flex justify-between items-start mb-2 relative z-10">
                 <h3 className="font-bold text-lg text-slate-900 pr-16">{offer.title}</h3>
