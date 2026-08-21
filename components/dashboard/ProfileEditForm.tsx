@@ -3,15 +3,28 @@
 import React, { useState } from 'react';
 import { User, Store, Phone, Mail, KeyRound, Loader2, CheckCircle2, Tag } from 'lucide-react';
 
-// Categorías sugeridas para que el dueño elija o se guíe
+// Categorías sugeridas
 const SUGGESTED_CATEGORIES = [
-  'Gastronomía',
-  'Indumentaria',
-  'Kiosco',
-  'Servicios',
-  'Tecnología',
-  'Salud y Belleza',
-  'Entretenimiento',
+  '🥩 Carnicería',
+  '🥦 Verdulería / Frutería',
+  '🏪 Kiosco',
+  '🥖 Panadería',
+  '🍰 Pastelería',
+  '🧀 Fiambrería',
+  '🛒 Almacén / Despensa',
+  '🍕 Pizzería',
+  '🍔 Hamburguesería',
+  '☕ Cafetería',
+  '🍦 Heladería',
+  '💊 Farmacia',
+  '👕 Tienda de ropa',
+  '👟 Zapatería',
+  '💇 Peluquería',
+  '💅 Estética / Manicuría',
+  '🔧 Ferretería',
+  '📱 Accesorios para celulares',
+  '🐶 Pet shop / Veterinaria',
+  '🧹 Artículos de limpieza',
 ];
 
 interface ProfileEditFormProps {
@@ -20,13 +33,18 @@ interface ProfileEditFormProps {
 }
 
 export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
+  const [isCustomCategory, setIsCustomCategory] = useState(
+    profile.category && !SUGGESTED_CATEGORIES.includes(profile.category) ? true : false
+  );
+
   const [formData, setFormData] = useState({
     full_name: profile.full_name || '',
     business_name: profile.business_name || '',
     phone: profile.phone || '',
     avatar_url: profile.avatar_url || '',
     maps_url: profile.maps_url || '',
-    category: profile.category || '',
+    category: isCustomCategory ? 'Otro' : (profile.category || ''),
+    custom_category: isCustomCategory ? profile.category : '',
   });
 
   const [passwordData, setPasswordData] = useState({
@@ -41,8 +59,16 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
   const [profileError, setProfileError] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
-  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    if (name === 'category') {
+      if (value === 'Otro') {
+        setIsCustomCategory(true);
+      } else {
+        setIsCustomCategory(false);
+      }
+    }
+    setFormData(prev => ({ ...prev, [name]: value }));
     setProfileSuccess(false);
     setProfileError('');
   };
@@ -65,7 +91,7 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
       phone: formData.phone || null,
       avatar_url: formData.avatar_url || null,
       maps_url: formData.maps_url || null,
-      category: formData.category || null,
+      category: isCustomCategory ? (formData.custom_category || null) : (formData.category || null),
     });
 
     if (result.success) {
@@ -157,22 +183,36 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
               <label className="block text-sm font-medium text-slate-300">Categoría o Rubro</label>
               <div className="relative">
                 <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
-                <input
+                <select
                   name="category"
-                  type="text"
                   value={formData.category}
                   onChange={handleProfileChange}
-                  list="category-suggestions"
-                  placeholder="Ej: Gastronomía, Indumentaria..."
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
-                />
-                <datalist id="category-suggestions">
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all appearance-none"
+                >
+                  <option value="" disabled>Seleccioná tu rubro...</option>
                   {SUGGESTED_CATEGORIES.map(cat => (
-                    <option key={cat} value={cat} />
+                    <option key={cat} value={cat}>{cat}</option>
                   ))}
-                </datalist>
+                  <option value="Otro">➕ Otro (escribir...)</option>
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-slate-400">
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" /></svg>
+                </div>
               </div>
-              <p className="text-xs text-slate-500 mt-1">Elegí una sugerencia o escribí la tuya libremente.</p>
+              
+              {isCustomCategory && (
+                <div className="pt-2 animate-in fade-in slide-in-from-top-1">
+                  <input
+                    name="custom_category"
+                    type="text"
+                    value={formData.custom_category}
+                    onChange={handleProfileChange}
+                    placeholder="Escribí tu rubro..."
+                    className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-violet-500/50 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
+                    autoFocus
+                  />
+                </div>
+              )}
             </div>
 
             <div className="space-y-1.5">
