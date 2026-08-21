@@ -103,6 +103,12 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
             </select>
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-slate-400 mb-1">Límite de Stock (opcional)</label>
+            <input type="number" name="stock_limit" min="1" placeholder="Ej: 50" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none" />
+            <p className="text-xs text-slate-500 mt-1">Si querés que la oferta se agote automáticamente al llegar a un límite, ponelo acá.</p>
+          </div>
+
           <button type="submit" disabled={loading} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl py-3 font-medium transition-colors flex items-center justify-center gap-2">
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Guardar Oferta'}
           </button>
@@ -130,6 +136,17 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
                   -{offer.discount_pct}%
                 </span>
               </div>
+              
+              {offer.stock_limit && (
+                <div className="mb-3 w-full bg-slate-800 rounded-full h-1.5">
+                  <div className="bg-violet-500 h-1.5 rounded-full" style={{ width: `${Math.min(100, ((offer.used_count || 0) / offer.stock_limit) * 100)}%` }}></div>
+                </div>
+              )}
+              {offer.stock_limit && (
+                <div className="text-xs font-medium mb-4 text-violet-400">
+                  Stock: {offer.stock_limit - (offer.used_count || 0)} disponibles (de {offer.stock_limit})
+                </div>
+              )}
               
               {offer.image_url && (
                 <div className="w-full h-32 mb-4 rounded-xl overflow-hidden relative border border-slate-700/50">

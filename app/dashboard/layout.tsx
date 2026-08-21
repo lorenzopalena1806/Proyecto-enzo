@@ -28,6 +28,10 @@ export default async function DashboardLayout({
     redirect('/auth/login');
   }
 
+  if (profile.is_active === false) {
+    redirect('/suspended');
+  }
+
   // Solo merchants (y superadmins) pueden acceder al dashboard
   if (profile.role === 'client') {
     redirect('/client/qr');

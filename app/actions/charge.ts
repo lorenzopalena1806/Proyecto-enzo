@@ -103,6 +103,12 @@ async function executePaymentServer(merchantId: string, clientId: string, amount
       return { success: false, reason: 'La oferta seleccionada no existe o ya no está activa.' };
     }
 
+    if (offer.stock_limit && offer.used_count >= offer.stock_limit) {
+      // Auto-desactivar por las dudas si no se desactivó
+      await adminClient.from('merchant_offers').update({ is_active: false }).eq('id', offerId);
+      return { success: false, reason: 'Esta oferta agotó su límite de stock disponible.' };
+    }
+
     if (offer.target_role !== 'all' && offer.target_role !== clientUser.role) {
       return { success: false, reason: `Esta oferta es exclusiva para ${offer.target_role === 'client' ? 'Clientes' : 'Comercios'}.` };
     }
@@ -113,6 +119,15 @@ async function executePaymentServer(merchantId: string, clientId: string, amount
       finalAmount = amount * (offer.final_price / offer.original_price);
     } else {
       finalAmount = amount - (amount * (finalPct / 100));
+    }
+    
+    // Increment stock
+    if (offer.stock_limit) {
+      const newCount = offer.used_count + 1;
+      await adminClient.from('merchant_offers').update({ 
+        used_count: newCount,
+        is_active: newCount < offer.stock_limit 
+      }).eq('id', offerId);
     }
 
   } else {
@@ -126,7 +141,7 @@ async function executePaymentServer(merchantId: string, clientId: string, amount
   }
 
   // 5. Insert Transaction
-  const { error: insertError } = await adminClient.from('discount_transactions').insert({
+  const { data: insertedTx, error: insertError } = await adminClient.from('discount_transactions').insert({
     scanner_id: merchantId,
     scanned_user_id: clientId,
     original_amount: amount,
@@ -136,12 +151,65 @@ async function executePaymentServer(merchantId: string, clientId: string, amount
     day_of_week: new Date().getDay(),
     client_name: (clientUser as any).full_name || null,
     offer_title: offerTitle || null,
-  });
+    offer_id: offerId || null,
+    status: 'completed'
+  }).select('id').single();
 
   if (insertError) {
     console.error("Insert error:", insertError);
     return { success: false, reason: `Error al registrar: ${insertError.message}` };
   }
 
-  return { success: true, finalAmount: finalAmount, discountPct: finalPct };
+  return { success: true, finalAmount: finalAmount, discountPct: finalPct, transactionId: insertedTx?.id };
+}
+
+export async function undoChargeServer(transactionId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { success: false, reason: 'No autorizado' };
+
+  const adminClient = createAdminClient();
+
+  const { data: tx } = await adminClient
+    .from('discount_transactions')
+    .select('*')
+    .eq('id', transactionId)
+    .single();
+
+  if (!tx) return { success: false, reason: 'Transacción no encontrada' };
+  
+  if (tx.scanner_id !== user.id) {
+    return { success: false, reason: 'No tienes permiso para deshacer esta transacción' };
+  }
+
+  if (tx.status === 'cancelled') {
+    return { success: false, reason: 'Esta transacción ya fue cancelada' };
+  }
+
+  const { error } = await adminClient
+    .from('discount_transactions')
+    .update({ status: 'cancelled' })
+    .eq('id', transactionId);
+
+  if (error) {
+    console.error("Undo error:", error);
+    return { success: false, reason: error.message };
+  }
+
+  if (tx.offer_id) {
+    const { data: offer } = await adminClient
+      .from('merchant_offers')
+      .select('used_count')
+      .eq('id', tx.offer_id)
+      .single();
+
+    if (offer && offer.used_count > 0) {
+      await adminClient.from('merchant_offers').update({ 
+        used_count: offer.used_count - 1,
+        is_active: true // reactivar si había quedado pausada por stock limit
+      }).eq('id', tx.offer_id);
+    }
+  }
+
+  return { success: true };
 }

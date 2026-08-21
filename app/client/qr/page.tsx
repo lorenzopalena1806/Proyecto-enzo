@@ -22,9 +22,13 @@ export default async function ClientQRPage() {
   // Obtener perfil y QR
   const { data: profile } = await adminClient
     .from('profiles')
-    .select('full_name')
+    .select('full_name, is_active')
     .eq('id', user.id)
     .single();
+
+  if (profile && profile.is_active === false) {
+    redirect('/suspended');
+  }
 
   let { data: qrData } = await adminClient
     .from('qr_codes')

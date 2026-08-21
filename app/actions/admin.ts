@@ -142,3 +142,19 @@ export async function deleteMerchantServer(merchantId: string) {
     return { success: false, error: error.message || 'Error desconocido' };
   }
 }
+
+export async function toggleUserActiveStatusServer(userId: string, isActive: boolean) {
+  try {
+    const adminClient = await requireSuperAdmin();
+    const { error } = await adminClient
+      .from('profiles')
+      .update({ is_active: isActive })
+      .eq('id', userId);
+    
+    if (error) throw error;
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error toggling user active status:', error.message || error);
+    return { success: false, error: error.message };
+  }
+}

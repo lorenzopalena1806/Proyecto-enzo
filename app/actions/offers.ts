@@ -15,6 +15,8 @@ export async function createOffer(formData: FormData) {
   const description = formData.get('description') as string;
   let discount_pct = parseInt(formData.get('discount_pct') as string, 10);
   const target_role = formData.get('target_role') as string;
+  const stock_limit_raw = formData.get('stock_limit') as string;
+  const stock_limit = stock_limit_raw ? parseInt(stock_limit_raw, 10) : null;
   
   const original_price_raw = formData.get('original_price') as string;
   const final_price_raw = formData.get('final_price') as string;
@@ -45,6 +47,7 @@ export async function createOffer(formData: FormData) {
     final_price,
     target_role,
     image_url,
+    stock_limit,
     is_active: true
   });
 

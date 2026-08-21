@@ -1,6 +1,7 @@
 import React from 'react';
 import { createAdminClient } from '@/lib/supabase-server';
 import { Store, User, Mail, Calendar, ShieldAlert } from 'lucide-react';
+import { SuspendUserButton } from '@/components/admin/SuspendUserButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -55,6 +56,7 @@ export default async function AdminUsersPage() {
                 <th className="px-6 py-4 font-medium">Rol</th>
                 <th className="px-6 py-4 font-medium">Negocio / Detalles</th>
                 <th className="px-6 py-4 font-medium text-right">Fecha de Registro</th>
+                <th className="px-6 py-4 font-medium text-right">Estado</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/50">
@@ -105,12 +107,15 @@ export default async function AdminUsersPage() {
                       {new Date(user.created_at).toLocaleDateString('es-AR')}
                     </div>
                   </td>
+                  <td className="px-6 py-4 text-right">
+                    <SuspendUserButton userId={user.id} isActive={user.is_active} role={user.role} />
+                  </td>
                 </tr>
               ))}
               
               {enrichedProfiles.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-slate-500">
+                  <td colSpan={5} className="px-6 py-12 text-center text-slate-500">
                     No hay usuarios registrados en el sistema.
                   </td>
                 </tr>

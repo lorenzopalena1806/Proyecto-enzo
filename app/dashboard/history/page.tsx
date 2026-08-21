@@ -4,6 +4,7 @@ import React from 'react';
 import { createClient, createAdminClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import { Receipt, TrendingUp, Users, DollarSign } from 'lucide-react';
+import { UndoChargeButton } from '@/components/dashboard/UndoChargeButton';
 
 export default async function MerchantHistoryPage() {
   const supabase = await createClient();
@@ -96,6 +97,7 @@ export default async function MerchantHistoryPage() {
                   <th className="px-6 py-4 font-medium text-right">Precio Final</th>
                   <th className="px-6 py-4 font-medium text-right">Descuento</th>
                   <th className="px-6 py-4 font-medium text-right">Fecha</th>
+                  <th className="px-6 py-4 font-medium text-right">Acciones</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/50">
@@ -143,6 +145,13 @@ export default async function MerchantHistoryPage() {
                           minute: '2-digit',
                           timeZone: 'America/Argentina/Buenos_Aires',
                         })}
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <UndoChargeButton 
+                          transactionId={tx.id} 
+                          isRecent={new Date(tx.applied_at).getTime() > Date.now() - 24 * 60 * 60 * 1000}
+                          isCancelled={tx.status === 'cancelled'}
+                        />
                       </td>
                     </tr>
                   );
