@@ -311,7 +311,7 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          {role === 'client' && (
+          {formData.role === 'client' && (
             <button
               type="button"
               className="w-full py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-900 font-semibold transition-all duration-200 flex items-center justify-center gap-3 shadow-md active:scale-[0.99]"
@@ -339,7 +339,7 @@ export default function RegisterPage() {
             </button>
           )}
 
-          {role === 'merchant' && (
+          {formData.role === 'merchant' && (
             <p className="text-center text-xs text-slate-400">
               El registro con Google es exclusivo para clientes.
             </p>
