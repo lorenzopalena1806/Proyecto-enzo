@@ -108,13 +108,13 @@ export default function RegisterPage() {
       }, 3000);
 
       return (
-        <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
+        <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
           <div className="w-full max-w-md text-center space-y-4">
-            <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 border border-emerald-200 mb-2">
+            <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-900 border border-emerald-700 mb-2">
               <span className="text-3xl">✅</span>
             </div>
-            <h2 className="text-xl font-bold text-slate-900">¡Registro exitoso!</h2>
-            <p className="text-slate-600 text-sm font-medium">
+            <h2 className="text-xl font-bold text-white">¡Registro exitoso!</h2>
+            <p className="text-slate-400 text-sm">
               Tu cuenta ha sido creada. Para activarla y configurar tu comercio en la red, serás redirigido a nuestro WhatsApp...
             </p>
             <a
@@ -124,7 +124,7 @@ export default function RegisterPage() {
               Ir a WhatsApp ahora
             </a>
             <div className="pt-4">
-              <Link href="/auth/login" className="text-slate-500 text-sm hover:text-slate-700 font-medium">
+              <Link href="/auth/login" className="text-slate-600 text-sm hover:text-slate-400">
                 O ir al Login
               </Link>
             </div>
@@ -134,18 +134,18 @@ export default function RegisterPage() {
     }
 
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
         <div className="w-full max-w-md text-center space-y-4">
-          <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 border border-emerald-200">
+          <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-900 border border-emerald-700">
             <span className="text-3xl">✅</span>
           </div>
-          <h2 className="text-xl font-bold text-slate-900">¡Registro exitoso!</h2>
-          <p className="text-slate-600 text-sm font-medium">
+          <h2 className="text-xl font-bold text-white">¡Registro exitoso!</h2>
+          <p className="text-slate-400 text-sm">
             Revisá tu email para confirmar tu cuenta antes de ingresar.
           </p>
           <Link
             href="/auth/login"
-            className="inline-block mt-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all shadow-md shadow-blue-500/20"
+            className="inline-block mt-2 px-6 py-3 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-semibold transition-all"
           >
             Ir al Login
           </Link>
@@ -155,28 +155,24 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 relative overflow-hidden flex items-center justify-center p-4 py-8 z-0">
-      {/* Orbes decorativos */}
-      <div className="absolute top-[0%] right-[-10%] w-[500px] h-[500px] bg-blue-400/20 rounded-full blur-3xl -z-10 animate-pulse" />
-      <div className="absolute bottom-[0%] left-[-10%] w-[400px] h-[400px] bg-cyan-400/20 rounded-full blur-3xl -z-10 animate-pulse delay-1000" />
-
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 py-8">
       <div className="w-full max-w-md space-y-6">
 
         {/* Logo */}
         <div className="text-center flex flex-col items-center space-y-3">
           <Link href="/">
-            <img src="/logo.png" alt="Lazoo" className="h-20 sm:h-24 w-auto rounded-xl shadow-lg shadow-blue-900/10 object-contain" />
+            <img src="/logo.png" alt="Lazoo" className="h-20 sm:h-24 w-auto rounded-xl shadow-2xl shadow-blue-900/40 object-contain" />
           </Link>
-          <p className="text-slate-500 text-sm font-medium">Únete a la red de descuentos</p>
+          <p className="text-slate-400 text-sm">Únete a la red de descuentos</p>
         </div>
 
         {/* Card */}
-        <div className="rounded-3xl glass-panel p-6 sm:p-8 space-y-5">
+        <div className="rounded-2xl border border-slate-700 bg-slate-800/60 backdrop-blur-sm p-6 space-y-5">
           <form onSubmit={handleRegister} className="space-y-4" noValidate>
 
             {/* Tipo de cuenta */}
             <div className="space-y-1.5">
-              <label className="block text-sm font-semibold text-slate-700">Tipo de cuenta</label>
+              <label className="block text-sm font-medium text-slate-300">Tipo de cuenta</label>
               <div className="grid grid-cols-2 gap-3">
                 {(['client', 'merchant'] as const).map((r) => (
                   <button
@@ -184,10 +180,10 @@ export default function RegisterPage() {
                     type="button"
                     onClick={() => setFormData((prev) => ({ ...prev, role: r }))}
                     className={`
-                      py-3 px-4 rounded-xl border-2 text-sm font-semibold transition-all shadow-sm
+                      py-2.5 px-4 rounded-xl border-2 text-sm font-medium transition-all
                       ${formData.role === r
-                        ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-blue-500/10'
-                        : 'border-slate-200 bg-white/50 text-slate-500 hover:border-slate-300 hover:bg-white'
+                        ? 'border-violet-500 bg-violet-950/60 text-violet-300'
+                        : 'border-slate-600 bg-slate-900/40 text-slate-400 hover:border-slate-500'
                       }
                     `}
                   >
@@ -248,7 +244,7 @@ export default function RegisterPage() {
 
             {/* Contraseña */}
             <div className="space-y-1.5">
-              <label htmlFor="reg-password" className="block text-sm font-semibold text-slate-700">
+              <label htmlFor="reg-password" className="block text-sm font-medium text-slate-300">
                 Contraseña
               </label>
               <div className="relative">
@@ -260,12 +256,12 @@ export default function RegisterPage() {
                   onChange={handleChange}
                   placeholder="Mínimo 8 caracteres"
                   required
-                  className="w-full px-4 py-3 pr-12 rounded-xl bg-white/50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all shadow-sm"
+                  className="w-full px-4 py-3 pr-12 rounded-xl bg-slate-900 border border-slate-600 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -286,9 +282,8 @@ export default function RegisterPage() {
 
             {/* Error */}
             {error && (
-              <div className="rounded-xl bg-red-50 border border-red-200 p-3 flex items-center gap-2">
-                <div className="w-1.5 h-full bg-red-500 rounded-full" />
-                <p className="text-sm text-red-700 font-medium">{error}</p>
+              <div className="rounded-lg bg-red-950/60 border border-red-700 p-3">
+                <p className="text-sm text-red-300">{error}</p>
               </div>
             )}
 
@@ -297,7 +292,7 @@ export default function RegisterPage() {
               id="btn-register"
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 mt-2 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 hover:scale-[1.01] active:scale-[0.99]"
+              className="w-full py-3 rounded-xl bg-violet-600 hover:bg-violet-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-violet-900/40"
             >
               {loading ? (
                 <><Loader2 className="h-4 w-4 animate-spin" /> Creando cuenta...</>
@@ -309,17 +304,17 @@ export default function RegisterPage() {
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-200"></div>
+              <div className="w-full border-t border-slate-700"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-slate-50 text-slate-400 text-xs font-semibold uppercase tracking-widest rounded-full">O</span>
+              <span className="px-2 bg-slate-800/60 text-slate-400 text-xs uppercase tracking-widest">O</span>
             </div>
           </div>
 
           {formData.role === 'client' && (
             <button
               type="button"
-              className="w-full py-3.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 text-slate-700 font-semibold transition-all duration-200 flex items-center justify-center gap-3 shadow-sm active:scale-[0.98]"
+              className="w-full py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-900 font-semibold transition-all duration-200 flex items-center justify-center gap-3 shadow-md active:scale-[0.99]"
               onClick={async () => {
                 const { createClient } = await import('@/lib/supabase');
                 const supabase = createClient();
@@ -345,14 +340,14 @@ export default function RegisterPage() {
           )}
 
           {formData.role === 'merchant' && (
-            <p className="text-center text-xs text-slate-500 font-medium">
+            <p className="text-center text-xs text-slate-400">
               El registro con Google es exclusivo para clientes.
             </p>
           )}
 
-          <div className="text-center text-sm text-slate-500 font-medium">
+          <div className="text-center text-sm text-slate-500">
             ¿Ya tenés cuenta?{' '}
-            <Link href="/auth/login" className="text-blue-600 hover:text-blue-700 font-semibold transition-colors">
+            <Link href="/auth/login" className="text-violet-400 hover:text-violet-300 font-medium transition-colors">
               Ingresar
             </Link>
           </div>
@@ -385,7 +380,7 @@ function InputField({
 }) {
   return (
     <div className="space-y-1.5">
-      <label htmlFor={id} className="block text-sm font-semibold text-slate-700">
+      <label htmlFor={id} className="block text-sm font-medium text-slate-300">
         {label}
       </label>
       <input
@@ -396,7 +391,7 @@ function InputField({
         onChange={onChange}
         placeholder={placeholder}
         required={required}
-        className="w-full px-4 py-3 rounded-xl bg-white/50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all shadow-sm"
+        className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-600 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
       />
     </div>
   );

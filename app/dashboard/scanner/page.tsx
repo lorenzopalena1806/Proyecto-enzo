@@ -25,8 +25,8 @@ export default async function ScannerPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Generar Cobro</h1>
-        <p className="text-slate-500 mt-1 font-medium">
+        <h1 className="text-2xl font-bold text-white">Generar Cobro</h1>
+        <p className="text-slate-400 mt-1">
           Ingresá el monto y seleccioná el método de pago para cobrar con descuento.
         </p>
       </div>

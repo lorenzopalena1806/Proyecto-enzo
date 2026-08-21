@@ -7,7 +7,7 @@
 
 /* ── BASE STYLES ──────────────────────────────────────────────── */
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 * {
@@ -19,8 +19,8 @@ html {
 }
 
 body {
-  background-color: #f8fafc; /* slate-50 */
-  color: #0f172a;            /* slate-950 */
+  background-color: #0f172a; /* slate-950 */
+  color: #f8fafc;            /* slate-50 */
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -33,21 +33,21 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9; /* slate-100 */
+  background: #1e293b; /* slate-800 */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1; /* slate-300 */
+  background: #475569; /* slate-600 */
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8; /* slate-400 */
+  background: #64748b; /* slate-500 */
 }
 
 /* ── FOCUS VISIBLE RING ───────────────────────────────────────── */
 *:focus-visible {
-  outline: 2px solid #2563eb; /* blue-600 */
+  outline: 2px solid #7c3aed; /* violet-600 */
   outline-offset: 2px;
   border-radius: 6px;
 }
@@ -65,8 +65,8 @@ input[type="number"] {
 
 /* ── SELECCIÓN DE TEXTO ───────────────────────────────────────── */
 ::selection {
-  background-color: #bfdbfe; /* blue-200 */
-  color: #1e3a8a; /* blue-900 */
+  background-color: #7c3aed33;
+  color: #c4b5fd;
 }
 
 /* ── ANIMACIONES SUAVES ───────────────────────────────────────── */
@@ -93,31 +93,30 @@ input[type="number"] {
   font-family: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
 }
 
-/* ── MODERN FINTECH / LIGHT GLASSMORPHISM ─────────────────────── */
+/* ── PREMIUM GLASSMORPHISM ────────────────────────────────────── */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
 .glass-panel-hover {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
 }
 
 .glass-panel-hover:hover {
-  background: rgba(255, 255, 255, 0.95);
-  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.06);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
 }
 
-/* Utilidad para gradiente de marca */
-.text-brand-gradient {
-  background: linear-gradient(to right, #2563eb, #06b6d4);
+/* Utilidad para gradiente neón */
+.text-neon-gradient {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6, #d946ef);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-

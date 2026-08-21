@@ -48,8 +48,62 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-50 text-slate-900 relative overflow-hidden z-0">
-      
+    <div className="flex min-h-screen app-bg text-white">
+      <style>{`
+        .app-bg {
+          background: radial-gradient(ellipse at top, #0f1f4a 0%, #060d1f 50%, #000510 100%);
+        }
+        .glass-panel {
+          background: rgba(255,255,255,0.03);
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+          border: 1px solid rgba(255,255,255,0.08);
+          box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+        .glass-card-blue {
+          background: rgba(59, 130, 246, 0.05);
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+          border: 1px solid rgba(59,130,246,0.15);
+          box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06), 0 0 40px rgba(59,130,246,0.05);
+        }
+        .btn-primary {
+          background: linear-gradient(135deg, #2563eb, #4f46e5);
+          box-shadow: 0 0 20px rgba(37,99,235,0.3), 0 4px 10px rgba(0,0,0,0.2);
+          border: 1px solid rgba(255,255,255,0.1);
+          color: white;
+          transition: all 0.2s ease;
+        }
+        .btn-primary:hover {
+          background: linear-gradient(135deg, #3b82f6, #6366f1);
+          box-shadow: 0 0 30px rgba(59,130,246,0.4), 0 4px 15px rgba(0,0,0,0.3);
+          transform: translateY(-1px);
+        }
+        .input-glass {
+          background: rgba(0,0,0,0.3);
+          border: 1px solid rgba(255,255,255,0.1);
+          color: white;
+          transition: all 0.2s ease;
+        }
+        .input-glass:focus {
+          border-color: #3b82f6;
+          box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+          outline: none;
+        }
+        .input-glass::placeholder {
+          color: rgba(255,255,255,0.3);
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-6px); }
+        }
+        .float-anim { animation: float 3s ease-in-out infinite; }
+        @keyframes pulse-glow {
+          0%, 100% { opacity: 0.4; }
+          50% { opacity: 0.8; }
+        }
+        .glow-pulse { animation: pulse-glow 2s ease-in-out infinite; }
+      `}</style>
       <Sidebar profile={profile} />
       {/* Spacer para mobile header */}
       <div className="flex-1 flex flex-col lg:overflow-auto relative z-10">
@@ -60,9 +114,9 @@ export default async function DashboardLayout({
       </div>
       
       {/* Background ambient orbs para todo el dashboard */}
-      <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
-        <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-blue-200/50 blur-[100px] animate-pulse" />
-        <div className="absolute bottom-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-cyan-200/50 blur-[100px] animate-pulse delay-1000" />
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600/10 blur-[120px]" />
+        <div className="absolute bottom-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-600/10 blur-[120px]" />
       </div>
     </div>
   );

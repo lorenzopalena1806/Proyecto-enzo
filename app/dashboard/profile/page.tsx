@@ -21,8 +21,8 @@ export default async function ProfilePage() {
   return (
     <div className="max-w-xl mx-auto space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Mi Perfil</h1>
-        <p className="text-slate-500 mt-1 font-medium">Actualizá los datos de tu cuenta.</p>
+        <h1 className="text-3xl font-bold text-white tracking-tight">Mi Perfil</h1>
+        <p className="text-slate-400 mt-1">Actualizá los datos de tu cuenta.</p>
       </div>
       <ProfileEditForm profile={profile} userEmail={user.email || ''} />
     </div>
