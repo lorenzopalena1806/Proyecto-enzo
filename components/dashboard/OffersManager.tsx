@@ -1,30 +1,34 @@
 'use client';
 
 import React, { useState } from 'react';
-import { createOffer, toggleOfferStatus, deleteOffer, resetOfferStock } from '@/app/actions/offers';
-import { Plus, Tag, Trash2, Power, PowerOff, Loader2, QrCode as QrCodeIcon, X, AlertTriangle } from 'lucide-react';
-import { QRCodeSVG } from 'qrcode.react';
+import { createOffer, updateOffer, toggleOfferStatus, deleteOffer, resetOfferStock } from '@/app/actions/offers';
+import { Plus, Tag, Trash2, Power, PowerOff, Loader2, AlertTriangle, Edit2 } from 'lucide-react';
 
 export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
-  const [isCreating, setIsCreating] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingOffer, setEditingOffer] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
-  const [qrOffer, setQrOffer] = useState<any | null>(null);
 
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
 
-  const handleCreate = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     const formData = new FormData(e.currentTarget);
-    const res = await createOffer(formData);
+    
+    const res = editingOffer 
+      ? await updateOffer(editingOffer.id, formData)
+      : await createOffer(formData);
+      
     setLoading(false);
     
     if (res && !res.success) {
-      alert(res.error || 'Error al crear la oferta');
+      alert(res.error || `Error al ${editingOffer ? 'actualizar' : 'crear'} la oferta`);
       return;
     }
     
-    setIsCreating(false);
+    setIsFormOpen(false);
+    setEditingOffer(null);
   };
 
   const handleToggle = async (id: string, currentStatus: boolean) => {
@@ -48,28 +52,34 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold text-white">Tus Ofertas Activas</h2>
         <button
-          onClick={() => setIsCreating(!isCreating)}
+          onClick={() => {
+            setIsFormOpen(!isFormOpen);
+            if (isFormOpen) setEditingOffer(null);
+          }}
           className="bg-violet-600 hover:bg-violet-500 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors flex items-center gap-2"
         >
-          {isCreating ? 'Cancelar' : <><Plus className="w-4 h-4" /> Nueva Oferta</>}
+          {isFormOpen ? 'Cancelar' : <><Plus className="w-4 h-4" /> Nueva Oferta</>}
         </button>
       </div>
 
-      {isCreating && (
-        <form onSubmit={handleCreate} className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+      {isFormOpen && (
+        <form key={editingOffer ? editingOffer.id : 'new'} onSubmit={handleSubmitForm} className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-bold text-white">{editingOffer ? 'Editar Oferta' : 'Crear Nueva Oferta'}</h3>
+          </div>
           <div>
             <label className="block text-sm font-medium text-slate-400 mb-1">Título de la Oferta / Producto</label>
-            <input name="title" required placeholder="Ej: 2x1 en Remeras / Hamburguesa Completa" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none" />
+            <input name="title" defaultValue={editingOffer?.title} required placeholder="Ej: 2x1 en Remeras / Hamburguesa Completa" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none" />
           </div>
           
           <div>
             <label className="block text-sm font-medium text-slate-400 mb-1">Descripción corta (opcional)</label>
-            <input name="description" placeholder="Ej: Válido llevando dos remeras lisas" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none" />
+            <input name="description" defaultValue={editingOffer?.description} placeholder="Ej: Válido llevando dos remeras lisas" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none" />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-slate-400 mb-1">Enlace (URL) de la Foto (opcional pero recomendado)</label>
-            <input type="url" name="image_url" placeholder="Ej: https://misitio.com/foto.jpg" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none" />
+            <input type="url" name="image_url" defaultValue={editingOffer?.image_url} placeholder="Ej: https://misitio.com/foto.jpg" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none" />
             <p className="text-xs text-slate-500 mt-1">Pegá el link de una imagen que ya esté en internet (para no gastar espacio en el servidor).</p>
           </div>
 
@@ -80,11 +90,11 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-slate-400 mb-1">Precio Normal ($)</label>
-                <input type="number" name="original_price" min="1" step="0.01" placeholder="Ej: 10000" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none" />
+                <input type="number" name="original_price" defaultValue={editingOffer?.original_price} min="1" step="0.01" placeholder="Ej: 10000" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-400 mb-1">Precio en App ($)</label>
-                <input type="number" name="final_price" min="1" step="0.01" placeholder="Ej: 8000" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none" />
+                <input type="number" name="final_price" defaultValue={editingOffer?.final_price} min="1" step="0.01" placeholder="Ej: 8000" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none" />
               </div>
             </div>
 
@@ -96,13 +106,13 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
 
             <div>
               <label className="block text-sm font-medium text-slate-400 mb-1">Descuento (%)</label>
-              <input type="number" name="discount_pct" min="1" max="100" placeholder="Ej: 20" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none" />
+              <input type="number" name="discount_pct" defaultValue={editingOffer?.discount_pct} min="1" max="100" placeholder="Ej: 20" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none" />
             </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-slate-400 mb-1">¿Para quién es?</label>
-            <select name="target_role" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none">
+            <select name="target_role" defaultValue={editingOffer?.target_role || 'client'} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none">
               <option value="client">Solo Clientes</option>
               <option value="merchant">Solo Comercios (B2B)</option>
               <option value="all">Todos</option>
@@ -111,18 +121,18 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
 
           <div>
             <label className="block text-sm font-medium text-slate-400 mb-1">Límite de Stock (opcional)</label>
-            <input type="number" name="stock_limit" min="1" placeholder="Ej: 50" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none" />
+            <input type="number" name="stock_limit" defaultValue={editingOffer?.stock_limit} min="1" placeholder="Ej: 50" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none" />
             <p className="text-xs text-slate-500 mt-1">Si querés que la oferta se agote automáticamente al llegar a un límite, ponelo acá.</p>
           </div>
 
           <button type="submit" disabled={loading} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl py-3 font-medium transition-colors flex items-center justify-center gap-2">
-            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Guardar Oferta'}
+            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (editingOffer ? 'Guardar Cambios' : 'Guardar Oferta')}
           </button>
         </form>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {initialOffers.length === 0 && !isCreating && (
+        {initialOffers.length === 0 && !isFormOpen && (
           <div className="col-span-full bg-slate-900/50 border border-slate-800 rounded-2xl p-8 text-center">
             <Tag className="w-12 h-12 text-slate-600 mx-auto mb-3" />
             <p className="text-slate-400">No tenés ninguna oferta creada.</p>
@@ -202,61 +212,33 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
                         {offer.is_active ? <><PowerOff className="w-4 h-4"/> Pausar</> : <><Power className="w-4 h-4"/> Activar</>}
                       </button>
                     )}
-                    {offer.is_active && !isDepleted && (
-                      <button 
-                        onClick={() => setQrOffer(offer)}
-                        className="text-violet-400 hover:text-violet-300 flex items-center gap-1.5 text-sm font-medium"
-                      >
-                        <QrCodeIcon className="w-4 h-4" /> QR
-                      </button>
-                    )}
                   </div>
-                  <button 
-                    onClick={() => handleDelete(offer.id)}
-                    className="text-red-400 hover:text-red-300 flex items-center gap-1.5 text-sm font-medium"
-                  >
-                    <Trash2 className="w-4 h-4" /> Eliminar
-                  </button>
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={() => {
+                        setEditingOffer(offer);
+                        setIsFormOpen(true);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="text-blue-400 hover:text-blue-300 flex items-center gap-1.5 text-sm font-medium"
+                      title="Editar oferta"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(offer.id)}
+                      className="text-red-400 hover:text-red-300 flex items-center gap-1.5 text-sm font-medium"
+                      title="Eliminar oferta"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           );
         })}
       </div>
-
-      {qrOffer && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-          <div className="bg-slate-900 border border-slate-700 rounded-3xl p-8 max-w-sm w-full relative flex flex-col items-center shadow-2xl">
-            <button 
-              onClick={() => setQrOffer(null)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-white bg-slate-800 rounded-full p-1 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <h3 className="text-xl font-bold text-white text-center mb-2">{qrOffer.title}</h3>
-            <p className="text-sm text-slate-400 text-center mb-8">
-              Mostrá este QR al cliente para que aplique esta oferta específica.
-            </p>
-            <div className="bg-white p-6 rounded-2xl shadow-lg mb-6">
-              <QRCodeSVG 
-                value={`${baseUrl}/pay?m=${qrOffer.merchant_id}&offer=${qrOffer.id}${qrOffer.final_price ? `&a=${qrOffer.original_price}` : ''}`}
-                size={220} 
-                level="M" 
-              />
-            </div>
-            {qrOffer.final_price && (
-              <p className="text-emerald-400 font-bold bg-emerald-950/50 px-4 py-2 rounded-xl text-center w-full border border-emerald-900/50">
-                Paga: ${qrOffer.final_price.toLocaleString('es-AR')}
-              </p>
-            )}
-            {!qrOffer.final_price && (
-              <p className="text-violet-400 font-bold bg-violet-950/50 px-4 py-2 rounded-xl text-center w-full border border-violet-900/50">
-                -{qrOffer.discount_pct}% de descuento
-              </p>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
