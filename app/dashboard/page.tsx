@@ -1,7 +1,7 @@
 import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { QrCode, ScanLine, ImageIcon, TrendingUp, ArrowRight, AlertTriangle, Star, ShieldCheck } from 'lucide-react';
+import { QrCode, ScanLine, ImageIcon, TrendingUp, ArrowRight, AlertTriangle, Star, ShieldCheck, Briefcase } from 'lucide-react';
 import { PushManager } from '@/components/dashboard/PushManager';
 
 export const metadata = {
@@ -124,7 +124,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Accesos rápidos */}
-      <div className="grid md:grid-cols-3 gap-4">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
         <QuickLink
           href="/dashboard/qr"
           title="Mi Código QR"
@@ -142,6 +142,12 @@ export default async function DashboardPage() {
           title="Modo Empleado"
           description="Acceso con PIN"
           Icon={ShieldCheck}
+        />
+        <QuickLink
+          href="/dashboard/b2b"
+          title="Beneficios B2B"
+          description="Ofertas exclusivas para vos"
+          Icon={Briefcase}
         />
       </div>
 
