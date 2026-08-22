@@ -1,17 +1,8 @@
 import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { ChevronLeft, Scan } from 'lucide-react';
-
-const InteractiveMap = dynamic(() => import('@/components/client/InteractiveMap'), {
-  ssr: false,
-  loading: () => (
-    <div className="h-[calc(100vh-80px)] w-full bg-slate-900 flex items-center justify-center">
-      <div className="text-violet-400 font-medium animate-pulse">Cargando mapa interactivo...</div>
-    </div>
-  )
-});
+import MapWrapper from '@/components/client/MapWrapper';
 
 export const metadata = {
   title: 'Mapa de Comercios | Lazoo',
@@ -75,7 +66,7 @@ export default async function MapPage() {
       
       {/* ── MAPA ── */}
       <div className="flex-1 w-full h-full">
-        <InteractiveMap merchants={merchants || []} />
+        <MapWrapper merchants={merchants || []} />
       </div>
 
       {/* ── BOTTOM NAV BAR ── */}
