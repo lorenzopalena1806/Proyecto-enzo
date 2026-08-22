@@ -6,7 +6,8 @@ import { toggleFavoriteServer } from '@/app/actions/client';
 import Link from 'next/link';
 import Image from 'next/image';
 
-const getCategoryIcon = (category: string) => {
+const getCategoryIcon = (category: string | null | undefined) => {
+  if (!category) return <Store className="w-6 h-6 mb-1 text-violet-400" />;
   const cat = category.toLowerCase();
   if (cat.includes('caf')) return <Coffee className="w-6 h-6 mb-1 text-amber-400" />;
   if (cat.includes('restauran') || cat.includes('comida') || cat.includes('panad')) return <Utensils className="w-6 h-6 mb-1 text-red-400" />;
@@ -147,7 +148,7 @@ export function DiscoverSection({
                       <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
                       <div className="flex items-center gap-1 text-slate-400 text-[10px] ml-2">
                         <MapPin className="w-3 h-3" />
-                        <span>{(Math.random() * 8 + 1).toFixed(1)} km</span>
+                        <span>2.5 km</span>
                       </div>
                     </div>
 
