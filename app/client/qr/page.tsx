@@ -302,8 +302,8 @@ export default async function ClientQRPage() {
         <div className="max-w-lg mx-auto relative flex justify-between items-end pointer-events-auto bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-[2rem] px-6 py-3 shadow-2xl">
           
           {/* Left: Historial */}
-          <button 
-            onClick={() => document.getElementById('historial')?.scrollIntoView({ behavior: 'smooth' })}
+          <a 
+            href="#historial"
             className="flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white transition-colors pb-1"
           >
             <div className="relative">
@@ -313,7 +313,7 @@ export default async function ClientQRPage() {
               </div>
             </div>
             <span className="text-[10px] font-semibold text-center leading-tight">Descuentos<br/>Escaneados</span>
-          </button>
+          </a>
 
           {/* Center: QR (Floating) */}
           <div className="relative -top-6">
