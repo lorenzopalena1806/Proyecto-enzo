@@ -11,15 +11,27 @@ function VerifyContent() {
   const supabase = createClient();
 
   useEffect(() => {
-    // Al instanciar supabase en el cliente, automáticamente lee el hash (#access_token=...)
-    // y establece la sesión. Solo necesitamos esperar a que termine y redirigir.
     const checkSession = async () => {
+      // Si hay un hash con access_token, lo forzamos (para sobreescribir la sesión actual del admin)
+      if (window.location.hash) {
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        const accessToken = hashParams.get('access_token');
+        const refreshToken = hashParams.get('refresh_token');
+
+        if (accessToken && refreshToken) {
+          await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken
+          });
+        }
+      }
+
       const { data: { session } } = await supabase.auth.getSession();
       
       if (session) {
         const next = searchParams.get('next') || '/dashboard';
         router.push(next);
-        router.refresh(); // Forzar recarga para que el Server Layout vea las nuevas cookies
+        router.refresh(); 
       } else {
         // Si no hay sesión todavía, configurar un listener
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
