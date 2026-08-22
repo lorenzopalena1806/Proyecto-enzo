@@ -1,10 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+
 import { createGlobalNotification, toggleNotificationStatus, deleteGlobalNotification } from '@/app/actions/admin-notifications';
 import { Megaphone, AlertTriangle, CheckCircle2, Info, Trash2, Power } from 'lucide-react';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
 
 interface Notification {
   id: string;
@@ -129,7 +128,9 @@ export function NotificationsManager({ initialNotifications }: { initialNotifica
               <div className="flex-1">
                 <p className="text-white text-sm whitespace-pre-wrap">{notif.message}</p>
                 <div className="flex items-center gap-3 mt-3 text-xs font-medium text-slate-500">
-                  <span>{format(new Date(notif.created_at), "d 'de' MMMM, yyyy", { locale: es })}</span>
+                  <span>
+                    {new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(notif.created_at))}
+                  </span>
                   <span>•</span>
                   <span className={notif.is_active ? 'text-cyan-400 font-bold' : ''}>
                     {notif.is_active ? 'Activo (Mostrándose)' : 'Apagado'}
