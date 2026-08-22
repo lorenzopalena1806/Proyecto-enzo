@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Lazoo — Red de Descuentos B2B y B2C',
     description: 'Transformá tu comercio con el ecosistema de beneficios de Lazoo. Cobros por QR, estadísticas en tiempo real y red B2B.',
-    url: 'https://lazoo.com.ar', // Replace with real domain later
+    url: 'https://lazoo.vercel.app',
     siteName: 'Lazoo',
     images: [
       {
