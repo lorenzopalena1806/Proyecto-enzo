@@ -68,6 +68,8 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
   const [passwordSuccess, setPasswordSuccess] = useState(false);
   const [profileError, setProfileError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [isExtractingMaps, setIsExtractingMaps] = useState(false);
+  const [mapExtractMessage, setMapExtractMessage] = useState({ type: '', text: '' });
 
   const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -87,6 +89,31 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
     setPasswordData(prev => ({ ...prev, [e.target.name]: e.target.value }));
     setPasswordSuccess(false);
     setPasswordError('');
+  };
+
+  const handleExtractMaps = async () => {
+    if (!formData.maps_url) {
+      setMapExtractMessage({ type: 'error', text: 'Primero pegá un link de Google Maps válido.' });
+      return;
+    }
+    setIsExtractingMaps(true);
+    setMapExtractMessage({ type: '', text: '' });
+    
+    try {
+      const { extractCoordinatesFromMapsUrl } = await import('@/app/actions/map');
+      const res = await extractCoordinatesFromMapsUrl(formData.maps_url);
+      
+      if (res.success && res.lat && res.lng) {
+        setFormData(prev => ({ ...prev, latitude: res.lat, longitude: res.lng }));
+        setMapExtractMessage({ type: 'success', text: '¡Coordenadas obtenidas y actualizadas en el mapa!' });
+      } else {
+        setMapExtractMessage({ type: 'error', text: res.error || 'No se pudo obtener la ubicación.' });
+      }
+    } catch (err) {
+      setMapExtractMessage({ type: 'error', text: 'Error al comunicarse con el servidor.' });
+    } finally {
+      setIsExtractingMaps(false);
+    }
   };
 
   const handleProfileSubmit = async (e: React.FormEvent) => {
@@ -247,19 +274,35 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
 
             <div className="space-y-1.5">
               <label className="block text-sm font-medium text-slate-300">Link de Google Maps</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span className="text-slate-500 font-bold text-sm">📍</span>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <div className="relative flex-1">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <span className="text-slate-500 font-bold text-sm">📍</span>
+                  </div>
+                  <input
+                    name="maps_url"
+                    type="url"
+                    value={formData.maps_url}
+                    onChange={handleProfileChange}
+                    placeholder="Ej: https://maps.app.goo.gl/..."
+                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
+                  />
                 </div>
-                <input
-                  name="maps_url"
-                  type="url"
-                  value={formData.maps_url}
-                  onChange={handleProfileChange}
-                  placeholder="Ej: https://maps.app.goo.gl/..."
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
-                />
+                <button
+                  type="button"
+                  onClick={handleExtractMaps}
+                  disabled={isExtractingMaps || !formData.maps_url}
+                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-sm text-white font-medium disabled:opacity-50 transition-colors whitespace-nowrap"
+                >
+                  {isExtractingMaps ? <Loader2 className="h-4 w-4 animate-spin text-violet-400" /> : <MapPin className="h-4 w-4 text-violet-400" />}
+                  Extraer Ubicación
+                </button>
               </div>
+              {mapExtractMessage.text && (
+                <p className={`text-xs mt-1 ${mapExtractMessage.type === 'success' ? 'text-emerald-400' : 'text-amber-400'}`}>
+                  {mapExtractMessage.text}
+                </p>
+              )}
             </div>
 
             <div className="space-y-1.5">
