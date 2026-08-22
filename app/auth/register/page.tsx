@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Eye, EyeOff, Store, Loader2, UserPlus } from 'lucide-react';
+import { Eye, EyeOff, Store, Loader2, UserPlus, ArrowLeft } from 'lucide-react';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -155,7 +155,16 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 py-8">
+    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4 relative">
+      
+      {/* Botón Volver al inicio */}
+      <div className="absolute top-6 left-6 z-10 hidden sm:block">
+        <Link href="/" className="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white transition-colors bg-slate-900/50 backdrop-blur-md border border-slate-800 px-4 py-2 rounded-full hover:bg-slate-800">
+          <ArrowLeft className="w-4 h-4" />
+          Volver a la web
+        </Link>
+      </div>
+
       <div className="w-full max-w-md space-y-6">
 
         {/* Logo */}
@@ -168,6 +177,14 @@ export default function RegisterPage() {
 
         {/* Card */}
         <div className="rounded-2xl border border-slate-700 bg-slate-800/60 backdrop-blur-sm p-6 space-y-5">
+          {/* Mobile Back Button */}
+          <div className="sm:hidden mb-2">
+            <Link href="/" className="inline-flex items-center gap-2 text-xs font-medium text-slate-400 hover:text-white transition-colors">
+              <ArrowLeft className="w-3 h-3" />
+              Volver a la web
+            </Link>
+          </div>
+
           <form onSubmit={handleRegister} className="space-y-4" noValidate>
 
             {/* Tipo de cuenta */}

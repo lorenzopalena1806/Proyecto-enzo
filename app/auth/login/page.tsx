@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Eye, EyeOff, Loader2, LogIn } from 'lucide-react';
+import { Eye, EyeOff, Loader2, LogIn, ArrowLeft } from 'lucide-react';
 
 import { loginWithPasswordServer } from '@/app/actions/auth';
 
@@ -39,7 +39,16 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4 relative">
+      
+      {/* Botón Volver al inicio */}
+      <div className="absolute top-6 left-6 z-10">
+        <Link href="/" className="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white transition-colors bg-slate-900/50 backdrop-blur-md border border-slate-800 px-4 py-2 rounded-full hover:bg-slate-800">
+          <ArrowLeft className="w-4 h-4" />
+          Volver a la web
+        </Link>
+      </div>
+
       <div className="w-full max-w-md space-y-6">
 
         {/* Logo */}
