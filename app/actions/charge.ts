@@ -3,6 +3,7 @@
 import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { calculateDiscount } from '@/lib/discount-logic';
 import type { PaymentMethod, Profile } from '@/types';
+import { sendPushNotification } from './push';
 
 export async function processPaymentByShortCodeServer(merchantId: string, amount: number, method: PaymentMethod, shortCode: string, offerId?: string) {
   const adminClient = createAdminClient();
@@ -158,6 +159,17 @@ async function executePaymentServer(merchantId: string, clientId: string, amount
   if (insertError) {
     console.error("Insert error:", insertError);
     return { success: false, reason: `Error al registrar: ${insertError.message}` };
+  }
+
+  // Trigger push notification to merchant
+  try {
+    await sendPushNotification(merchantId, {
+      title: '¡Cobro Exitoso! 💰',
+      body: `Cobraste $${finalAmount.toLocaleString('es-AR')} a ${clientUser.full_name || 'un cliente'}.`,
+      url: '/dashboard'
+    });
+  } catch (err) {
+    console.error('Failed to send push notification:', err);
   }
 
   return { success: true, finalAmount: finalAmount, discountPct: finalPct, transactionId: insertedTx?.id };

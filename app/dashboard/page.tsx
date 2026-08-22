@@ -2,6 +2,7 @@ import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { QrCode, ScanLine, ImageIcon, TrendingUp, ArrowRight, AlertTriangle, Star, ShieldCheck } from 'lucide-react';
+import { PushManager } from '@/components/dashboard/PushManager';
 
 export const metadata = {
   title: 'Panel Principal | Lazoo',
@@ -72,6 +73,9 @@ export default async function DashboardPage() {
           {today.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}
         </p>
       </div>
+
+      {/* Gestor de Notificaciones Push */}
+      <PushManager />
 
       {/* Alerta de día */}
       <div className={`
