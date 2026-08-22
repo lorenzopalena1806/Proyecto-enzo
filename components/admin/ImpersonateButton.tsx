@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { LogIn, Loader2 } from 'lucide-react';
-import { impersonateMerchant } from '@/app/actions/impersonate';
 
 export function ImpersonateButton({ merchantId, merchantName }: { merchantId: string; merchantName: string }) {
   const [loading, setLoading] = useState(false);
@@ -11,18 +10,29 @@ export function ImpersonateButton({ merchantId, merchantName }: { merchantId: st
     if (!confirm(`¿Querés entrar como "${merchantName}"? Se va a cerrar tu sesión de admin temporalmente.`)) return;
 
     setLoading(true);
-    const result = await impersonateMerchant(merchantId);
 
-    if (result.error) {
-      alert('Error: ' + result.error);
-      setLoading(false);
-      return;
-    }
+    try {
+      const res = await fetch('/api/admin/impersonate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ merchantId }),
+      });
 
-    if (result.link) {
-      // Guardamos que somos admin para poder volver
+      const data = await res.json();
+
+      if (!res.ok || !data.link) {
+        alert('Error: ' + (data.error || 'No se pudo generar el acceso'));
+        setLoading(false);
+        return;
+      }
+
+      // Guardamos que somos admin para mostrar el banner al volver
       localStorage.setItem('admin_return', 'true');
-      window.location.href = result.link;
+      window.location.href = data.link;
+
+    } catch (err) {
+      alert('Error de conexión. Intentá de nuevo.');
+      setLoading(false);
     }
   };
 
