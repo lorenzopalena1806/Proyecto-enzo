@@ -1,7 +1,7 @@
 import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { QrCode, ScanLine, ImageIcon, TrendingUp, ArrowRight, AlertTriangle, Star } from 'lucide-react';
+import { QrCode, ScanLine, ImageIcon, TrendingUp, ArrowRight, AlertTriangle, Star, ShieldCheck } from 'lucide-react';
 
 export const metadata = {
   title: 'Panel Principal | Lazoo',
@@ -120,18 +120,24 @@ export default async function DashboardPage() {
       </div>
 
       {/* Accesos rápidos */}
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-3 gap-4">
         <QuickLink
           href="/dashboard/qr"
           title="Mi Código QR"
-          description="Ver y descargar tu QR único"
+          description="Ver y descargar tu QR"
           Icon={QrCode}
         />
         <QuickLink
           href="/dashboard/scanner"
-          title="Escáner"
-          description="Escanear QR y aplicar descuentos"
+          title="Escáner (Caja)"
+          description="Cobrar desde acá"
           Icon={ScanLine}
+        />
+        <QuickLink
+          href="/dashboard/employee"
+          title="Modo Empleado"
+          description="Acceso con PIN"
+          Icon={ShieldCheck}
         />
       </div>
 
