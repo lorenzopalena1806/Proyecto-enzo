@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { CheckCircle2, Loader2, XCircle, ShieldCheck } from 'lucide-react';
-import { confirmScannedPaymentServer } from '@/app/actions/charge';
+import { CheckCircle2, Loader2, XCircle, ShieldCheck, Star } from 'lucide-react';
+import { confirmScannedPaymentServer, rateTransactionServer } from '@/app/actions/charge';
 import { completePendingCharge } from '@/app/actions/pending-charges';
 import type { PaymentMethod } from '@/types';
 import { formatARS } from '@/lib/discount-logic';
@@ -36,6 +36,13 @@ export function ClientConfirmForm({
   const router = useRouter();
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
+  const [createdTxId, setCreatedTxId] = useState<string | null>(null);
+  
+  // Rating state
+  const [rating, setRating] = useState<number>(0);
+  const [hoverRating, setHoverRating] = useState<number>(0);
+  const [isRatingSubmitting, setIsRatingSubmitting] = useState(false);
+  const [ratingSubmitted, setRatingSubmitted] = useState(false);
 
   const handleConfirm = async () => {
     setStatus('loading');
@@ -53,6 +60,10 @@ export function ClientConfirmForm({
         setStatus('error');
         setErrorMsg(res.reason || 'Error al confirmar el pago.');
         return;
+      }
+
+      if (res.transactionId) {
+        setCreatedTxId(res.transactionId);
       }
 
       const resolvedFinal = ('finalAmount' in res && res.finalAmount !== undefined) ? res.finalAmount : finalAmount;
@@ -131,13 +142,51 @@ export function ClientConfirmForm({
           </div>
         </div>
 
-        <p className="text-slate-400 text-sm">
-          Mostrále esta pantalla a <strong className="text-white">{merchantName}</strong>
-        </p>
+        {/* --- Encuesta Exprés --- */}
+        {!ratingSubmitted ? (
+          <div className="w-full pt-2 pb-2">
+            <p className="text-white font-semibold text-sm mb-3">¿Cómo te atendieron en {merchantName}?</p>
+            <div className="flex items-center justify-center gap-2">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  disabled={isRatingSubmitting}
+                  onMouseEnter={() => setHoverRating(star)}
+                  onMouseLeave={() => setHoverRating(0)}
+                  onClick={async () => {
+                    setRating(star);
+                    if (!createdTxId) {
+                      setRatingSubmitted(true);
+                      return;
+                    }
+                    setIsRatingSubmitting(true);
+                    await rateTransactionServer(createdTxId, star);
+                    setRatingSubmitted(true);
+                    setIsRatingSubmitting(false);
+                  }}
+                  className="transition-transform hover:scale-125 focus:outline-none"
+                >
+                  <Star 
+                    className={`h-8 w-8 transition-colors ${
+                      (hoverRating || rating) >= star 
+                        ? 'fill-amber-400 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]' 
+                        : 'text-white/20'
+                    }`} 
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="w-full pt-2 pb-2">
+            <p className="text-emerald-400 font-bold">¡Gracias por tu calificación!</p>
+          </div>
+        )}
+        {/* ----------------------- */}
 
         <button
           onClick={() => router.push('/client/qr')}
-          className="w-full py-3.5 rounded-2xl font-semibold text-white transition-all"
+          className="w-full py-3.5 rounded-2xl font-semibold text-white transition-all mt-2"
           style={{
             background: 'rgba(255,255,255,0.08)',
             border: '1px solid rgba(255,255,255,0.12)',

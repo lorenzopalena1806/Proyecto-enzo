@@ -226,3 +226,28 @@ export async function getLastTransactionServer(merchantId: string) {
 
   return data ? data.id : null;
 }
+
+export async function rateTransactionServer(transactionId: string, rating: number) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { success: false, reason: 'No autorizado' };
+
+  if (rating < 1 || rating > 5) return { success: false, reason: 'Calificación inválida' };
+
+  const adminClient = createAdminClient();
+
+  const { error } = await adminClient
+    .from('discount_transactions')
+    .update({ rating })
+    .eq('id', transactionId)
+    // Nos aseguramos de que solo el cliente escaneado (scanned_user_id) pueda calificar,
+    // o simplemente actualizamos si existe.
+    .eq('scanned_user_id', user.id);
+
+  if (error) {
+    console.error("Rating error:", error);
+    return { success: false, reason: error.message };
+  }
+
+  return { success: true };
+}

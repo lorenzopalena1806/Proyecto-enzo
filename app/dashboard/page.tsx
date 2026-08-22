@@ -1,7 +1,7 @@
 import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { QrCode, ScanLine, ImageIcon, TrendingUp, ArrowRight, AlertTriangle } from 'lucide-react';
+import { QrCode, ScanLine, ImageIcon, TrendingUp, ArrowRight, AlertTriangle, Star } from 'lucide-react';
 
 export const metadata = {
   title: 'Panel Principal | Lazoo',
@@ -46,6 +46,21 @@ export default async function DashboardPage() {
   const dayOfWeek = today.getDay();
   const isDiscountDay = dayOfWeek >= 1 && dayOfWeek <= 4;
 
+  // Calcular promedio de calificaciones
+  const { data: ratedTransactions } = await adminClient
+    .from('discount_transactions')
+    .select('rating')
+    .eq('scanner_id', user.id)
+    .not('rating', 'is', null);
+
+  let averageRating = 0;
+  let totalRatings = 0;
+  if (ratedTransactions && ratedTransactions.length > 0) {
+    totalRatings = ratedTransactions.length;
+    const sum = ratedTransactions.reduce((acc: number, tx: any) => acc + (tx.rating || 0), 0);
+    averageRating = Number((sum / totalRatings).toFixed(1));
+  }
+
   return (
     <div className="space-y-6">
       {/* Saludo */}
@@ -75,26 +90,33 @@ export default async function DashboardPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard
-          label="Escaneos realizados"
+          label="Escaneos totales"
           value={String(totalTransactions ?? 0)}
           Icon={ScanLine}
           color="violet"
         />
         <StatCard
-          label="Materiales de marketing"
+          label="Materiales"
           value={String(totalAssets ?? 0)}
           Icon={ImageIcon}
           color="blue"
         />
         <StatCard
-          label="Estado suscripción"
+          label="Suscripción"
           value="Activa"
           Icon={TrendingUp}
           color="emerald"
-          className="col-span-2 md:col-span-1"
         />
+        <div className="rounded-xl border p-4 space-y-2 bg-amber-950/40 border-amber-800 text-amber-400">
+          <Star className="h-5 w-5 opacity-70" />
+          <div className="flex items-baseline gap-1">
+            <p className="text-2xl font-bold text-white">{averageRating > 0 ? averageRating : '-'}</p>
+            {averageRating > 0 && <span className="text-xs opacity-70">/ 5</span>}
+          </div>
+          <p className="text-xs opacity-70">{totalRatings} opiniones</p>
+        </div>
       </div>
 
       {/* Accesos rápidos */}
