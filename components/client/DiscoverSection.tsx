@@ -125,7 +125,7 @@ export function DiscoverSection({
               const hasOffer = offers.some(o => o.merchant_id === merchant.id);
               
               return (
-                <div key={merchant.id} className="bg-white/5 border border-white/10 rounded-[1.5rem] p-2 pr-4 flex items-center gap-4 hover:border-blue-500/30 transition-all shadow-lg group relative overflow-hidden">
+                <Link key={merchant.id} href={`/client/merchant/${merchant.id}`} className="bg-white/5 border border-white/10 rounded-[1.5rem] p-2 pr-4 flex items-center gap-4 hover:border-blue-500/30 transition-all shadow-lg group relative overflow-hidden">
                   {/* Foto izquierda */}
                   <div className="w-24 h-24 rounded-xl bg-black/40 flex-shrink-0 flex items-center justify-center overflow-hidden relative shadow-inner">
                     {merchant.avatar_url ? (
@@ -166,7 +166,7 @@ export function DiscoverSection({
                       </div>
                     )}
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
