@@ -115,6 +115,7 @@ export function Sidebar({ profile }: SidebarProps) {
     exact ? pathname === href : pathname.startsWith(href);
 
   const handleLogout = async () => {
+    localStorage.removeItem('admin_return');
     await supabase.auth.signOut();
     router.push('/auth/login');
     router.refresh();
