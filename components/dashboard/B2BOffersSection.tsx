@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { Search, Tag, ShoppingBag, Store, MapPin, Briefcase } from 'lucide-react';
+import Image from 'next/image';
 
 export function B2BOffersSection({
   merchants,
@@ -113,7 +114,7 @@ export function B2BOffersSection({
                   </div>
                   {offer.image_url && (
                     <div className="absolute inset-0 z-0 opacity-20 group-hover:opacity-30 transition-opacity">
-                      <img src={offer.image_url} alt={offer.title} className="w-full h-full object-cover" />
+                      <Image src={offer.image_url} alt={offer.title} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/90 to-slate-900/50"></div>
                     </div>
                   )}

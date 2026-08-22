@@ -5,6 +5,10 @@ import { InstallPwaPrompt } from '@/components/shared/InstallPwaPrompt';
 
 export const viewport: Viewport = {
   themeColor: '#020617',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false, // Prevents zoom on mobile inputs
 };
 
 const inter = Inter({
@@ -21,12 +25,39 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Lazoo — Lazoo - Red de Descuentos B2B para Comercios',
+    default: 'Lazoo — Red de Descuentos para Comercios',
     template: '%s | Lazoo',
   },
   description:
     'La plataforma SaaS que conecta comercios locales con una red de descuentos inteligente. QR dinámico, escáner de descuentos y marketing personalizado.',
-  keywords: ['descuentos', 'comercios', 'B2B', 'QR', 'SaaS', 'beneficios'],
+  keywords: ['descuentos', 'comercios', 'B2B', 'QR', 'SaaS', 'beneficios', 'fidelización'],
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Lazoo',
+  },
+  openGraph: {
+    title: 'Lazoo — Red de Descuentos B2B y B2C',
+    description: 'Transformá tu comercio con el ecosistema de beneficios de Lazoo. Cobros por QR, estadísticas en tiempo real y red B2B.',
+    url: 'https://lazoo.com.ar', // Replace with real domain later
+    siteName: 'Lazoo',
+    images: [
+      {
+        url: '/logo.png', // Replace with a nice og:image banner later
+        width: 800,
+        height: 600,
+      },
+    ],
+    locale: 'es_AR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Lazoo — Red de Descuentos para Comercios',
+    description: 'Conectá tu negocio a la red inteligente de descuentos.',
+    images: ['/logo.png'],
+  },
 };
 
 export default function RootLayout({

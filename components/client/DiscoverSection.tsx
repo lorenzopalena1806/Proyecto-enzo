@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { Search, Heart, Store, MapPin, Tag, ShoppingBag, Star, Map } from 'lucide-react';
 import { toggleFavoriteServer } from '@/app/actions/client';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function DiscoverSection({
   merchants,
@@ -178,9 +179,9 @@ export function DiscoverSection({
               return (
                 <div key={merchant.id} className="glass-panel rounded-3xl p-4 flex items-center justify-between gap-4 hover:border-blue-500/30 transition-all hover:bg-white/5 shadow-lg group relative overflow-hidden">
                   <div className="flex items-center gap-4 min-w-0">
-                    <div className="w-14 h-14 rounded-2xl bg-black/40 border border-white/10 flex-shrink-0 flex items-center justify-center overflow-hidden">
+                    <div className="w-14 h-14 rounded-2xl bg-black/40 border border-white/10 flex-shrink-0 flex items-center justify-center overflow-hidden relative">
                       {merchant.avatar_url ? (
-                        <img src={merchant.avatar_url} alt={merchant.business_name || 'Logo'} className="w-full h-full object-cover" />
+                        <Image src={merchant.avatar_url} alt={merchant.business_name || 'Logo'} fill sizes="56px" className="object-cover" />
                       ) : (
                         <Store className="w-6 h-6 text-slate-500" />
                       )}
@@ -257,7 +258,7 @@ export function DiscoverSection({
                   </div>
                   {offer.image_url && (
                     <div className="absolute inset-0 z-0 opacity-20 group-hover:opacity-30 transition-opacity">
-                      <img src={offer.image_url} alt={offer.title} className="w-full h-full object-cover" />
+                      <Image src={offer.image_url} alt={offer.title} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
                     </div>
                   )}

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { createOffer, updateOffer, toggleOfferStatus, deleteOffer, resetOfferStock } from '@/app/actions/offers';
 import { Plus, Tag, Trash2, Power, PowerOff, Loader2, AlertTriangle, Edit2, CalendarDays } from 'lucide-react';
+import Image from 'next/image';
 
 const DAYS = [
   { value: '1', label: 'L' },
@@ -201,7 +202,7 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
               
               {offer.image_url && (
                 <div className="w-full h-32 mb-4 rounded-xl overflow-hidden relative border border-slate-700/50">
-                  <img src={offer.image_url} alt={offer.title} className="w-full h-full object-cover" />
+                  <Image src={offer.image_url} alt={offer.title} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
                 </div>
               )}
