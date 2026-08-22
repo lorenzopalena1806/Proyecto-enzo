@@ -20,6 +20,8 @@ import {
   Tag,
   History,
   Megaphone,
+  Calculator,
+  Filter,
 } from 'lucide-react';
 import type { Profile } from '@/types';
 
@@ -89,6 +91,18 @@ const ADMIN_NAV_ITEMS = [
     href: '/admin/notifications',
     label: 'Comunicados Globales',
     icon: Megaphone,
+    exact: false,
+  },
+  {
+    href: '/admin/simulator',
+    label: 'Simulador de Ingresos',
+    icon: Calculator,
+    exact: false,
+  },
+  {
+    href: '/admin/funnel',
+    label: 'Embudo de Abandono',
+    icon: Filter,
     exact: false,
   },
 ];
