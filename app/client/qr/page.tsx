@@ -4,7 +4,7 @@ import React from 'react';
 import { createClient, createAdminClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import { LogoutButton } from '@/components/dashboard/LogoutButton';
-import { User, Sparkles, Clock, Scan } from 'lucide-react';
+import { User, Sparkles, Clock, Scan, ClipboardList } from 'lucide-react';
 import Link from 'next/link';
 import { encodeQRPayload } from '@/lib/qr-utils';
 import { CopyCodeButton } from '@/components/client/CopyCodeButton';
@@ -190,16 +190,10 @@ export default async function ClientQRPage() {
       {/* Header */}
       <header className="px-4 py-4 border-b border-white/5 flex justify-between items-center bg-black/20 backdrop-blur-md sticky top-0 z-50">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-900/40">
-            <User className="h-4 w-4 text-white" />
-          </div>
-          <span className="text-white font-bold text-sm tracking-wide">Lazoo</span>
+          <span className="text-blue-400 font-black text-xl tracking-wide">Lazoo</span>
         </div>
-        <div className="flex items-center gap-2">
-          <Link href="/client/profile" className="flex items-center gap-1.5 text-xs text-slate-300 hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5">
-            <User className="h-4 w-4" />
-            <span className="hidden sm:inline font-medium">Mi Perfil</span>
-          </Link>
+        <div className="flex items-center gap-2 text-slate-300 font-medium">
+          ¡Bienvenido a Lazoo!
           <LogoutButton />
         </div>
       </header>
@@ -242,7 +236,7 @@ export default async function ClientQRPage() {
         </section>
 
         {/* Sección: Mis Descuentos Usados */}
-        <section className="space-y-4 pt-6 border-t border-white/10 mb-8">
+        <section id="historial" className="space-y-4 pt-6 border-t border-white/10 mb-8">
           <div className="flex items-center gap-2 mb-2">
             <Clock className="w-5 h-5 text-emerald-400" />
             <div>
@@ -304,18 +298,41 @@ export default async function ClientQRPage() {
       </main>
 
       {/* Floating Bottom Navigation Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-6 pt-4 bg-gradient-to-t from-slate-950 via-slate-950/90 to-transparent pointer-events-none">
-        <div className="max-w-lg mx-auto relative flex justify-center pointer-events-auto">
+      <div className="fixed bottom-0 left-0 right-0 z-50 px-6 pb-6 pt-4 bg-gradient-to-t from-slate-950 via-slate-950/95 to-transparent pointer-events-none">
+        <div className="max-w-lg mx-auto relative flex justify-between items-end pointer-events-auto bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-[2rem] px-6 py-3 shadow-2xl">
           
-          <Link href="/client/scanner" className="group relative flex items-center justify-center">
-            {/* Anillo exterior animado */}
-            <div className="absolute inset-0 bg-fuchsia-500/30 rounded-full blur-xl group-hover:blur-2xl group-hover:bg-fuchsia-500/40 transition-all duration-300 animate-pulse" />
-            
-            {/* Botón principal */}
-            <div className="relative flex flex-col items-center justify-center w-20 h-20 bg-gradient-to-b from-blue-600 to-indigo-700 rounded-full border-[4px] border-slate-950 shadow-[0_0_30px_rgba(59,130,246,0.5)] group-hover:scale-105 transition-transform duration-300">
-              <Scan className="w-8 h-8 text-white mb-0.5" />
-              <span className="text-[10px] font-bold text-white tracking-widest uppercase font-montserrat">Pagar</span>
+          {/* Left: Historial */}
+          <button 
+            onClick={() => document.getElementById('historial')?.scrollIntoView({ behavior: 'smooth' })}
+            className="flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white transition-colors pb-1"
+          >
+            <div className="relative">
+              <ClipboardList className="h-6 w-6" />
+              <div className="absolute -top-1 -right-1 bg-emerald-500 rounded-full w-3.5 h-3.5 flex items-center justify-center text-[8px] font-bold text-white">
+                %
+              </div>
             </div>
+            <span className="text-[10px] font-semibold text-center leading-tight">Descuentos<br/>Escaneados</span>
+          </button>
+
+          {/* Center: QR (Floating) */}
+          <div className="relative -top-6">
+            <Link href="/client/scanner" className="group relative flex items-center justify-center">
+              {/* Anillo exterior animado */}
+              <div className="absolute inset-0 bg-blue-500/30 rounded-full blur-xl group-hover:blur-2xl group-hover:bg-blue-500/40 transition-all duration-300 animate-pulse" />
+              
+              {/* Botón principal */}
+              <div className="relative flex flex-col items-center justify-center w-[72px] h-[72px] bg-gradient-to-b from-slate-800 to-slate-900 rounded-full border-4 border-slate-950 shadow-[0_0_20px_rgba(59,130,246,0.3)] group-hover:scale-105 transition-transform duration-300">
+                <Scan className="w-8 h-8 text-blue-400 mb-0.5" />
+              </div>
+            </Link>
+            <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-slate-300 whitespace-nowrap">Escanear QR</span>
+          </div>
+
+          {/* Right: Perfil */}
+          <Link href="/client/profile" className="flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white transition-colors pb-1">
+            <User className="h-6 w-6" />
+            <span className="text-[10px] font-semibold text-center leading-tight mt-1">Perfil<br/>&nbsp;</span>
           </Link>
           
         </div>
