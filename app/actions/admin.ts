@@ -1,6 +1,7 @@
 'use server';
 
 import { createAdminClient, createClient } from '@/lib/supabase-server';
+import { revalidatePath } from 'next/cache';
 
 // Validar que el usuario que ejecuta la acción es realmente un superadmin
 async function requireSuperAdmin() {
