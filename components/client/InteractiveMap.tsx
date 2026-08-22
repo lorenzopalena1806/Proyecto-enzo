@@ -30,6 +30,17 @@ const svgIcon = L.divIcon({
   popupAnchor: [0, -30]
 });
 
+const createMerchantIcon = (avatarUrl: string | null) => {
+  if (!avatarUrl) return svgIcon;
+  return L.divIcon({
+    className: 'custom-merchant-icon',
+    html: `<div style="width: 44px; height: 44px; border-radius: 50%; border: 3px solid #8b5cf6; box-shadow: 0 4px 10px rgba(0,0,0,0.4); overflow: hidden; background-color: #0f172a;"><img src="${avatarUrl}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'" /></div>`,
+    iconSize: [44, 44],
+    iconAnchor: [22, 44],
+    popupAnchor: [0, -44]
+  });
+};
+
 interface MerchantLocation {
   id: string;
   business_name: string | null;
@@ -83,7 +94,7 @@ export default function InteractiveMap({ merchants }: MapProps) {
           <Marker 
             key={merchant.id} 
             position={[merchant.latitude, merchant.longitude]}
-            icon={svgIcon}
+            icon={createMerchantIcon(merchant.avatar_url)}
           >
             <Popup className="merchant-popup" closeButton={false}>
               <div className="p-1 min-w-[200px]">
@@ -119,9 +130,8 @@ export default function InteractiveMap({ merchants }: MapProps) {
                     <Navigation className="h-3 w-3" />
                     Cómo llegar
                   </a>
-                  {/* We can route to a merchant profile page if it exists. For now, we just link to dashboard or a placeholder */}
                   <Link 
-                    href={`/dashboard`} 
+                    href={`/client/merchant/${merchant.id}`} 
                     className="flex items-center justify-center gap-1.5 py-2 px-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg text-xs font-semibold transition-colors shadow-sm shadow-violet-200"
                   >
                     Ver ofertas <ExternalLink className="h-3 w-3" />
