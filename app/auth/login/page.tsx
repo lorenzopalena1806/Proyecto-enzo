@@ -39,17 +39,16 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4 relative">
-      
-      {/* Botón Volver al inicio */}
-      <div className="absolute top-6 left-6 z-10">
-        <Link href="/" className="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white transition-colors bg-slate-900/50 backdrop-blur-md border border-slate-800 px-4 py-2 rounded-full hover:bg-slate-800">
-          <ArrowLeft className="w-4 h-4" />
-          Volver a la web
-        </Link>
-      </div>
-
+    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md space-y-6">
+
+        {/* Volver */}
+        <div className="flex justify-start">
+          <Link href="/" className="inline-flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white transition-colors">
+            <ArrowLeft className="w-4 h-4" />
+            Volver a la web
+          </Link>
+        </div>
 
         {/* Logo */}
         <div className="text-center flex flex-col items-center space-y-3">
