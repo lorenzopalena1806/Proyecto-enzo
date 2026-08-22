@@ -120,9 +120,10 @@ export default async function ClientQRPage() {
   // 3. Fetch Locales Adheridos (active merchants)
   const { data: merchants } = await adminClient
     .from('profiles')
-    .select('id, business_name, avatar_url, maps_url, category')
+    .select('id, business_name, avatar_url, maps_url, category, is_featured')
     .eq('role', 'merchant')
     .eq('is_active', true)
+    .order('is_featured', { ascending: false })
     .order('created_at', { ascending: false });
 
   // 4. Fetch Favorites for current user

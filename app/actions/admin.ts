@@ -158,3 +158,19 @@ export async function toggleUserActiveStatusServer(userId: string, isActive: boo
     return { success: false, error: error.message };
   }
 }
+
+export async function toggleMerchantFeatured(merchantId: string, isFeatured: boolean) {
+  try {
+    const adminClient = createAdminClient();
+    const { error } = await adminClient
+      .from('profiles')
+      .update({ is_featured: isFeatured })
+      .eq('id', merchantId);
+
+    if (error) throw error;
+    revalidatePath('/admin/merchants');
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}

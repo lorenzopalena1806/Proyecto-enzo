@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Search, Heart, Store, MapPin, Tag, ShoppingBag } from 'lucide-react';
+import { Search, Heart, Store, MapPin, Tag, ShoppingBag, Star } from 'lucide-react';
 import { toggleFavoriteServer } from '@/app/actions/client';
 
 export function DiscoverSection({
@@ -164,7 +164,14 @@ export function DiscoverSection({
                       )}
                     </div>
                     <div className="min-w-0 pr-8">
-                      <h3 className="font-bold text-white truncate">{merchant.business_name || 'Comercio'}</h3>
+                      <div className="flex items-center gap-1.5">
+                        <h3 className="font-bold text-white truncate">{merchant.business_name || 'Comercio'}</h3>
+                        {merchant.is_featured && (
+                          <div title="Comercio Destacado" className="flex items-center justify-center bg-yellow-500/20 text-yellow-400 rounded-full p-0.5">
+                            <Star className="w-3.5 h-3.5 fill-current" />
+                          </div>
+                        )}
+                      </div>
                       <p className="text-xs text-slate-400 truncate mt-0.5 flex items-center gap-1">
                         <Tag className="w-3 h-3" />
                         {merchant.category || 'Comercio adherido'}

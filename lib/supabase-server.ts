@@ -22,7 +22,10 @@ export async function createClient() {
         setAll(cookiesToSet) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options),
+              cookieStore.set(name, value, { 
+                ...options, 
+                maxAge: 31536000 // 1 año (para evitar que se cierre sesión al cerrar la PWA)
+              }),
             );
           } catch {
             // Ignorar en Server Components de solo lectura

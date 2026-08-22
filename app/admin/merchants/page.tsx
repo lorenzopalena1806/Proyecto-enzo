@@ -4,12 +4,13 @@ export const dynamic = 'force-dynamic';
 
 import React, { useEffect, useState } from 'react';
 import type { Profile } from '@/types';
-import { Store, Loader2, CheckCircle, XCircle, Trash2 } from 'lucide-react';
-import { getMerchantsListServer, toggleMerchantSubscriptionServer, deleteMerchantServer } from '@/app/actions/admin';
+import { Store, Loader2, CheckCircle, XCircle, Trash2, Star } from 'lucide-react';
+import { getMerchantsListServer, toggleMerchantSubscriptionServer, deleteMerchantServer, toggleMerchantFeatured } from '@/app/actions/admin';
 import { ImpersonateButton } from '@/components/admin/ImpersonateButton';
 
 interface MerchantWithSubscription extends Profile {
   subscriptionStatus: 'active' | 'inactive' | 'none';
+  is_featured?: boolean;
 }
 
 export default function MerchantsPage() {
@@ -34,6 +35,18 @@ export default function MerchantsPage() {
     const result = await toggleMerchantSubscriptionServer(merchantId, currentStatus);
     if (!result.success) {
       alert('Error al actualizar la suscripción. Verifica los logs del servidor.');
+    }
+
+    await fetchMerchants();
+    setProcessingId(null);
+  };
+
+  const toggleFeatured = async (merchantId: string, isFeatured: boolean) => {
+    setProcessingId(merchantId);
+    
+    const result = await toggleMerchantFeatured(merchantId, isFeatured);
+    if (!result.success) {
+      alert('Error al actualizar destacado: ' + result.error);
     }
 
     await fetchMerchants();
@@ -129,6 +142,18 @@ export default function MerchantsPage() {
                           ) : (
                             'Activar'
                           )}
+                        </button>
+                        <button
+                          onClick={() => toggleFeatured(merchant.id, !merchant.is_featured)}
+                          disabled={processingId === merchant.id}
+                          title={merchant.is_featured ? "Quitar destacado" : "Destacar comercio"}
+                          className={`inline-flex items-center justify-center rounded-lg p-2 transition-all border border-transparent ${
+                            merchant.is_featured 
+                              ? 'text-yellow-400 bg-yellow-500/10 hover:bg-yellow-500/20 hover:border-yellow-500/50' 
+                              : 'text-slate-400 hover:text-yellow-400 hover:bg-yellow-500/10'
+                          }`}
+                        >
+                          <Star className={`h-5 w-5 ${merchant.is_featured ? 'fill-current' : ''}`} />
                         </button>
                         
                         <button
