@@ -2,6 +2,28 @@
 
 import { createClient, createAdminClient } from '@/lib/supabase-server';
 
+export async function loginWithPasswordServer(email: string, password: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    return { success: false, error: error.message };
+  }
+
+  // Get role
+  const adminClient = createAdminClient();
+  const { data: profile } = await adminClient
+    .from('profiles')
+    .select('role')
+    .eq('id', data.user.id)
+    .single();
+
+  return { success: true, role: profile?.role || null };
+}
+
 export async function getUserRoleServer() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
