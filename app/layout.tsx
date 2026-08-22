@@ -24,6 +24,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://lazoo.vercel.app'),
   title: {
     default: 'Lazoo — Red de Descuentos para Comercios',
     template: '%s | Lazoo',
