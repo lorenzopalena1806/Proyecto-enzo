@@ -135,7 +135,7 @@ export default function InteractiveMap({ merchants }: MapProps) {
                   </a>
                   <Link 
                     href={`/client/merchant/${merchant.id}`} 
-                    className="flex flex-col items-center justify-center flex-1 py-2 px-1 bg-gradient-to-b from-blue-600 to-indigo-700 hover:from-blue-500 hover:to-indigo-600 text-white rounded-xl text-[10px] font-bold transition-colors shadow-lg border border-indigo-500/50"
+                    className="flex flex-col items-center justify-center flex-1 py-2 px-1 bg-white hover:bg-slate-100 text-slate-900 rounded-xl text-[11px] font-black transition-colors shadow-lg border border-white"
                   >
                     <ExternalLink className="h-4 w-4 mb-0.5" />
                     Ver perfil
