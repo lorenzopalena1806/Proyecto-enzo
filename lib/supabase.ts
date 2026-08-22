@@ -11,6 +11,7 @@ export function createClient() {
     {
       cookieOptions: {
         maxAge: 31536000, // 1 año para PWA persistente
+        expires: new Date(Date.now() + 31536000 * 1000), // Fallback para WebView
       },
     }
   );

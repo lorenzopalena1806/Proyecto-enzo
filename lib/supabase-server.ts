@@ -24,7 +24,8 @@ export async function createClient() {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, { 
                 ...options, 
-                maxAge: 31536000 // 1 año (para evitar que se cierre sesión al cerrar la PWA)
+                maxAge: 31536000, // 1 año
+                expires: new Date(Date.now() + 31536000 * 1000) // Fallback para WebView
               }),
             );
           } catch {

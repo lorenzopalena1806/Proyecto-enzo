@@ -2,14 +2,31 @@ import Link from 'next/link';
 import { ArrowRight, QrCode, Store, TrendingUp, Users, Star, CheckCircle2, ShieldCheck, Zap } from 'lucide-react';
 import { Navbar } from '@/components/marketing/Navbar';
 import { ClientDownloadButton } from '@/components/shared/ClientDownloadButton';
-import { createAdminClient } from '@/lib/supabase-server';
+import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { AnimatedStats } from '@/components/marketing/AnimatedStats';
 import { FeaturesTabs } from '@/components/marketing/FeaturesTabs';
 import { FloatingWhatsApp } from '@/components/marketing/FloatingWhatsApp';
+import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (user) {
+    const adminClient = createAdminClient();
+    const { data: profile } = await adminClient
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+    
+    if (profile?.role === 'superadmin') redirect('/admin');
+    else if (profile?.role === 'merchant') redirect('/dashboard');
+    else redirect('/client/qr');
+  }
+
   const adminClient = createAdminClient();
 
   const [

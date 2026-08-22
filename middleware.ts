@@ -28,6 +28,7 @@ export async function middleware(request: NextRequest) {
             supabaseResponse.cookies.set(name, value, {
               ...options,
               maxAge: 31536000, // 1 año forzado para PWA
+              expires: new Date(Date.now() + 31536000 * 1000) // Fallback para WebView
             })
           )
         },
