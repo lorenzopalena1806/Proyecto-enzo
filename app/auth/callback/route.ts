@@ -33,6 +33,11 @@ export async function GET(request: Request) {
         profile = { role: 'client' };
       }
 
+      // Si viene un 'next' específico (ej: modo soporte), respetarlo
+      if (next && next !== '/') {
+        return NextResponse.redirect(new URL(next, requestUrl.origin));
+      }
+
       const role = profile.role;
       let redirectUrl = '/client/qr';
       if (role === 'superadmin') redirectUrl = '/admin';

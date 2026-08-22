@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
       type: 'magiclink',
       email: merchantUser.user.email,
       options: {
-        redirectTo: `${siteUrl}/dashboard?support_mode=true`,
+        redirectTo: `${siteUrl}/auth/callback?next=/dashboard?support_mode=true`,
       },
     });
 
