@@ -99,12 +99,6 @@ const ADMIN_NAV_ITEMS = [
     icon: Calculator,
     exact: false,
   },
-  {
-    href: '/admin/funnel',
-    label: 'Embudo de Abandono',
-    icon: Filter,
-    exact: false,
-  },
 ];
 
 export function Sidebar({ profile }: SidebarProps) {
