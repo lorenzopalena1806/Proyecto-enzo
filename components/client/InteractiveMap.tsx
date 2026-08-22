@@ -97,44 +97,48 @@ export default function InteractiveMap({ merchants }: MapProps) {
             icon={createMerchantIcon(merchant.avatar_url)}
           >
             <Popup className="merchant-popup" closeButton={false}>
-              <div className="p-1 min-w-[200px]">
+              <div className="p-1 min-w-[220px]">
                 <div className="flex items-center gap-3 mb-3">
                   {merchant.avatar_url ? (
-                    <img src={merchant.avatar_url} alt={merchant.business_name || 'Comercio'} className="w-12 h-12 rounded-xl object-cover shadow-sm border border-slate-200" />
+                    <img src={merchant.avatar_url} alt={merchant.business_name || 'Comercio'} className="w-14 h-14 rounded-2xl object-cover shadow-inner border border-white/10 bg-slate-800 flex-shrink-0" />
                   ) : (
-                    <div className="w-12 h-12 rounded-xl bg-violet-100 flex items-center justify-center border border-violet-200">
-                      <Store className="h-6 w-6 text-violet-600" />
+                    <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 flex-shrink-0">
+                      <Store className="h-6 w-6 text-slate-400" />
                     </div>
                   )}
-                  <div>
-                    <h3 className="font-bold text-slate-900 leading-tight">{merchant.business_name || 'Comercio'}</h3>
-                    <p className="text-xs font-medium text-violet-600 bg-violet-50 inline-block px-1.5 py-0.5 rounded mt-1">
-                      {merchant.category || 'Local'}
-                    </p>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-white text-[15px] leading-tight truncate">{merchant.business_name || 'Comercio'}</h3>
+                    <div className="mt-1">
+                      <span className="text-[9px] font-bold text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded uppercase tracking-wider inline-block truncate max-w-full">
+                        {merchant.category || 'Local'}
+                      </span>
+                    </div>
                   </div>
                 </div>
                 
                 {merchant.address && (
-                  <p className="text-xs text-slate-500 mb-3 leading-snug flex items-start gap-1">
-                    <span className="mt-0.5">📍</span> {merchant.address}
+                  <p className="text-[11px] text-slate-400 mb-4 leading-snug flex items-start gap-1.5 line-clamp-2">
+                    <span className="mt-0.5 text-slate-500">📍</span> 
+                    {merchant.address}
                   </p>
                 )}
 
-                <div className="grid grid-cols-2 gap-2 mt-2">
+                <div className="flex gap-2">
                   <a 
                     href={`https://www.google.com/maps/dir/?api=1&destination=${merchant.latitude},${merchant.longitude}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-1.5 py-2 px-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition-colors"
+                    className="flex flex-col items-center justify-center flex-1 py-2 px-1 bg-white/5 hover:bg-white/10 text-slate-300 rounded-xl text-[10px] font-semibold transition-colors border border-white/10"
                   >
-                    <Navigation className="h-3 w-3" />
+                    <Navigation className="h-4 w-4 mb-0.5" />
                     Cómo llegar
                   </a>
                   <Link 
                     href={`/client/merchant/${merchant.id}`} 
-                    className="flex items-center justify-center gap-1.5 py-2 px-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg text-xs font-semibold transition-colors shadow-sm shadow-violet-200"
+                    className="flex flex-col items-center justify-center flex-1 py-2 px-1 bg-gradient-to-b from-blue-600 to-indigo-700 hover:from-blue-500 hover:to-indigo-600 text-white rounded-xl text-[10px] font-bold transition-colors shadow-lg border border-indigo-500/50"
                   >
-                    Ver ofertas <ExternalLink className="h-3 w-3" />
+                    <ExternalLink className="h-4 w-4 mb-0.5" />
+                    Ver perfil
                   </Link>
                 </div>
               </div>
@@ -146,16 +150,19 @@ export default function InteractiveMap({ merchants }: MapProps) {
       {/* Global styles for Leaflet Popup to look modern */}
       <style jsx global>{`
         .merchant-popup .leaflet-popup-content-wrapper {
-          border-radius: 16px;
+          border-radius: 20px;
           padding: 4px;
-          box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-          border: 1px solid rgba(0,0,0,0.05);
+          background-color: #0f172a;
+          color: white;
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+          border: 1px solid rgba(255,255,255,0.1);
         }
         .merchant-popup .leaflet-popup-content {
           margin: 8px;
         }
         .merchant-popup .leaflet-popup-tip {
-          box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+          background-color: #0f172a;
+          box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
         }
         /* Hide default zoom controls if we added zoomControl={false} but just in case */
         .leaflet-control-zoom {
