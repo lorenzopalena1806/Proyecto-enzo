@@ -26,7 +26,7 @@ export default async function MerchantProfilePage({ params }: { params: Promise<
 
   // Obtener ofertas activas
   const { data: offers } = await supabase
-    .from('offers')
+    .from('merchant_offers')
     .select('*')
     .eq('merchant_id', merchantId)
     .eq('is_active', true)
