@@ -45,9 +45,9 @@ export const metadata: Metadata = {
     siteName: 'Lazoo',
     images: [
       {
-        url: '/logo.png', // Replace with a nice og:image banner later
+        url: '/og-image.jpg', // Replace with a nice og:image banner later
         width: 800,
-        height: 600,
+        height: 800,
       },
     ],
     locale: 'es_AR',
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Lazoo — Red de Descuentos para Comercios',
     description: 'Conectá tu negocio a la red inteligente de descuentos.',
-    images: ['/logo.png'],
+    images: ['/og-image.jpg'],
   },
 };
 
