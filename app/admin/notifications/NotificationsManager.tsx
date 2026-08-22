@@ -11,9 +11,16 @@ interface Notification {
   type: string;
   is_active: boolean;
   created_at: string;
+  target_merchant_id: string | null;
+  profiles?: { business_name: string };
 }
 
-export function NotificationsManager({ initialNotifications }: { initialNotifications: Notification[] }) {
+interface Merchant {
+  id: string;
+  business_name: string;
+}
+
+export function NotificationsManager({ initialNotifications, merchants }: { initialNotifications: Notification[], merchants: Merchant[] }) {
   const [notifications, setNotifications] = useState<Notification[]>(initialNotifications);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -99,6 +106,19 @@ export function NotificationsManager({ initialNotifications }: { initialNotifica
             </select>
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-1">Destinatario</label>
+            <select
+              name="target_merchant_id"
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 appearance-none mb-4"
+            >
+              <option value="all">Para todos los comercios (Global)</option>
+              {merchants.map(m => (
+                <option key={m.id} value={m.id}>{m.business_name || 'Comercio sin nombre'}</option>
+              ))}
+            </select>
+          </div>
+
           <button
             type="submit"
             disabled={loading}
@@ -127,6 +147,11 @@ export function NotificationsManager({ initialNotifications }: { initialNotifica
               </div>
               <div className="flex-1">
                 <p className="text-white text-sm whitespace-pre-wrap">{notif.message}</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${notif.target_merchant_id ? 'bg-fuchsia-500/10 text-fuchsia-400 border border-fuchsia-500/20' : 'bg-slate-800 text-slate-300'}`}>
+                    {notif.target_merchant_id ? `Solo para: ${notif.profiles?.business_name || 'Desconocido'}` : 'Global'}
+                  </span>
+                </div>
                 <div className="flex items-center gap-3 mt-3 text-xs font-medium text-slate-500">
                   <span>
                     {new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(notif.created_at))}

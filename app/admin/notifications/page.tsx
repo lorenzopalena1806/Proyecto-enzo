@@ -17,19 +17,28 @@ export default async function AdminNotificationsPage() {
 
   const { data: notifications } = await adminClient
     .from('global_notifications')
-    .select('*')
+    .select('*, profiles(business_name)')
     .order('created_at', { ascending: false });
+
+  const { data: merchants } = await adminClient
+    .from('profiles')
+    .select('id, business_name')
+    .eq('role', 'merchant')
+    .order('business_name', { ascending: true });
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-white">Comunicados Globales</h1>
         <p className="text-slate-400 mt-1">
-          Enviá carteles de aviso a todos los comercios. Solo 1 puede estar activo a la vez.
+          Enviá carteles de aviso a todos los comercios o a uno en específico.
         </p>
       </div>
 
-      <NotificationsManager initialNotifications={notifications || []} />
+      <NotificationsManager 
+        initialNotifications={notifications || []} 
+        merchants={merchants || []}
+      />
     </div>
   );
 }

@@ -7,20 +7,25 @@ export async function createGlobalNotification(formData: FormData) {
   const adminClient = createAdminClient();
   const message = formData.get('message') as string;
   const type = formData.get('type') as string;
+  const targetId = formData.get('target_merchant_id') as string;
+
+  const target_merchant_id = (targetId && targetId !== 'all') ? targetId : null;
 
   if (!message || !type) {
     return { success: false, error: 'Faltan campos obligatorios.' };
   }
 
-  // Apagamos todas las notificaciones previas para que haya solo 1 activa
-  await adminClient
-    .from('global_notifications')
-    .update({ is_active: false })
-    .neq('message', ''); // truco para actualizar todas
+  // Solo apagamos las previas si el mensaje es global. Si es a un comercio en específico, no tocamos las demás.
+  if (!target_merchant_id) {
+    await adminClient
+      .from('global_notifications')
+      .update({ is_active: false })
+      .is('target_merchant_id', null);
+  }
 
   const { error } = await adminClient
     .from('global_notifications')
-    .insert([{ message, type, is_active: true }]);
+    .insert([{ message, type, is_active: true, target_merchant_id }]);
 
   if (error) {
     console.error('Error creando notificación:', error);
@@ -36,11 +41,17 @@ export async function toggleNotificationStatus(id: string, isActive: boolean) {
   const adminClient = createAdminClient();
 
   if (isActive) {
-    // Si la prendemos, apagamos todas las demás
-    await adminClient
-      .from('global_notifications')
-      .update({ is_active: false })
-      .neq('id', id);
+    // Averiguar si esta notificación es global o específica
+    const { data: notif } = await adminClient.from('global_notifications').select('target_merchant_id').eq('id', id).single();
+    
+    // Si la prendemos y es global, apagamos las demás globales
+    if (notif && !notif.target_merchant_id) {
+      await adminClient
+        .from('global_notifications')
+        .update({ is_active: false })
+        .is('target_merchant_id', null)
+        .neq('id', id);
+    }
   }
 
   const { error } = await adminClient
