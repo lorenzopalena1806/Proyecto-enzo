@@ -2,6 +2,7 @@ import { createClient, createAdminClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import { Sidebar } from '@/components/dashboard/Sidebar';
 import { GlobalNotificationBanner } from '@/components/dashboard/GlobalNotificationBanner';
+import { SupportModeBanner } from '@/components/dashboard/SupportModeBanner';
 
 export default async function DashboardLayout({
   children,
@@ -114,6 +115,7 @@ export default async function DashboardLayout({
       <div className="flex-1 flex flex-col lg:overflow-auto relative z-10">
         <div className="lg:hidden h-14 flex-shrink-0" />
         <main className="flex-1 p-4 lg:p-8 max-w-5xl w-full mx-auto">
+          <SupportModeBanner />
           <GlobalNotificationBanner />
           {children}
         </main>

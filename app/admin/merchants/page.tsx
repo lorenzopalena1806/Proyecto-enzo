@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import type { Profile } from '@/types';
 import { Store, Loader2, CheckCircle, XCircle, Trash2 } from 'lucide-react';
 import { getMerchantsListServer, toggleMerchantSubscriptionServer, deleteMerchantServer } from '@/app/actions/admin';
+import { ImpersonateButton } from '@/components/admin/ImpersonateButton';
 
 interface MerchantWithSubscription extends Profile {
   subscriptionStatus: 'active' | 'inactive' | 'none';
@@ -138,6 +139,8 @@ export default function MerchantsPage() {
                         >
                           <Trash2 className="h-5 w-5" />
                         </button>
+
+                        <ImpersonateButton merchantId={merchant.id} merchantName={merchant.business_name || 'Comercio'} />
                       </div>
                     </td>
                   </tr>
