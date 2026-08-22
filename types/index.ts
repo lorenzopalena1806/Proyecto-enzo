@@ -15,6 +15,9 @@ export interface Profile {
   phone: string | null;
   avatar_url: string | null;
   maps_url: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  address: string | null;
   is_active: boolean;
   created_at: string;
 }

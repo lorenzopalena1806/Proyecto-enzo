@@ -1,7 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { User, Store, Phone, Mail, KeyRound, Loader2, CheckCircle2, Tag } from 'lucide-react';
+import { User, Store, Phone, Mail, KeyRound, Loader2, CheckCircle2, Tag, MapPin } from 'lucide-react';
+import dynamic from 'next/dynamic';
+
+const LocationPicker = dynamic(() => import('./LocationPicker'), {
+  ssr: false,
+  loading: () => <div className="h-64 w-full bg-slate-800 rounded-xl animate-pulse flex items-center justify-center text-slate-500">Cargando mapa...</div>
+});
 
 // Categorías sugeridas
 const SUGGESTED_CATEGORIES = [
@@ -46,6 +52,9 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
     maps_url: profile.maps_url || '',
     category: isCustomCategory ? 'Otro' : (profile.category || ''),
     custom_category: isCustomCategory ? profile.category : '',
+    address: profile.address || '',
+    latitude: profile.latitude || null,
+    longitude: profile.longitude || null,
   });
 
   const [passwordData, setPasswordData] = useState({
@@ -92,6 +101,9 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
       phone: formData.phone || null,
       avatar_url: formData.avatar_url || null,
       maps_url: formData.maps_url || null,
+      address: formData.address || null,
+      latitude: formData.latitude,
+      longitude: formData.longitude,
       category: isCustomCategory ? (formData.custom_category || null) : (formData.category || null),
     });
 
@@ -248,6 +260,30 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
                   className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
                 />
               </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-slate-300">Dirección Física</label>
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                <input
+                  name="address"
+                  type="text"
+                  value={formData.address}
+                  onChange={handleProfileChange}
+                  placeholder="Ej: Av. Corrientes 1234, CABA"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5 pt-2">
+              <label className="block text-sm font-medium text-slate-300">Ubicación en el Mapa</label>
+              <LocationPicker 
+                initialLat={formData.latitude} 
+                initialLng={formData.longitude} 
+                onChange={(lat, lng) => setFormData(prev => ({ ...prev, latitude: lat, longitude: lng }))}
+              />
             </div>
           </div>
         )}

@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Search, Heart, Store, MapPin, Tag, ShoppingBag, Star } from 'lucide-react';
+import { Search, Heart, Store, MapPin, Tag, ShoppingBag, Star, Map } from 'lucide-react';
 import { toggleFavoriteServer } from '@/app/actions/client';
+import Link from 'next/link';
 
 export function DiscoverSection({
   merchants,
@@ -80,6 +81,27 @@ export function DiscoverSection({
 
   return (
     <div className="space-y-6">
+      {/* ── MAPA INTERACTIVO CTA ── */}
+      <Link 
+        href="/client/map"
+        className="flex items-center justify-between w-full p-4 rounded-3xl bg-gradient-to-r from-violet-600 to-indigo-600 border border-violet-500/50 shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_40px_rgba(139,92,246,0.5)] hover:scale-[1.02] transition-all group overflow-hidden relative"
+      >
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
+        <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white/20 to-transparent transform skew-x-12 translate-x-8 group-hover:-translate-x-full transition-transform duration-1000 ease-in-out"></div>
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/30 shadow-inner">
+            <Map className="w-6 h-6 text-white" />
+          </div>
+          <div className="text-left">
+            <h3 className="text-white font-bold text-lg leading-tight">Mapa Interactivo</h3>
+            <p className="text-violet-200 text-sm font-medium">Explorá locales cerca tuyo</p>
+          </div>
+        </div>
+        <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md border border-white/30 group-hover:bg-white/30 transition-colors relative z-10">
+          <MapPin className="w-4 h-4 text-white" />
+        </div>
+      </Link>
+
       {/* ── SEARCH BAR & FAVORITES TOGGLE ── */}
       <div className="flex gap-2">
         <div className="relative flex-1">
