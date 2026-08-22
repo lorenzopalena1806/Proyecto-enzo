@@ -55,32 +55,6 @@ export default function LocationPicker({ initialLat, initialLng, onChange }: Loc
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [searchError, setSearchError] = useState('');
-  const [isLocating, setIsLocating] = useState(false);
-
-  // Focus map on current location
-  const handleGetCurrentLocation = () => {
-    setIsLocating(true);
-    setSearchError('');
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const newPos = L.latLng(pos.coords.latitude, pos.coords.longitude);
-          setPosition(newPos);
-          onChange(pos.coords.latitude, pos.coords.longitude);
-          setIsLocating(false);
-        },
-        (err) => {
-          console.error(err);
-          setSearchError('No se pudo obtener tu ubicación. Revisá los permisos.');
-          setIsLocating(false);
-        },
-        { enableHighAccuracy: true, timeout: 10000 }
-      );
-    } else {
-      setSearchError('Tu navegador no soporta geolocalización.');
-      setIsLocating(false);
-    }
-  };
 
   // Search using Nominatim OpenStreetMap API
   const handleSearch = async (e?: React.FormEvent) => {
@@ -133,20 +107,6 @@ export default function LocationPicker({ initialLat, initialLng, onChange }: Loc
             {isSearching ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Buscar'}
           </button>
         </form>
-        
-        <button
-          type="button"
-          onClick={handleGetCurrentLocation}
-          disabled={isLocating}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-sm text-white font-medium disabled:opacity-50 transition-colors shrink-0"
-        >
-          {isLocating ? (
-            <Loader2 className="w-4 h-4 text-violet-400 animate-spin" />
-          ) : (
-            <Navigation className="w-4 h-4 text-violet-400" />
-          )}
-          Usar mi ubicación
-        </button>
       </div>
 
       {searchError && (
