@@ -53,12 +53,6 @@ const MERCHANT_NAV_ITEMS = [
     exact: false,
   },
   {
-    href: '/dashboard/marketing',
-    label: 'Marketing',
-    icon: ImageIcon,
-    exact: false,
-  },
-  {
     href: '/dashboard/history',
     label: 'Historial',
     icon: History,
@@ -89,12 +83,6 @@ const ADMIN_NAV_ITEMS = [
     href: '/admin/users',
     label: 'Usuarios Registrados',
     icon: Users,
-    exact: false,
-  },
-  {
-    href: '/admin/marketing',
-    label: 'Upload Marketing',
-    icon: ImageIcon,
     exact: false,
   },
   {
