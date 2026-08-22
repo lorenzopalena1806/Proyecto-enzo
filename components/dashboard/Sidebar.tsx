@@ -19,6 +19,7 @@ import {
   Settings,
   Tag,
   History,
+  Megaphone,
 } from 'lucide-react';
 import type { Profile } from '@/types';
 
@@ -94,6 +95,12 @@ const ADMIN_NAV_ITEMS = [
     href: '/admin/marketing',
     label: 'Upload Marketing',
     icon: ImageIcon,
+    exact: false,
+  },
+  {
+    href: '/admin/notifications',
+    label: 'Comunicados Globales',
+    icon: Megaphone,
     exact: false,
   },
 ];
