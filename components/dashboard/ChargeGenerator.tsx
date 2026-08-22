@@ -21,6 +21,35 @@ import {
   Tag,
 } from 'lucide-react';
 import { UndoChargeButton } from './UndoChargeButton';
+import confetti from 'canvas-confetti';
+
+const playSuccessSound = () => {
+  if (typeof window === 'undefined') return;
+  try {
+    const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    
+    // Premium "Ting!" sound
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, ctx.currentTime); // A5
+    osc.frequency.exponentialRampToValueAtTime(1760, ctx.currentTime + 0.1); // A6
+    
+    gain.gain.setValueAtTime(0, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.5, ctx.currentTime + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+    
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.5);
+  } catch (e) {
+    console.error('Audio play failed', e);
+  }
+};
 
 interface ChargeGeneratorProps {
   merchantId: string;
@@ -69,6 +98,18 @@ export function ChargeGenerator({ merchantId, activeOffers = [] }: ChargeGenerat
               transactionId: newTx.id,
             });
             setStatus('success');
+            
+            // Juguetes Visuales y Sensoriales
+            confetti({
+              particleCount: 100,
+              spread: 70,
+              origin: { y: 0.6 },
+              colors: ['#8b5cf6', '#10b981', '#3b82f6']
+            });
+            playSuccessSound();
+            if (navigator.vibrate) {
+              navigator.vibrate([200, 100, 200]);
+            }
           }
         }
       )
@@ -113,6 +154,18 @@ export function ChargeGenerator({ merchantId, activeOffers = [] }: ChargeGenerat
           transactionId: (res as any).transactionId,
         });
         setStatus('success');
+        
+        // Juguetes Visuales y Sensoriales
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#8b5cf6', '#10b981', '#3b82f6']
+        });
+        playSuccessSound();
+        if (navigator.vibrate) {
+          navigator.vibrate([200, 100, 200]);
+        }
       } else {
         setErrorMessage(res.reason || 'Error desconocido.');
         setStatus('waiting');
@@ -187,6 +240,8 @@ export function ChargeGenerator({ merchantId, activeOffers = [] }: ChargeGenerat
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-semibold">$</span>
               <input
                 type="number"
+                inputMode="decimal"
+                pattern="[0-9]*"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="0.00"
