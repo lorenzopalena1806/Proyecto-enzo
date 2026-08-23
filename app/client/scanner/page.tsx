@@ -14,7 +14,8 @@ export default async function ClientScannerPage() {
 
   if (!user) redirect('/auth/login');
 
-  const { data: qrData } = await supabase
+  const adminClient = createAdminClient();
+  const { data: qrData } = await adminClient
     .from('qr_codes')
     .select('qr_token')
     .eq('user_id', user.id)
