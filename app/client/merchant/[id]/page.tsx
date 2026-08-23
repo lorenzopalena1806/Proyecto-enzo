@@ -34,6 +34,20 @@ export default async function MerchantProfilePage({ params }: { params: Promise<
 
   const activeOffers = offers || [];
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: merchant.business_name || merchant.full_name || 'Comercio',
+    image: merchant.avatar_url || '',
+    telephone: merchant.phone || '',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: merchant.address || '',
+    },
+    url: `https://lazoo.vercel.app/client/merchant/${merchant.id}`,
+    hasMap: merchant.maps_url || '',
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 pb-20">
       <style dangerouslySetInnerHTML={{ __html: `
@@ -191,6 +205,10 @@ export default async function MerchantProfilePage({ params }: { params: Promise<
           )}
         </div>
       </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
     </div>
   );
 }

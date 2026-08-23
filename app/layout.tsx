@@ -3,6 +3,7 @@ import { Inter, Montserrat } from 'next/font/google';
 import './globals.css';
 import { InstallPwaPrompt } from '@/components/shared/InstallPwaPrompt';
 import { NetworkStatus } from '@/components/NetworkStatus';
+import { CookieBanner } from '@/components/marketing/CookieBanner';
 
 export const viewport: Viewport = {
   themeColor: '#020617',
@@ -73,6 +74,7 @@ export default function RootLayout({
         <NetworkStatus />
         {children}
         <InstallPwaPrompt />
+        <CookieBanner />
       </body>
     </html>
   );

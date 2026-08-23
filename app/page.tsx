@@ -6,6 +6,7 @@ import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { AnimatedStats } from '@/components/marketing/AnimatedStats';
 import { FeaturesTabs } from '@/components/marketing/FeaturesTabs';
 import { FloatingWhatsApp } from '@/components/marketing/FloatingWhatsApp';
+import { MobileStickyCTA } from '@/components/marketing/MobileStickyCTA';
 import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
@@ -362,13 +363,14 @@ export default async function Home() {
           </div>
           <p className="text-slate-500 text-sm">© {new Date().getFullYear()} Lazoo. Todos los derechos reservados.</p>
           <div className="flex gap-6 text-sm font-medium text-slate-400">
-            <a href="#" className="hover:text-cyan-400 transition-colors">Privacidad</a>
-            <a href="#" className="hover:text-cyan-400 transition-colors">Términos</a>
-            <a href="#" className="hover:text-cyan-400 transition-colors">Soporte</a>
+            <Link href="/privacy" className="hover:text-cyan-400 transition-colors">Privacidad</Link>
+            <Link href="/terms" className="hover:text-cyan-400 transition-colors">Términos</Link>
+            <a href="https://wa.me/5491100000000" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors">Soporte</a>
           </div>
         </div>
       </footer>
       <FloatingWhatsApp />
+      <MobileStickyCTA />
     </div>
   );
 }

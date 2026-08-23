@@ -65,15 +65,22 @@ export function POSView({
   const numAmount = parseFloat(amount);
   const isValidAmount = !isNaN(numAmount) && numAmount > 0;
   
-  let estimatedDiscountPct = 0;
+  let estimatedDiscountPctLabel = 0;
+  let exactDiscountRatio = 0;
+
   if (selectedOfferId) {
     const offer = offers.find(o => o.id === selectedOfferId);
     if (offer) {
-      estimatedDiscountPct = offer.discount_pct || 0;
+      estimatedDiscountPctLabel = offer.discount_pct || 0;
+      if (offer.original_price && offer.final_price && offer.original_price > 0) {
+        exactDiscountRatio = (offer.original_price - offer.final_price) / offer.original_price;
+      } else {
+        exactDiscountRatio = estimatedDiscountPctLabel / 100;
+      }
     }
   }
   
-  const estimatedDiscountAmount = isValidAmount ? (numAmount * estimatedDiscountPct) / 100 : 0;
+  const estimatedDiscountAmount = isValidAmount ? numAmount * exactDiscountRatio : 0;
   const estimatedFinalPrice = isValidAmount ? numAmount - estimatedDiscountAmount : 0;
 
   // Estado para el código manual
@@ -350,12 +357,20 @@ export function POSView({
 
               {/* Resumen del cobro activo */}
               {(() => {
-                let discountPct = 0;
+                let discountPctLabel = 0;
+                let exactRatio = 0;
                 if (activeCharge.offer_title) {
                   const offer = offers.find(o => o.title === activeCharge.offer_title);
-                  if (offer) discountPct = offer.discount_pct || 0;
+                  if (offer) {
+                    discountPctLabel = offer.discount_pct || 0;
+                    if (offer.original_price && offer.final_price && offer.original_price > 0) {
+                      exactRatio = (offer.original_price - offer.final_price) / offer.original_price;
+                    } else {
+                      exactRatio = discountPctLabel / 100;
+                    }
+                  }
                 }
-                const discountAmount = (activeCharge.amount * discountPct) / 100;
+                const discountAmount = activeCharge.amount * exactRatio;
                 const finalPrice = activeCharge.amount - discountAmount;
 
                 return (
@@ -374,14 +389,14 @@ export function POSView({
                       <span className="text-white font-medium">{activeCharge.payment_method === 'cash' ? 'Efectivo' : 'Transferencia'}</span>
                     </div>
 
-                    {discountPct > 0 ? (
+                    {exactRatio > 0 ? (
                       <div className="pt-3 border-t border-white/5 space-y-2 mt-1">
                         <div className="flex justify-between items-center text-sm">
                           <span className="text-slate-400">Precio original</span>
                           <span className="text-slate-300 line-through">{formatARS(activeCharge.amount)}</span>
                         </div>
                         <div className="flex justify-between items-center text-sm">
-                          <span className="text-blue-400/80">Descuento ({discountPct}%)</span>
+                          <span className="text-blue-400/80">Descuento ({discountPctLabel}%)</span>
                           <span className="text-blue-400 font-medium">-{formatARS(discountAmount)}</span>
                         </div>
                         <div className="flex justify-between items-baseline mt-2 pt-2 border-t border-blue-900/50">
@@ -510,14 +525,14 @@ export function POSView({
           </div>
 
           {/* ── LIVE PREVIEW DEL DESCUENTO ── */}
-          {isValidAmount && estimatedDiscountPct > 0 && (
+          {isValidAmount && exactDiscountRatio > 0 && (
             <div className="rounded-xl bg-blue-950/40 border border-blue-900/50 p-4 space-y-2 animate-in fade-in zoom-in-95 duration-300">
               <div className="flex justify-between items-center text-sm">
                 <span className="text-slate-400">Precio original:</span>
                 <span className="text-slate-300 line-through">${numAmount.toLocaleString('es-AR')}</span>
               </div>
               <div className="flex justify-between items-center text-sm">
-                <span className="text-blue-400/80">Descuento ({estimatedDiscountPct}%):</span>
+                <span className="text-blue-400/80">Descuento ({estimatedDiscountPctLabel}%):</span>
                 <span className="text-blue-400 font-medium">-${estimatedDiscountAmount.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
               </div>
               <div className="w-full h-px bg-blue-900/50 my-1"></div>
