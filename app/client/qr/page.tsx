@@ -215,14 +215,9 @@ export default async function ClientQRPage() {
             </p>
           </div>
         </section>
-        <DiscoverSection 
-          merchants={merchants || []} 
-          offers={activeOffers} 
-          initialFavorites={initialFavorites} 
-        />
 
-        {/* Sección: Tu Código Corto (Movida arriba o mantenida) */}
-        <section className="space-y-4 pt-6 border-t border-white/10">
+        {/* Sección: Tu Código Corto */}
+        <section className="space-y-4 pt-2 mb-8">
           <div className="glass-card-blue rounded-3xl p-6 text-center relative overflow-hidden mt-4">
             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-2xl rounded-full" />
             <p className="text-blue-300/80 text-xs font-bold uppercase tracking-widest mb-4">Tu Código QR</p>
@@ -245,6 +240,11 @@ export default async function ClientQRPage() {
             </div>
           </div>
         </section>
+        <DiscoverSection 
+          merchants={merchants || []} 
+          offers={activeOffers} 
+          initialFavorites={initialFavorites} 
+        />
 
         {/* Sección: Mis Descuentos Usados */}
         <section id="historial" className="space-y-4 pt-6 border-t border-white/10 mb-8">
