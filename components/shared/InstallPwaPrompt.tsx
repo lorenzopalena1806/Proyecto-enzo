@@ -119,13 +119,28 @@ export function InstallPwaPrompt() {
         </div>
 
         {isIOS && !deferredPrompt ? (
-          <div className="bg-blue-950/40 border border-blue-900/50 rounded-xl p-3 text-xs text-blue-200 relative z-10 mt-1">
-            <p className="flex items-center gap-1.5 justify-center text-center">
-              Tocá el botón <Share className="w-4 h-4 text-blue-400 flex-shrink-0" /> en el menú y elegí
-            </p>
-            <p className="flex items-center gap-1 justify-center text-center font-bold text-white mt-1.5">
-              <PlusSquare className="w-3.5 h-3.5 text-slate-300" /> Agregar a Inicio
-            </p>
+          <div className="bg-slate-800/80 border border-slate-700 rounded-xl p-4 text-sm text-slate-300 relative z-10 mt-2">
+            <div className="flex flex-col items-center gap-2">
+              <p className="text-center font-medium text-white mb-1">
+                Para instalar la app en tu iPhone:
+              </p>
+              <div className="flex items-center gap-3 bg-white/10 px-3 py-2 rounded-lg border border-white/5 w-full shadow-inner">
+                <div className="bg-blue-500 rounded p-1.5 shadow-sm">
+                  <Share className="w-5 h-5 text-white" />
+                </div>
+                <p className="text-xs leading-tight">1. Tocá <strong>Compartir</strong> en la barra de Safari abajo.</p>
+              </div>
+              <div className="flex items-center gap-3 bg-white/10 px-3 py-2 rounded-lg border border-white/5 w-full shadow-inner">
+                <div className="bg-slate-600 rounded p-1.5 shadow-sm">
+                  <PlusSquare className="w-5 h-5 text-white" />
+                </div>
+                <p className="text-xs leading-tight">2. Deslizá hacia abajo y elegí <strong>Agregar a Inicio</strong>.</p>
+              </div>
+            </div>
+            {/* Flecha animada apuntando hacia abajo al centro de la pantalla */}
+            <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-white animate-bounce drop-shadow-lg">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white drop-shadow-md"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+            </div>
           </div>
         ) : (
           <button 

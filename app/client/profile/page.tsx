@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { ProfileEditForm } from '@/components/dashboard/ProfileEditForm';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { InstallAppButton } from '@/components/client/InstallAppButton';
 
 export default async function ClientProfilePage() {
   const supabase = await createClient();
@@ -28,11 +29,20 @@ export default async function ClientProfilePage() {
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-white">Mi Perfil</h1>
-            <p className="text-slate-400 text-sm mt-0.5">Actualizá tus datos personales.</p>
+            <h1 className="text-2xl font-black text-white">Mi Perfil</h1>
+            <p className="text-sm text-slate-400">Gestioná tu cuenta de cliente.</p>
           </div>
         </div>
-        <ProfileEditForm profile={profile} userEmail={user.email || ''} />
+
+        <div className="glass-panel p-6 rounded-3xl space-y-6 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
+          
+          <div className="mb-4">
+            <InstallAppButton />
+          </div>
+
+          <ProfileEditForm profile={profile} userEmail={user.email || ''} />
+        </div>
       </div>
     </div>
   );
