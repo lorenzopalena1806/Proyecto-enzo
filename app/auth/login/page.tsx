@@ -1,9 +1,8 @@
 'use client';
 
-export const dynamic = 'force-dynamic';
-
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Loader2, LogIn, ArrowLeft } from 'lucide-react';
 
@@ -53,7 +52,14 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="text-center flex flex-col items-center space-y-3">
           <Link href="/">
-            <img src="/logo.png" alt="Lazoo" className="h-20 sm:h-24 w-auto rounded-xl shadow-2xl shadow-blue-900/40 object-contain" />
+            <Image 
+              src="/logo.png" 
+              alt="Lazoo" 
+              width={120} 
+              height={120} 
+              priority 
+              className="h-20 sm:h-24 w-auto rounded-xl shadow-2xl shadow-blue-900/40 object-contain" 
+            />
           </Link>
           <p className="text-slate-400 text-sm">Ingresá a tu panel</p>
         </div>
