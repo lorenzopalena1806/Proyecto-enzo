@@ -143,7 +143,7 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
             </h3>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-8">
             {/* Formulario */}
             <form key={editingOffer ? editingOffer.id : 'new'} onSubmit={handleSubmitForm} className="space-y-4">
               <div>
@@ -232,7 +232,7 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
             </form>
 
             {/* Live Preview */}
-            <div className="hidden lg:block relative">
+            <div className="block relative lg:mt-0 mb-4 lg:mb-0">
               <div className="sticky top-6">
                 <h4 className="text-sm font-bold text-slate-400 mb-4 uppercase tracking-wider flex items-center gap-2">
                   Vista Previa
