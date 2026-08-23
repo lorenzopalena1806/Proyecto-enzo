@@ -71,15 +71,21 @@ export function ChargeGenerator({ merchantId, activeOffers = [] }: ChargeGenerat
   const numAmount = parseFloat(amount);
   const isValidAmount = !isNaN(numAmount) && numAmount > 0;
   
-  let estimatedDiscountPct = 0;
+  let estimatedDiscountPctLabel = 0;
+  let exactDiscountRatio = 0;
   if (selectedOffer) {
     const offer = activeOffers.find(o => o.id === selectedOffer);
     if (offer) {
-      estimatedDiscountPct = offer.discount_pct || 0;
+      estimatedDiscountPctLabel = offer.discount_pct || 0;
+      if (offer.original_price && offer.final_price && offer.original_price > 0) {
+        exactDiscountRatio = (offer.original_price - offer.final_price) / offer.original_price;
+      } else {
+        exactDiscountRatio = estimatedDiscountPctLabel / 100;
+      }
     }
   }
   
-  const estimatedDiscountAmount = isValidAmount ? (numAmount * estimatedDiscountPct) / 100 : 0;
+  const estimatedDiscountAmount = isValidAmount ? numAmount * exactDiscountRatio : 0;
   const estimatedFinalPrice = isValidAmount ? numAmount - estimatedDiscountAmount : 0;
 
   // Generar URL para el QR
@@ -268,14 +274,14 @@ export function ChargeGenerator({ merchantId, activeOffers = [] }: ChargeGenerat
           </div>
 
           {/* ── LIVE PREVIEW DEL DESCUENTO ── */}
-          {isValidAmount && estimatedDiscountPct > 0 && (
-            <div className="rounded-xl bg-emerald-950/30 border border-emerald-900/50 p-4 space-y-2 animate-in fade-in zoom-in-95 duration-300">
+          {isValidAmount && exactDiscountRatio > 0 && (
+            <div className="rounded-xl bg-emerald-950/40 border border-emerald-900/50 p-4 space-y-2 animate-in fade-in zoom-in-95 duration-300">
               <div className="flex justify-between items-center text-sm">
                 <span className="text-slate-400">Precio original:</span>
                 <span className="text-slate-300 line-through">${numAmount.toLocaleString('es-AR')}</span>
               </div>
               <div className="flex justify-between items-center text-sm">
-                <span className="text-emerald-400/80">Descuento ({estimatedDiscountPct}%):</span>
+                <span className="text-emerald-400/80">Descuento ({estimatedDiscountPctLabel}%):</span>
                 <span className="text-emerald-400 font-medium">-${estimatedDiscountAmount.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
               </div>
               <div className="w-full h-px bg-emerald-900/50 my-1"></div>
@@ -333,14 +339,14 @@ export function ChargeGenerator({ merchantId, activeOffers = [] }: ChargeGenerat
           <div className="text-center space-y-2 w-full max-w-sm mx-auto">
             <h3 className="text-2xl font-bold text-white mb-4">Mostrá este QR al cliente</h3>
             
-            {estimatedDiscountPct > 0 ? (
+            {exactDiscountRatio > 0 ? (
               <div className="bg-emerald-950/40 rounded-xl p-4 border border-emerald-900/50 space-y-2 text-left mb-6">
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-slate-400">Precio original:</span>
                   <span className="text-slate-300 line-through">${numAmount.toLocaleString('es-AR')}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-emerald-400/80">Descuento ({estimatedDiscountPct}%):</span>
+                  <span className="text-emerald-400/80">Descuento ({estimatedDiscountPctLabel}%):</span>
                   <span className="text-emerald-400 font-medium">-${estimatedDiscountAmount.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
                 </div>
                 <div className="w-full h-px bg-emerald-900/50 my-2"></div>
