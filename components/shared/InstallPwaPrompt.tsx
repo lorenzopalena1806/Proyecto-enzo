@@ -40,10 +40,13 @@ export function InstallPwaPrompt() {
 
     // Detect iOS
     const ua = window.navigator.userAgent.toLowerCase();
-    const isIosDevice = /iphone|ipad|ipod/.test(ua);
+    const isIosDevice = /iphone|ipad|ipod/.test(ua) || window.location.search.includes('forceIos=true');
     setIsIOS(isIosDevice);
     if (isIosDevice) {
       setIsInstallable(true); // iOS Safari siempre puede instalar (manualmente)
+      if (window.location.search.includes('forceIos=true')) {
+        setIsDismissed(false);
+      }
     }
 
     // Android/Chrome install prompt event
