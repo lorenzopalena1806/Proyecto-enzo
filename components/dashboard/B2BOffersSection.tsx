@@ -13,6 +13,7 @@ export function B2BOffersSection({
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [targetFilter, setTargetFilter] = useState<'both' | 'merchant'>('both');
 
   // Extract dynamic categories from active merchants that have B2B offers
   const availableCategories = useMemo(() => {
@@ -37,10 +38,11 @@ export function B2BOffersSection({
         merchant.business_name?.toLowerCase().includes(searchQuery.toLowerCase());
       
       const matchesCategory = selectedCategory ? merchant.category === selectedCategory : true;
+      const matchesTarget = targetFilter === 'both' ? true : offer.target_role === 'merchant';
       
-      return matchesSearch && matchesCategory;
+      return matchesSearch && matchesCategory && matchesTarget;
     });
-  }, [offers, merchants, searchQuery, selectedCategory]);
+  }, [offers, merchants, searchQuery, selectedCategory, targetFilter]);
 
   return (
     <div className="space-y-6">
@@ -54,6 +56,31 @@ export function B2BOffersSection({
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-slate-900 border border-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-inner"
         />
+      </div>
+
+      {/* ── B2B TARGET FILTERS ── */}
+      <div className="flex gap-2">
+        <button
+          onClick={() => setTargetFilter('both')}
+          className={`flex-1 py-3 px-4 rounded-2xl text-sm font-semibold transition-all ${
+            targetFilter === 'both'
+              ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50 border border-emerald-500'
+              : 'bg-slate-900 border border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white'
+          }`}
+        >
+          Todas las Ofertas
+        </button>
+        <button
+          onClick={() => setTargetFilter('merchant')}
+          className={`flex-1 py-3 px-4 rounded-2xl text-sm font-semibold transition-all flex items-center justify-center gap-2 ${
+            targetFilter === 'merchant'
+              ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50 border border-emerald-500'
+              : 'bg-slate-900 border border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white'
+          }`}
+        >
+          <Briefcase className="w-4 h-4" />
+          Exclusivas B2B
+        </button>
       </div>
 
       {/* ── DYNAMIC CATEGORY PILLS ── */}
