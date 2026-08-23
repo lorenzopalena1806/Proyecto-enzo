@@ -11,56 +11,60 @@ export function InstallPwaPrompt() {
   const [isDismissed, setIsDismissed] = useState(true);
 
   useEffect(() => {
-    // Only run on client
     if (typeof window === 'undefined') return;
+
+    // Detect standalone mode first
+    const mqStandAlone = '(display-mode: standalone)';
+    if ((window.navigator as any).standalone || window.matchMedia(mqStandAlone).matches) {
+      setIsStandalone(true);
+      return; // If standalone, we don't need to do anything else
+    }
+    setIsStandalone(false);
+
+    // Detect iOS and URL override
+    const ua = window.navigator.userAgent.toLowerCase();
+    const isForceIos = window.location.search.includes('forceIos=true');
+    const isIosDevice = /iphone|ipad|ipod/.test(ua) || isForceIos;
+    setIsIOS(isIosDevice);
+    
+    let shouldShow = false;
+    if (isIosDevice) {
+      shouldShow = true; // iOS Safari always 'installable' via share menu
+    }
 
     // Check if dismissed
     const dismissed = localStorage.getItem('pwa_prompt_dismissed');
     if (dismissed) {
       const dismissDate = new Date(parseInt(dismissed, 10));
       const now = new Date();
-      // Si la cerró hace menos de 3 días, no la volvemos a mostrar
       if (now.getTime() - dismissDate.getTime() < 3 * 24 * 60 * 60 * 1000) {
-        return; 
+        shouldShow = false; // Too soon to show again
       } else {
-        localStorage.removeItem('pwa_prompt_dismissed'); 
-        setIsDismissed(false);
-      }
-    } else {
-      setIsDismissed(false);
-    }
-
-    // Check if already installed (standalone mode)
-    const mqStandAlone = '(display-mode: standalone)';
-    if ((window.navigator as any).standalone || window.matchMedia(mqStandAlone).matches) {
-      setIsStandalone(true);
-      return; // Ya está instalada
-    }
-    setIsStandalone(false);
-
-    // Detect iOS
-    const ua = window.navigator.userAgent.toLowerCase();
-    const isIosDevice = /iphone|ipad|ipod/.test(ua) || window.location.search.includes('forceIos=true');
-    setIsIOS(isIosDevice);
-    if (isIosDevice) {
-      setIsInstallable(true); // iOS Safari siempre puede instalar (manualmente)
-      if (window.location.search.includes('forceIos=true')) {
-        setIsDismissed(false);
+        localStorage.removeItem('pwa_prompt_dismissed');
       }
     }
 
-    // Android/Chrome install prompt event
+    // Override if forced
+    if (isForceIos) {
+      shouldShow = true;
+    }
+
+    setIsInstallable(shouldShow);
+    setIsDismissed(!shouldShow);
+
+    // Chrome/Android prompt
     const handleBeforeInstallPrompt = (e: any) => {
-      e.preventDefault(); // Prevent default browser mini-infobar
+      e.preventDefault();
       setDeferredPrompt(e);
-      setIsInstallable(true);
+      if (!dismissed) {
+        setIsInstallable(true);
+        setIsDismissed(false);
+      }
     };
 
     const handleCustomTrigger = () => {
       setIsDismissed(false);
       setIsInstallable(true);
-      // We don't call prompt() directly here because it requires a user gesture,
-      // but showing the banner allows them to click the banner's button (which is a valid user gesture).
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
