@@ -4,6 +4,7 @@ import { createClient, createAdminClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import { Store, Scan, Tag, Banknote, MapPin, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import { B2BOffersSection } from '@/components/dashboard/B2BOffersSection';
 
 export const metadata = {
   title: 'Comprar (B2B) | Lazoo',
@@ -26,16 +27,18 @@ export default async function QRPage() {
 
 
 
+  // Fetch active merchants for B2B
+  const { data: merchants } = await adminClient
+    .from('profiles')
+    .select('id, business_name, full_name, category, avatar_url, maps_url')
+    .eq('role', 'merchant')
+    .eq('is_active', true);
+
   // Ofertas disponibles para comercios (merchant o all) de otros comercios
   const { data: merchantOffers } = await adminClient
     .from('merchant_offers')
-    .select(`
-      *,
-      merchant:profiles!merchant_id (
-        business_name,
-        full_name
-      )
-    `)
+    .select('*')
+    .in('target_role', ['merchant', 'all'])
     .eq('is_active', true)
     .neq('merchant_id', user.id) // Excluir sus propias ofertas
     .order('discount_pct', { ascending: false });
@@ -77,76 +80,10 @@ export default async function QRPage() {
         </Link>
       </div>
 
-      {/* Ofertas para comercios */}
-      <section className="space-y-4 border-t border-slate-800/50 pt-6">
-        <div>
-          <h2 className="text-xl font-bold text-white">Ofertas Exclusivas para Comercios</h2>
-          <p className="text-sm text-slate-400 mt-1">Estos locales tienen descuentos especiales para vos como dueño de comercio.</p>
-        </div>
-
-        {(!merchantOffers || merchantOffers.length === 0) ? (
-          <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-8 text-center">
-            <p className="text-slate-400">Por ahora no hay ofertas B2B disponibles de otros comercios.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {merchantOffers.map((offer: any) => {
-              const merchant = offer.merchant as { business_name?: string; full_name?: string };
-              const merchantName = merchant?.business_name || merchant?.full_name || 'Comercio';
-              const hasPrices = offer.original_price && offer.final_price;
-              const savings = hasPrices ? offer.original_price - offer.final_price : null;
-
-              return (
-                <div key={offer.id} className="bg-slate-900 border border-violet-800/30 hover:border-violet-600/60 transition-colors rounded-2xl p-5 flex flex-col relative overflow-hidden group">
-                  {/* Badge descuento */}
-                  <div className="absolute top-0 right-0 bg-violet-600 text-white font-bold px-3 py-1.5 rounded-bl-xl text-sm z-10 shadow-sm">
-                    -{offer.discount_pct}%
-                  </div>
-                  {/* B2B Badge */}
-                  {(offer.target_role === 'merchant' || offer.target_role === 'all') && (
-                    <div className="absolute top-0 left-0 bg-amber-500 text-black font-bold px-2 py-0.5 rounded-br-lg text-xs z-10">
-                      B2B
-                    </div>
-                  )}
-                  {offer.image_url && (
-                    <div className="absolute inset-0 z-0 opacity-20 group-hover:opacity-30 transition-opacity">
-                      <img src={offer.image_url} alt={offer.title} className="w-full h-full object-cover" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
-                    </div>
-                  )}
-                  <div className="relative z-10 flex flex-col h-full">
-                    <p className="text-xs text-violet-400 font-medium uppercase tracking-wider mb-1 mt-4 pr-12 truncate drop-shadow-md">
-                      {merchantName}
-                    </p>
-                  <h3 className="font-bold text-lg text-white mb-2 pr-8 leading-tight">{offer.title}</h3>
-                  {offer.description && (
-                    <p className="text-slate-400 text-sm mb-4 line-clamp-2">{offer.description}</p>
-                  )}
-
-                  {hasPrices && (
-                    <div className="mt-auto bg-slate-950/80 rounded-xl p-3 border border-slate-800/80">
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-xs text-slate-500">Precio sin app</span>
-                        <span className="text-sm text-slate-400 line-through">${offer.original_price.toLocaleString('es-AR')}</span>
-                      </div>
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-xs text-amber-400 font-medium">
-                          {(offer.target_role === 'merchant' || offer.target_role === 'all') ? 'Precio B2B' : 'Precio con app'}
-                        </span>
-                        <span className="text-xl text-white font-black">${offer.final_price.toLocaleString('es-AR')}</span>
-                      </div>
-                      <div className="text-xs text-amber-950 bg-amber-400 py-1.5 px-2 rounded-lg text-center font-bold uppercase tracking-wider">
-                        ¡Ahorrás ${savings?.toLocaleString('es-AR')}!
-                      </div>
-                    </div>
-                  )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </section>
+      {/* Ofertas para comercios usando el componente unificado */}
+      <div className="border-t border-slate-800/50 pt-6">
+        <B2BOffersSection merchants={merchants || []} offers={merchantOffers || []} />
+      </div>
 
       {/* Historial como comprador */}
       <section className="space-y-4 border-t border-slate-800/50 pt-6">
