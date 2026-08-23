@@ -67,6 +67,21 @@ export function ChargeGenerator({ merchantId, activeOffers = [] }: ChargeGenerat
   const [errorMessage, setErrorMessage] = useState('');
   const [successData, setSuccessData] = useState<{ amount: number; final: number; transactionId?: string } | null>(null);
 
+  // Calcula el precio final estimado basado en la oferta seleccionada
+  const numAmount = parseFloat(amount);
+  const isValidAmount = !isNaN(numAmount) && numAmount > 0;
+  
+  let estimatedDiscountPct = 0;
+  if (selectedOffer) {
+    const offer = activeOffers.find(o => o.id === selectedOffer);
+    if (offer) {
+      estimatedDiscountPct = offer.discount_pct || 0;
+    }
+  }
+  
+  const estimatedDiscountAmount = isValidAmount ? (numAmount * estimatedDiscountPct) / 100 : 0;
+  const estimatedFinalPrice = isValidAmount ? numAmount - estimatedDiscountAmount : 0;
+
   // Generar URL para el QR
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
   let qrUrl = `${baseUrl}/pay?m=${merchantId}&a=${amount}&method=${paymentMethod}`;
@@ -251,6 +266,25 @@ export function ChargeGenerator({ merchantId, activeOffers = [] }: ChargeGenerat
               />
             </div>
           </div>
+
+          {/* ── LIVE PREVIEW DEL DESCUENTO ── */}
+          {isValidAmount && estimatedDiscountPct > 0 && (
+            <div className="rounded-xl bg-emerald-950/30 border border-emerald-900/50 p-4 space-y-2 animate-in fade-in zoom-in-95 duration-300">
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-slate-400">Precio original:</span>
+                <span className="text-slate-300 line-through">${numAmount.toLocaleString('es-AR')}</span>
+              </div>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-emerald-400/80">Descuento ({estimatedDiscountPct}%):</span>
+                <span className="text-emerald-400 font-medium">-${estimatedDiscountAmount.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
+              </div>
+              <div className="w-full h-px bg-emerald-900/50 my-1"></div>
+              <div className="flex justify-between items-center text-base">
+                <span className="text-emerald-300 font-bold">Total a cobrar:</span>
+                <span className="text-white font-black text-lg">${estimatedFinalPrice.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
+              </div>
+            </div>
+          )}
 
           <div className="space-y-2">
             <label className="block text-sm font-medium text-slate-300">
