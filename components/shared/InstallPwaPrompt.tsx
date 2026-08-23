@@ -125,7 +125,7 @@ export function InstallPwaPrompt() {
           </div>
         </div>
 
-        {isIOS && !deferredPrompt ? (
+        {isIOS ? (
           <div className="bg-slate-800/80 border border-slate-700 rounded-xl p-4 text-sm text-slate-300 relative z-10 mt-2">
             <div className="flex flex-col items-center gap-2">
               <p className="text-center font-medium text-white mb-1">
