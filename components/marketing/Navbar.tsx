@@ -18,20 +18,20 @@ export function Navbar() {
             <a href="#pricing" className="hover:text-cyan-300 transition-colors">Precios</a>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Link
               href="/auth/login"
-              className="hidden sm:flex items-center gap-2 text-sm font-semibold text-slate-300 hover:text-white transition-colors"
+              className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-semibold text-slate-300 hover:text-white transition-colors"
             >
-              <User className="h-4 w-4" />
-              Ingresar
+              <User className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              Iniciar sesión
             </Link>
             
             <ClientDownloadButton className="hidden md:flex px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-sm font-bold hover:bg-slate-700 transition-colors items-center gap-2" />
 
             <Link
               href="/auth/register"
-              className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-bold hover:from-cyan-400 hover:to-blue-500 transition-colors shadow-[0_0_20px_rgba(6,182,212,0.3)]"
+              className="px-3 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-xs sm:text-sm font-bold hover:from-cyan-400 hover:to-blue-500 transition-colors shadow-[0_0_20px_rgba(6,182,212,0.3)]"
             >
               Registrarme
             </Link>
