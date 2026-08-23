@@ -61,6 +61,21 @@ export function POSView({
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState('');
 
+  // Calcula el precio final estimado basado en la oferta seleccionada
+  const numAmount = parseFloat(amount);
+  const isValidAmount = !isNaN(numAmount) && numAmount > 0;
+  
+  let estimatedDiscountPct = 0;
+  if (selectedOfferId) {
+    const offer = offers.find(o => o.id === selectedOfferId);
+    if (offer) {
+      estimatedDiscountPct = offer.discount_pct || 0;
+    }
+  }
+  
+  const estimatedDiscountAmount = isValidAmount ? (numAmount * estimatedDiscountPct) / 100 : 0;
+  const estimatedFinalPrice = isValidAmount ? numAmount - estimatedDiscountAmount : 0;
+
   // Estado para el código manual
   const [manualCode, setManualCode] = useState('');
   const [manualCodeLoading, setManualCodeLoading] = useState(false);
@@ -334,25 +349,55 @@ export function POSView({
               </div>
 
               {/* Resumen del cobro activo */}
-              <div className="w-full mt-8 bg-black/20 border border-white/10 rounded-2xl p-5 space-y-3 shadow-inner">
-                {activeCharge.offer_title && (
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-slate-400 flex items-center gap-1.5"><Tag className="w-4 h-4" /> Oferta</span>
-                    <span className="text-indigo-300 font-semibold bg-indigo-500/10 px-2 py-0.5 rounded-md border border-indigo-500/20">{activeCharge.offer_title}</span>
+              {(() => {
+                let discountPct = 0;
+                if (activeCharge.offer_title) {
+                  const offer = offers.find(o => o.title === activeCharge.offer_title);
+                  if (offer) discountPct = offer.discount_pct || 0;
+                }
+                const discountAmount = (activeCharge.amount * discountPct) / 100;
+                const finalPrice = activeCharge.amount - discountAmount;
+
+                return (
+                  <div className="w-full mt-8 bg-black/20 border border-white/10 rounded-2xl p-5 space-y-3 shadow-inner">
+                    {activeCharge.offer_title && (
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-slate-400 flex items-center gap-1.5"><Tag className="w-4 h-4" /> Oferta</span>
+                        <span className="text-blue-300 font-semibold bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-500/20">{activeCharge.offer_title}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-slate-400 flex items-center gap-1.5">
+                        {activeCharge.payment_method === 'cash' ? <Banknote className="w-4 h-4" /> : <ArrowLeftRight className="w-4 h-4" />}
+                        Método
+                      </span>
+                      <span className="text-white font-medium">{activeCharge.payment_method === 'cash' ? 'Efectivo' : 'Transferencia'}</span>
+                    </div>
+
+                    {discountPct > 0 ? (
+                      <div className="pt-3 border-t border-white/5 space-y-2 mt-1">
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="text-slate-400">Precio original</span>
+                          <span className="text-slate-300 line-through">{formatARS(activeCharge.amount)}</span>
+                        </div>
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="text-blue-400/80">Descuento ({discountPct}%)</span>
+                          <span className="text-blue-400 font-medium">-{formatARS(discountAmount)}</span>
+                        </div>
+                        <div className="flex justify-between items-baseline mt-2 pt-2 border-t border-blue-900/50">
+                          <span className="text-blue-300 font-bold">Monto a Cobrar</span>
+                          <span className="text-2xl font-black text-white tracking-tight">{formatARS(finalPrice)}</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="pt-3 border-t border-white/5 flex justify-between items-baseline mt-1">
+                        <span className="text-slate-300 font-medium">Monto Total</span>
+                        <span className="text-2xl font-black text-white tracking-tight">{formatARS(activeCharge.amount)}</span>
+                      </div>
+                    )}
                   </div>
-                )}
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-slate-400 flex items-center gap-1.5">
-                    {activeCharge.payment_method === 'cash' ? <Banknote className="w-4 h-4" /> : <ArrowLeftRight className="w-4 h-4" />}
-                    Método
-                  </span>
-                  <span className="text-white font-medium">{activeCharge.payment_method === 'cash' ? 'Efectivo' : 'Transferencia'}</span>
-                </div>
-                <div className="pt-3 border-t border-white/5 flex justify-between items-baseline mt-1">
-                  <span className="text-slate-300 font-medium">Monto Total</span>
-                  <span className="text-2xl font-black text-white tracking-tight">{formatARS(activeCharge.amount)}</span>
-                </div>
-              </div>
+                );
+              })()}
 
               {/* Formulario de Código Manual */}
               <form onSubmit={handleManualCodeSubmit} className="w-full mt-4 bg-slate-900/80 border border-slate-700 rounded-2xl p-4 shadow-lg">
@@ -463,6 +508,25 @@ export function POSView({
               />
             </div>
           </div>
+
+          {/* ── LIVE PREVIEW DEL DESCUENTO ── */}
+          {isValidAmount && estimatedDiscountPct > 0 && (
+            <div className="rounded-xl bg-blue-950/40 border border-blue-900/50 p-4 space-y-2 animate-in fade-in zoom-in-95 duration-300">
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-slate-400">Precio original:</span>
+                <span className="text-slate-300 line-through">${numAmount.toLocaleString('es-AR')}</span>
+              </div>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-blue-400/80">Descuento ({estimatedDiscountPct}%):</span>
+                <span className="text-blue-400 font-medium">-${estimatedDiscountAmount.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
+              </div>
+              <div className="w-full h-px bg-blue-900/50 my-1"></div>
+              <div className="flex justify-between items-center text-base mt-2">
+                <span className="text-blue-300 font-bold">Total a cobrar:</span>
+                <span className="text-white font-black text-xl">${estimatedFinalPrice.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
+              </div>
+            </div>
+          )}
 
           {/* Método de pago */}
           <div className="space-y-2">
