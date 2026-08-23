@@ -1,6 +1,6 @@
 export const dynamic = 'force-dynamic';
 
-import { createClient } from '@/lib/supabase-server';
+import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import { ClientScanner } from '@/components/client/ClientScanner';
 
@@ -14,6 +14,15 @@ export default async function ClientScannerPage() {
 
   if (!user) redirect('/auth/login');
 
+  const adminClient = createAdminClient();
+  const { data: profile } = await adminClient
+    .from('profiles')
+    .select('qr_token')
+    .eq('id', user.id)
+    .single();
+
+  const shortCode = profile?.qr_token?.substring(0, 6).toUpperCase() || '------';
+
   return (
     <div className="space-y-6">
       <div>
@@ -24,6 +33,14 @@ export default async function ClientScannerPage() {
       </div>
 
       <ClientScanner />
+
+      <div className="glass-panel rounded-2xl p-6 text-center border-white/5 mt-4">
+        <p className="text-xs text-slate-400 font-medium mb-2 uppercase tracking-widest">¿No te funciona la cámara?</p>
+        <p className="text-sm text-slate-300 mb-3">Dictale este código al cajero:</p>
+        <div className="text-4xl font-black text-white tracking-[0.2em] bg-black/30 py-3 rounded-xl border border-white/10 shadow-inner inline-block px-8">
+          {shortCode}
+        </div>
+      </div>
     </div>
   );
 }
