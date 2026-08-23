@@ -139,6 +139,23 @@ export function B2BOffersSection({
                   <div className="absolute top-0 right-0 bg-gradient-to-l from-emerald-600 to-teal-600 text-white font-bold px-3 py-1.5 rounded-bl-2xl text-sm z-10 shadow-md">
                     -{offer.discount_pct}%
                   </div>
+                  {/* Badge de Target Role */}
+                  <div className="absolute top-0 left-0 z-10">
+                    {offer.target_role === 'merchant' ? (
+                      <div className="bg-amber-500 text-black font-bold px-3 py-1 rounded-br-xl text-[10px] uppercase tracking-wider shadow-sm">
+                        Solo Dueños
+                      </div>
+                    ) : offer.target_role === 'client' ? (
+                      <div className="bg-blue-500 text-white font-bold px-3 py-1 rounded-br-xl text-[10px] uppercase tracking-wider shadow-sm">
+                        Solo Clientes
+                      </div>
+                    ) : (
+                      <div className="bg-slate-700 text-slate-200 font-bold px-3 py-1 rounded-br-xl text-[10px] uppercase tracking-wider shadow-sm">
+                        General
+                      </div>
+                    )}
+                  </div>
+
                   {offer.image_url && (
                     <div className="absolute inset-0 z-0 opacity-20 group-hover:opacity-30 transition-opacity">
                       <Image src={offer.image_url} alt={offer.title} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
@@ -178,7 +195,7 @@ export function B2BOffersSection({
                           <span className="text-sm text-slate-400 line-through">${offer.original_price.toLocaleString('es-AR')}</span>
                         </div>
                         <div className="flex justify-between items-baseline mb-2">
-                          <span className="text-xs text-emerald-400 font-bold uppercase">Precio B2B</span>
+                          <span className="text-xs text-emerald-400 font-bold uppercase">Precio App</span>
                           <span className="text-xl text-white font-black">${offer.final_price.toLocaleString('es-AR')}</span>
                         </div>
                         <div className="text-[11px] text-teal-100 bg-teal-500/20 border border-teal-500/30 py-1.5 px-2 rounded-xl text-center font-bold tracking-wide shadow-inner">

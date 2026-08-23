@@ -38,7 +38,6 @@ export default async function QRPage() {
   const { data: merchantOffers } = await adminClient
     .from('merchant_offers')
     .select('*')
-    .in('target_role', ['merchant', 'all'])
     .eq('is_active', true)
     .neq('merchant_id', user.id) // Excluir sus propias ofertas
     .order('discount_pct', { ascending: false });
