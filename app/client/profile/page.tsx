@@ -6,6 +6,7 @@ import { ProfileEditForm } from '@/components/dashboard/ProfileEditForm';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { InstallAppButton } from '@/components/client/InstallAppButton';
+import { CopyCodeButton } from '@/components/client/CopyCodeButton';
 
 export default async function ClientProfilePage() {
   const supabase = await createClient();
@@ -20,6 +21,14 @@ export default async function ClientProfilePage() {
     .single();
 
   if (!profile) redirect('/auth/login');
+
+  const { data: qrData } = await adminClient
+    .from('qr_codes')
+    .select('qr_token')
+    .eq('user_id', user.id)
+    .single();
+
+  const shortCode = qrData?.qr_token?.substring(0, 6).toUpperCase() || '------';
 
   return (
     <div className="min-h-screen bg-slate-950 p-4">
@@ -39,6 +48,21 @@ export default async function ClientProfilePage() {
           
           <div className="mb-4">
             <InstallAppButton />
+          </div>
+
+          {/* Código de Cliente (Solo texto) */}
+          <div className="bg-black/30 p-6 rounded-2xl border border-white/5 text-center relative z-10 mb-6">
+            <p className="text-blue-300/80 text-xs font-bold uppercase tracking-widest mb-3">Tu Código de Cliente</p>
+            <p className="text-slate-400 text-sm mb-4">Dictale este código al cajero para acceder a tus descuentos.</p>
+            
+            <div className="relative inline-block mx-auto">
+              <div className="text-5xl font-black text-white tracking-[0.2em] bg-black/40 py-4 px-8 rounded-2xl border border-white/10 shadow-inner font-montserrat">
+                {shortCode}
+              </div>
+              <div className="absolute -top-3 -right-3">
+                <CopyCodeButton code={shortCode} />
+              </div>
+            </div>
           </div>
 
           <ProfileEditForm profile={profile} userEmail={user.email || ''} />

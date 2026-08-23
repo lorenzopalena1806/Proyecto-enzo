@@ -6,9 +6,6 @@ import { redirect } from 'next/navigation';
 import { LogoutButton } from '@/components/dashboard/LogoutButton';
 import { User, Sparkles, Clock, Scan, ClipboardList } from 'lucide-react';
 import Link from 'next/link';
-import { QRCodeSVG } from 'qrcode.react';
-import { encodeQRPayload } from '@/lib/qr-utils';
-import { CopyCodeButton } from '@/components/client/CopyCodeButton';
 import { DiscoverSection } from '@/components/client/DiscoverSection';
 
 export default async function ClientQRPage() {
@@ -67,12 +64,7 @@ export default async function ClientQRPage() {
     }
   }
 
-  const encodedQR = encodeQRPayload({
-    userId: user.id,
-    role: 'client',
-    token: qrData.qr_token,
-    version: 1,
-  });
+  }
 
   // 1. Fetch active offers from active merchants
   const { data: offers } = await adminClient
@@ -216,30 +208,7 @@ export default async function ClientQRPage() {
           </div>
         </section>
 
-        {/* Sección: Tu Código Corto */}
-        <section className="space-y-4 pt-2 mb-8">
-          <div className="glass-card-blue rounded-3xl p-6 text-center relative overflow-hidden mt-4">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-2xl rounded-full" />
-            <p className="text-blue-300/80 text-xs font-bold uppercase tracking-widest mb-4">Tu Código QR</p>
-            
-            <div className="bg-white p-4 rounded-2xl mx-auto inline-block shadow-lg mb-6 relative z-10">
-              <QRCodeSVG 
-                value={encodedQR} 
-                size={200}
-                level="M"
-                includeMargin={false}
-              />
-            </div>
 
-            <p className="text-slate-400 text-xs mb-3 font-medium">O dictá este código si no pueden escanearte:</p>
-            <div className="relative">
-              <div className="text-5xl font-black text-white tracking-[0.2em] bg-black/20 py-4 rounded-2xl border border-white/5 shadow-inner font-montserrat">
-                {qrData.qr_token.substring(0, 6).toUpperCase()}
-              </div>
-              <CopyCodeButton code={qrData.qr_token.substring(0, 6).toUpperCase()} />
-            </div>
-          </div>
-        </section>
         <DiscoverSection 
           merchants={merchants || []} 
           offers={activeOffers} 
