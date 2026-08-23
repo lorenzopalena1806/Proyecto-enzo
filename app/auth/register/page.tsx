@@ -144,7 +144,7 @@ export default function RegisterPage() {
           </div>
           <h2 className="text-2xl font-bold text-white">¡Bienvenido a Lazoo!</h2>
           <p className="text-slate-400 text-sm">
-            Tu cuenta de cliente fue creada exitosamente. Revisá tu bandeja de entrada o spam para confirmar tu correo y empezar a disfrutar de los descuentos.
+            Tu cuenta de cliente fue creada exitosamente. Ya podés iniciar sesión para empezar a disfrutar de los descuentos.
           </p>
           <Link
             href="/auth/login"
