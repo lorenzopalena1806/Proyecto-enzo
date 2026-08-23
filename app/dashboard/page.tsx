@@ -31,11 +31,6 @@ export default async function DashboardPage() {
     .select('*', { count: 'exact', head: true })
     .eq('scanner_id', user.id);
 
-  const { count: totalAssets } = await adminClient
-    .from('marketing_assets')
-    .select('*', { count: 'exact', head: true })
-    .eq('merchant_id', user.id);
-
   const { data: recentTransactions } = await adminClient
     .from('discount_transactions')
     .select('*, scanned_user:profiles!scanned_user_id(full_name, business_name, role)')
@@ -94,18 +89,12 @@ export default async function DashboardPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 relative z-10">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 relative z-10">
         <StatCard
           label="Escaneos totales"
           value={String(totalTransactions ?? 0)}
           Icon={ScanLine}
           color="violet"
-        />
-        <StatCard
-          label="Materiales"
-          value={String(totalAssets ?? 0)}
-          Icon={ImageIcon}
-          color="blue"
         />
         <StatCard
           label="Suscripción"
