@@ -19,22 +19,17 @@ export default async function ClientQRPage() {
 
   const adminClient = createAdminClient();
 
-  // Obtener perfil y QR
-  const { data: profile } = await adminClient
-    .from('profiles')
-    .select('full_name, is_active')
-    .eq('id', user.id)
-    .single();
+  // Obtener perfil y QR en PARALELO
+  const [{ data: profile }, { data: initialQrData }] = await Promise.all([
+    adminClient.from('profiles').select('full_name, is_active').eq('id', user.id).single(),
+    adminClient.from('qr_codes').select('qr_token').eq('user_id', user.id).single(),
+  ]);
 
   if (profile && profile.is_active === false) {
     redirect('/suspended');
   }
 
-  let { data: qrData } = await adminClient
-    .from('qr_codes')
-    .select('qr_token')
-    .eq('user_id', user.id)
-    .single();
+  let qrData = initialQrData;
 
   // Self-healing: si el usuario no tiene QR (por fallos anteriores), se lo creamos en el momento.
   if (!qrData) {

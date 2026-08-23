@@ -17,37 +17,24 @@ export default async function DashboardPage() {
 
   const adminClient = createAdminClient();
 
-  const { data: profile } = await adminClient
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single();
+  // Obtener perfil y estadísticas en PARALELO para máxima velocidad de carga
+  const [
+    { data: profile },
+    { count: totalTransactions },
+    { data: recentTransactions },
+    { data: ratedTransactions }
+  ] = await Promise.all([
+    adminClient.from('profiles').select('*').eq('id', user.id).single(),
+    adminClient.from('discount_transactions').select('*', { count: 'exact', head: true }).eq('scanner_id', user.id),
+    adminClient.from('discount_transactions').select('*, scanned_user:profiles!scanned_user_id(full_name, business_name, role)').eq('scanner_id', user.id).order('applied_at', { ascending: false }).limit(5),
+    adminClient.from('discount_transactions').select('rating').eq('scanner_id', user.id).not('rating', 'is', null).limit(100)
+  ]);
 
   if (!profile) redirect('/auth/login');
-
-  // Obtener estadísticas del comerciante
-  const { count: totalTransactions } = await adminClient
-    .from('discount_transactions')
-    .select('*', { count: 'exact', head: true })
-    .eq('scanner_id', user.id);
-
-  const { data: recentTransactions } = await adminClient
-    .from('discount_transactions')
-    .select('*, scanned_user:profiles!scanned_user_id(full_name, business_name, role)')
-    .eq('scanner_id', user.id)
-    .order('applied_at', { ascending: false })
-    .limit(5);
 
   const today = new Date();
   const dayOfWeek = today.getDay();
   const isDiscountDay = dayOfWeek >= 1 && dayOfWeek <= 4;
-
-  // Calcular promedio de calificaciones
-  const { data: ratedTransactions } = await adminClient
-    .from('discount_transactions')
-    .select('rating')
-    .eq('scanner_id', user.id)
-    .not('rating', 'is', null);
 
   let averageRating = 0;
   let totalRatings = 0;

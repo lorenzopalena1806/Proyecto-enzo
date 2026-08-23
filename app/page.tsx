@@ -12,10 +12,26 @@ export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const adminClient = createAdminClient();
+
+  // Ejecutar verificación de usuario y consultas de estadísticas en PARALELO
+  const [
+    { data: authData },
+    { count: merchantCount },
+    { count: clientCount },
+    { count: txCount },
+    { data: avgData },
+  ] = await Promise.all([
+    supabase.auth.getUser(),
+    adminClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'merchant').eq('is_active', true),
+    adminClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'client'),
+    adminClient.from('discount_transactions').select('*', { count: 'exact', head: true }),
+    adminClient.from('discount_transactions').select('discount_pct').limit(50),
+  ]);
+
+  const user = authData?.user;
 
   if (user) {
-    const adminClient = createAdminClient();
     const { data: profile } = await adminClient
       .from('profiles')
       .select('role')
@@ -26,20 +42,6 @@ export default async function Home() {
     else if (profile?.role === 'merchant') redirect('/dashboard');
     else redirect('/client/qr');
   }
-
-  const adminClient = createAdminClient();
-
-  const [
-    { count: merchantCount },
-    { count: clientCount },
-    { count: txCount },
-    { data: avgData },
-  ] = await Promise.all([
-    adminClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'merchant').eq('is_active', true),
-    adminClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'client'),
-    adminClient.from('discount_transactions').select('*', { count: 'exact', head: true }),
-    adminClient.from('discount_transactions').select('discount_pct'),
-  ]);
 
   const avgDiscount = avgData && avgData.length > 0
     ? Math.round(avgData.reduce((sum: number, t: any) => sum + (t.discount_pct || 0), 0) / avgData.length)
