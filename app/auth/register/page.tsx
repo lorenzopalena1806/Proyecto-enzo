@@ -20,6 +20,7 @@ export default function RegisterPage() {
     businessName: '',
     phone: '',
   });
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -32,6 +33,11 @@ export default function RegisterPage() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (!acceptTerms) {
+      setError('Debés aceptar los términos y condiciones para crear tu cuenta.');
+      return;
+    }
 
     if (formData.password !== formData.confirmPassword) {
       setError('Las contraseñas no coinciden.');
@@ -290,6 +296,29 @@ export default function RegisterPage() {
               onChange={handleChange}
               required
             />
+
+            {/* Términos y Condiciones */}
+            <div className="flex items-start gap-2.5 pt-1 text-left">
+              <input
+                id="accept-terms"
+                type="checkbox"
+                required
+                checked={acceptTerms}
+                onChange={(e) => setAcceptTerms(e.target.checked)}
+                className="mt-0.5 h-4 w-4 rounded border-slate-700 bg-slate-900 text-violet-600 focus:ring-violet-500 accent-violet-600 cursor-pointer"
+              />
+              <label htmlFor="accept-terms" className="text-xs text-slate-400 leading-relaxed cursor-pointer select-none">
+                Acepto los{' '}
+                <Link href="/terms" target="_blank" className="text-violet-400 underline hover:text-violet-300 font-medium">
+                  Términos y Condiciones
+                </Link>{' '}
+                y la{' '}
+                <Link href="/privacy" target="_blank" className="text-violet-400 underline hover:text-violet-300 font-medium">
+                  Política de Privacidad
+                </Link>{' '}
+                de Lazoo.
+              </label>
+            </div>
 
             {/* Error */}
             {error && (
