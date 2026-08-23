@@ -64,7 +64,6 @@ export default async function ClientQRPage() {
     }
   }
 
-  }
 
   // 1. Fetch active offers from active merchants
   const { data: offers } = await adminClient
