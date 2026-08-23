@@ -229,7 +229,7 @@ export default async function ClientQRPage() {
             
             <div className="bg-white p-4 rounded-2xl mx-auto inline-block shadow-lg mb-6 relative z-10">
               <QRCodeSVG 
-                value={qrData.qr_token} 
+                value={encodedQR} 
                 size={200}
                 level="M"
                 includeMargin={false}
