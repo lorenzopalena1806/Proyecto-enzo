@@ -170,7 +170,19 @@ export function Sidebar({ profile }: SidebarProps) {
       </nav>
 
       {/* Logout */}
-      <div className="px-3 pb-4 border-t border-slate-800 pt-4">
+      <div className="px-3 pb-4 border-t border-slate-800 pt-4 space-y-2">
+        <a
+          href="https://wa.me/5493512388658"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-emerald-400 hover:bg-emerald-950/50 hover:border-emerald-800 border border-transparent transition-all duration-200"
+        >
+          <span className="text-xl">💬</span>
+          <div className="flex flex-col text-left leading-tight">
+            <span className="font-medium">Soporte</span>
+            <span className="text-[10px] text-emerald-600/80">Máx 48hs</span>
+          </div>
+        </a>
         <button
           onClick={handleLogout}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-400 hover:text-white hover:bg-red-950/50 hover:border-red-800 border border-transparent transition-all duration-200"

@@ -111,17 +111,20 @@ export default function RegisterPage() {
         <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
           <div className="w-full max-w-md text-center space-y-4">
             <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-900 border border-emerald-700 mb-2">
-              <span className="text-3xl">✅</span>
+              <span className="text-3xl">🎉</span>
             </div>
-            <h2 className="text-xl font-bold text-white">¡Registro exitoso!</h2>
+            <h2 className="text-xl font-bold text-white">¡Gracias por sumarte a Lazoo!</h2>
             <p className="text-slate-400 text-sm">
-              Tu cuenta ha sido creada. Para activarla y configurar tu comercio en la red, serás redirigido a nuestro WhatsApp...
+              Tu cuenta de comerciante fue creada con éxito. Para activar tu local en la red y habilitar tus cobros, serás redirigido a nuestro WhatsApp.
             </p>
+            <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-3 rounded-xl text-sm font-medium mt-2">
+              ⏱️ Tiempo de respuesta: Máximo 48hs
+            </div>
             <a
               href={waLink}
-              className="inline-block mt-4 px-6 py-3 rounded-xl bg-[#25D366] hover:bg-[#20b858] text-white font-bold transition-all w-full shadow-lg shadow-[#25D366]/20"
+              className="inline-block mt-4 px-6 py-3 rounded-xl bg-[#25D366] hover:bg-[#20b858] text-white font-bold transition-all w-full shadow-lg shadow-[#25D366]/20 flex items-center justify-center gap-2"
             >
-              Ir a WhatsApp ahora
+              Hablar con Soporte ahora
             </a>
             <div className="pt-4">
               <Link href="/auth/login" className="text-slate-600 text-sm hover:text-slate-400">
@@ -137,11 +140,11 @@ export default function RegisterPage() {
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
         <div className="w-full max-w-md text-center space-y-4">
           <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-900 border border-emerald-700">
-            <span className="text-3xl">✅</span>
+            <span className="text-3xl">🎉</span>
           </div>
-          <h2 className="text-xl font-bold text-white">¡Registro exitoso!</h2>
+          <h2 className="text-2xl font-bold text-white">¡Bienvenido a Lazoo!</h2>
           <p className="text-slate-400 text-sm">
-            Revisá tu email para confirmar tu cuenta antes de ingresar.
+            Tu cuenta de cliente fue creada exitosamente. Revisá tu bandeja de entrada o spam para confirmar tu correo y empezar a disfrutar de los descuentos.
           </p>
           <Link
             href="/auth/login"

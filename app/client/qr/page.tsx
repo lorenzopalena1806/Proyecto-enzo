@@ -185,7 +185,16 @@ export default async function ClientQRPage() {
           <span className="text-blue-400 font-black text-xl tracking-wide">Lazoo</span>
         </div>
         <div className="flex items-center gap-2 text-slate-300 font-medium">
-          ¡Bienvenido a Lazoo!
+          <a
+            href="https://wa.me/5493512388658"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all mr-2"
+            title="Soporte (Máx 48hs)"
+          >
+            <span className="text-sm">💬</span>
+            Soporte
+          </a>
           <LogoutButton />
         </div>
       </header>
