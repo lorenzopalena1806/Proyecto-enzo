@@ -364,9 +364,9 @@ export default async function Home() {
           </div>
           <p className="text-slate-500 text-sm">© {new Date().getFullYear()} Lazoo. Todos los derechos reservados.</p>
           <div className="flex gap-6 text-sm font-medium text-slate-400">
-            <Link href="/privacy" className="hover:text-cyan-400 transition-colors">Privacidad</Link>
-            <Link href="/terms" className="hover:text-cyan-400 transition-colors">Términos</Link>
-            <a href="https://wa.me/5491100000000" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors">Soporte</a>
+            <Link href="https://lazoo.vercel.app/privacy" className="hover:text-cyan-400 transition-colors">Privacidad</Link>
+            <Link href="https://lazoo.vercel.app/terms" className="hover:text-cyan-400 transition-colors">Términos</Link>
+            <a href="https://wa.me/5493512388658" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors">Soporte</a>
           </div>
         </div>
       </footer>

@@ -307,11 +307,11 @@ export default function RegisterPage() {
               />
               <label htmlFor="accept-terms" className="text-xs text-slate-400 leading-relaxed cursor-pointer select-none">
                 Acepto los{' '}
-                <Link href="/terms" target="_blank" className="text-violet-400 underline hover:text-violet-300 font-medium">
+                <Link href="https://lazoo.vercel.app/terms" target="_blank" className="text-violet-400 underline hover:text-violet-300 font-medium">
                   Términos y Condiciones
                 </Link>{' '}
                 y la{' '}
-                <Link href="/privacy" target="_blank" className="text-violet-400 underline hover:text-violet-300 font-medium">
+                <Link href="https://lazoo.vercel.app/privacy" target="_blank" className="text-violet-400 underline hover:text-violet-300 font-medium">
                   Política de Privacidad
                 </Link>{' '}
                 de Lazoo.
