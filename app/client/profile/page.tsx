@@ -55,11 +55,11 @@ export default async function ClientProfilePage() {
             <p className="text-blue-300/80 text-xs font-bold uppercase tracking-widest mb-3">Tu Código de Cliente</p>
             <p className="text-slate-400 text-sm mb-4">Dictale este código al cajero para acceder a tus descuentos.</p>
             
-            <div className="flex items-center justify-center gap-3 mt-2">
-              <div className="text-5xl font-black text-white tracking-[0.2em] bg-black/40 py-4 px-8 rounded-2xl border border-white/10 shadow-inner font-montserrat">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-2">
+              <div className="text-4xl sm:text-5xl font-black text-white tracking-[0.15em] sm:tracking-[0.2em] bg-black/40 py-3 sm:py-4 px-6 sm:px-8 rounded-2xl border border-white/10 shadow-inner font-montserrat w-full sm:w-auto">
                 {shortCode}
               </div>
-              <CopyCodeButton code={shortCode} className="shrink-0 p-4" />
+              <CopyCodeButton code={shortCode} className="shrink-0 p-4 w-full sm:w-auto flex justify-center" />
             </div>
           </div>
 
