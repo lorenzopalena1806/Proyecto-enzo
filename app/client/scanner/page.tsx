@@ -14,14 +14,13 @@ export default async function ClientScannerPage() {
 
   if (!user) redirect('/auth/login');
 
-  const adminClient = createAdminClient();
-  const { data: profile } = await adminClient
-    .from('profiles')
+  const { data: qrData } = await supabase
+    .from('qr_tokens')
     .select('qr_token')
-    .eq('id', user.id)
+    .eq('user_id', user.id)
     .single();
 
-  const shortCode = profile?.qr_token?.substring(0, 6).toUpperCase() || '------';
+  const shortCode = qrData?.qr_token?.substring(0, 6).toUpperCase() || '------';
 
   return (
     <div className="space-y-6">

@@ -330,9 +330,28 @@ export function ChargeGenerator({ merchantId, activeOffers = [] }: ChargeGenerat
       {/* ── ESTADO: WAITING / PROCESSING ──────────────────────── */}
       {(status === 'waiting' || status === 'processing') && (
         <div className="rounded-2xl border border-violet-700/50 bg-slate-800/80 backdrop-blur-sm p-8 flex flex-col items-center gap-6">
-          <div className="text-center space-y-2">
-            <h3 className="text-2xl font-bold text-white">Mostrá este QR al cliente</h3>
-            <p className="text-slate-400">Total: <span className="font-bold text-white">${parseFloat(amount).toLocaleString('es-AR')}</span></p>
+          <div className="text-center space-y-2 w-full max-w-sm mx-auto">
+            <h3 className="text-2xl font-bold text-white mb-4">Mostrá este QR al cliente</h3>
+            
+            {estimatedDiscountPct > 0 ? (
+              <div className="bg-emerald-950/40 rounded-xl p-4 border border-emerald-900/50 space-y-2 text-left mb-6">
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-slate-400">Precio original:</span>
+                  <span className="text-slate-300 line-through">${numAmount.toLocaleString('es-AR')}</span>
+                </div>
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-emerald-400/80">Descuento ({estimatedDiscountPct}%):</span>
+                  <span className="text-emerald-400 font-medium">-${estimatedDiscountAmount.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
+                </div>
+                <div className="w-full h-px bg-emerald-900/50 my-2"></div>
+                <div className="flex justify-between items-center">
+                  <span className="text-emerald-300 font-bold text-sm">Total a cobrar:</span>
+                  <span className="text-white font-black text-xl">${estimatedFinalPrice.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
+                </div>
+              </div>
+            ) : (
+              <p className="text-slate-400 text-lg mb-6">Total: <span className="font-black text-white text-2xl">${parseFloat(amount).toLocaleString('es-AR')}</span></p>
+            )}
           </div>
 
           <div className="bg-white p-4 rounded-2xl shadow-xl shadow-violet-900/20">
