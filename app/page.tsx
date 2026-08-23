@@ -6,7 +6,6 @@ import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { AnimatedStats } from '@/components/marketing/AnimatedStats';
 import { FeaturesTabs } from '@/components/marketing/FeaturesTabs';
 import { FloatingWhatsApp } from '@/components/marketing/FloatingWhatsApp';
-import { MobileStickyCTA } from '@/components/marketing/MobileStickyCTA';
 import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
@@ -370,7 +369,6 @@ export default async function Home() {
         </div>
       </footer>
       <FloatingWhatsApp />
-      <MobileStickyCTA />
     </div>
   );
 }
