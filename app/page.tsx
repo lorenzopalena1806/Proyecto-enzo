@@ -6,6 +6,7 @@ import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { AnimatedStats } from '@/components/marketing/AnimatedStats';
 import { FeaturesTabs } from '@/components/marketing/FeaturesTabs';
 import { FloatingWhatsApp } from '@/components/marketing/FloatingWhatsApp';
+import { FadeIn } from '@/components/shared/FadeIn';
 import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
@@ -168,25 +169,29 @@ export default async function Home() {
         </section>
 
         {/* ✨ FEATURES ✨ */}
-        <section id="features" className="py-24 relative">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6">
-            <FeaturesTabs />
-          </div>
-        </section>
+        <FadeIn>
+          <section id="features" className="py-24 relative">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6">
+              <FeaturesTabs />
+            </div>
+          </section>
+        </FadeIn>
 
         {/* ✨ PURPOSE ✨ */}
-        <section className="py-24 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#060D1A] via-cyan-900/10 to-[#060D1A]" />
-          <div className="relative mx-auto max-w-4xl px-4 sm:px-6 text-center">
-            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">Nuestro Propósito</h2>
-            <div className="relative p-8 md:p-12 rounded-3xl bg-white/5 border border-cyan-500/20 backdrop-blur-md shadow-2xl">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-full blur-2xl opacity-50" />
-              <p className="text-lg md:text-xl text-slate-300 leading-relaxed font-medium">
-                Creemos que los comercios de barrio son el corazón de la ciudad. Nacimos para darles la misma tecnología que usan las grandes cadenas, pero a un costo accesible. Nuestro objetivo es que <strong className="text-cyan-400 font-bold">los locales vendan más</strong> y <strong className="text-cyan-400 font-bold">los vecinos ahorren todos los días</strong>. Así crecemos todos.
-              </p>
+        <FadeIn>
+          <section className="py-24 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-b from-[#060D1A] via-cyan-900/10 to-[#060D1A]" />
+            <div className="relative mx-auto max-w-4xl px-4 sm:px-6 text-center">
+              <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">Nuestro Propósito</h2>
+              <div className="relative p-8 md:p-12 rounded-3xl bg-white/5 border border-cyan-500/20 backdrop-blur-md shadow-2xl">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-full blur-2xl opacity-50" />
+                <p className="text-lg md:text-xl text-slate-300 leading-relaxed font-medium">
+                  Creemos que los comercios de barrio son el corazón de la ciudad. Nacimos para darles la misma tecnología que usan las grandes cadenas, pero a un costo accesible. Nuestro objetivo es que <strong className="text-cyan-400 font-bold">los locales vendan más</strong> y <strong className="text-cyan-400 font-bold">los vecinos ahorren todos los días</strong>. Así crecemos todos.
+                </p>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </FadeIn>
 
         {/* ✨ HOW IT WORKS ✨ */}
         <section id="how-it-works" className="py-24 relative border-y border-cyan-500/10">
@@ -364,6 +369,7 @@ export default async function Home() {
           </div>
           <p className="text-slate-500 text-sm">© {new Date().getFullYear()} Lazoo. Todos los derechos reservados.</p>
           <div className="flex gap-6 text-sm font-medium text-slate-400">
+            <Link href="/about" className="hover:text-cyan-400 transition-colors">Sobre Nosotros</Link>
             <Link href="https://lazoo.vercel.app/privacy" className="hover:text-cyan-400 transition-colors">Privacidad</Link>
             <Link href="https://lazoo.vercel.app/terms" className="hover:text-cyan-400 transition-colors">Términos</Link>
             <a href="https://wa.me/5493512388658" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors">Soporte</a>

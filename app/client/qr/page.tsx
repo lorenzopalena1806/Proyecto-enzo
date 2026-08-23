@@ -7,6 +7,7 @@ import { LogoutButton } from '@/components/dashboard/LogoutButton';
 import { User, Sparkles, Clock, Scan, ClipboardList } from 'lucide-react';
 import Link from 'next/link';
 import { DiscoverSection } from '@/components/client/DiscoverSection';
+import { ShareButton } from '@/components/shared/ShareButton';
 
 export default async function ClientQRPage() {
   const supabase = await createClient();
@@ -180,6 +181,7 @@ export default async function ClientQRPage() {
           <span className="text-blue-400 font-black text-xl tracking-wide">Lazoo</span>
         </div>
         <div className="flex items-center gap-2 text-slate-300 font-medium">
+          <ShareButton className="text-xs text-blue-400 border border-blue-500/20 bg-blue-500/10 hover:bg-blue-500/20 px-3 py-1.5 rounded-lg font-semibold" />
           <a
             href="https://wa.me/5493512388658"
             target="_blank"

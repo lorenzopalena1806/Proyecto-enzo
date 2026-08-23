@@ -65,6 +65,8 @@ export const metadata: Metadata = {
 
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
+import NextTopLoader from 'nextjs-toploader';
+import { ScrollToTop } from '@/components/shared/ScrollToTop';
 
 export default function RootLayout({
   children,
@@ -74,8 +76,20 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${inter.variable} ${montserrat.variable} h-full`}>
       <body className="min-h-full antialiased font-sans bg-slate-950 text-slate-100">
+        <NextTopLoader
+          color="#06b6d4"
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={false}
+          easing="ease"
+          speed={200}
+          shadow="0 0 10px #06b6d4,0 0 5px #06b6d4"
+        />
         <NetworkStatus />
         {children}
+        <ScrollToTop />
         <InstallPwaPrompt />
         <CookieBanner />
         <SpeedInsights />
