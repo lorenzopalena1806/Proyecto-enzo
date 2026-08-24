@@ -1,7 +1,7 @@
 import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { QrCode, ScanLine, ImageIcon, TrendingUp, ArrowRight, AlertTriangle, Star, ShieldCheck, Briefcase } from 'lucide-react';
+import { QrCode, ScanLine, ImageIcon, TrendingUp, ArrowRight, AlertTriangle, Star, ShieldCheck, Briefcase, Printer } from 'lucide-react';
 import { PushManager } from '@/components/dashboard/PushManager';
 
 export const metadata = {
@@ -108,18 +108,24 @@ export default async function DashboardPage() {
       </div>
 
       {/* Accesos rápidos */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <QuickLink
-          href="/dashboard/qr"
-          title="Mi Código QR"
-          description="Ver y descargar tu QR"
-          Icon={QrCode}
+          href="/dashboard/pos"
+          title="Cobrar (POS)"
+          description="Cargar QR de cobro"
+          Icon={ScanLine}
         />
         <QuickLink
-          href="/dashboard/scanner"
-          title="Escáner (Caja)"
-          description="Cobrar desde acá"
-          Icon={ScanLine}
+          href="/dashboard/print-qr"
+          title="Imprimir QR"
+          description="Cartel para mostrador"
+          Icon={Printer}
+        />
+        <QuickLink
+          href="/dashboard/qr"
+          title="Beneficios B2B"
+          description="Comprar en otros locales"
+          Icon={QrCode}
         />
         <QuickLink
           href="/dashboard/employee"
@@ -128,9 +134,9 @@ export default async function DashboardPage() {
           Icon={ShieldCheck}
         />
         <QuickLink
-          href="/dashboard/b2b"
-          title="Beneficios B2B"
-          description="Ofertas exclusivas para vos"
+          href="/dashboard/offers"
+          title="Mis Ofertas"
+          description="Crear y editar promos"
           Icon={Briefcase}
         />
       </div>

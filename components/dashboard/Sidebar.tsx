@@ -22,6 +22,7 @@ import {
   Megaphone,
   Calculator,
   Filter,
+  Printer,
 } from 'lucide-react';
 import type { Profile } from '@/types';
 
@@ -40,6 +41,12 @@ const MERCHANT_NAV_ITEMS = [
     href: '/dashboard/pos',
     label: 'Cobrar con QR (POS)',
     icon: ScanLine,
+    exact: false,
+  },
+  {
+    href: '/dashboard/print-qr',
+    label: 'Imprimir Cartel QR',
+    icon: Printer,
     exact: false,
   },
   {

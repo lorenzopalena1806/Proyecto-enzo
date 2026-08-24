@@ -4,9 +4,10 @@ import { useState, useEffect, useRef } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { createClient } from '@/lib/supabase';
 import { createPendingCharge, cancelPendingCharge, completePendingChargeWithCode } from '@/app/actions/pending-charges';
+import Link from 'next/link';
 import {
   Store, BellRing, Banknote, ArrowLeftRight,
-  Loader2, QrCode, X, Tag, DollarSign, CheckCircle2, Clock, Sparkles
+  Loader2, QrCode, X, Tag, DollarSign, CheckCircle2, Clock, Sparkles, Printer
 } from 'lucide-react';
 import { UndoChargeButton } from '@/components/dashboard/UndoChargeButton';
 import { getLastTransactionServer } from '@/app/actions/charge';
@@ -459,6 +460,20 @@ export function POSView({
               <div className="flex items-center gap-2 mt-5 text-slate-500 text-xs font-semibold uppercase tracking-wider bg-black/20 px-4 py-2 rounded-full border border-white/5">
                 <Clock className="w-3.5 h-3.5" />
                 Esperando monto...
+              </div>
+
+              {/* Botón para imprimir cartel físico para el mostrador */}
+              <div className="mt-6 pt-5 border-t border-white/10 w-full flex flex-col items-center">
+                <Link
+                  href="/dashboard/print-qr"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-cyan-500/10 border border-cyan-500/30 hover:border-cyan-400 text-cyan-300 hover:text-cyan-200 text-xs font-bold transition-all hover:scale-105"
+                >
+                  <Printer className="w-4 h-4 text-cyan-400" />
+                  Imprimir Cartel QR de Mostrador
+                </Link>
+                <p className="text-[11px] text-slate-500 mt-2 text-center">
+                  Descargá o imprimí el QR oficial de tu local en alta calidad
+                </p>
               </div>
             </>
           )}
