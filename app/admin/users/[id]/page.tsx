@@ -7,9 +7,10 @@ import { SuspendUserButton } from '@/components/admin/SuspendUserButton';
 
 export const dynamic = 'force-dynamic';
 
-export default async function AdminUserDetailsPage({ params }: { params: { id: string } }) {
+export default async function AdminUserDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const adminClient = createAdminClient();
-  const userId = params.id;
+  const resolvedParams = await params;
+  const userId = resolvedParams.id;
 
   // 1. Fetch Profile
   const { data: profile, error: profileError } = await adminClient
