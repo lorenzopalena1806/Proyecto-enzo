@@ -352,8 +352,20 @@ export function POSView({
                 </span>
               </div>
 
-              <div className="bg-white p-5 rounded-3xl shadow-[0_0_40px_rgba(59,130,246,0.3)] border-4 border-blue-500/50 transition-all transform hover:scale-105 duration-300">
-                <QRCodeSVG value={qrUrl} size={220} level="H" includeMargin={false} />
+              <div className="bg-[#0F172A] p-5 rounded-3xl shadow-[0_0_40px_rgba(6,182,212,0.3)] border-4 border-cyan-500/50 transition-all transform hover:scale-105 duration-300 relative">
+                <QRCodeSVG
+                  value={qrUrl}
+                  size={220}
+                  level="H"
+                  includeMargin={false}
+                  bgColor="#0F172A"
+                  fgColor="#38bdf8"
+                />
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="bg-[#0F172A] px-2 py-1 rounded-xl shadow-lg border-2 border-cyan-400">
+                    <img src="/logo.png" alt="Lazoo" className="h-5 w-auto object-contain" />
+                  </div>
+                </div>
               </div>
 
               {/* Resumen del cobro activo */}
@@ -454,8 +466,19 @@ export function POSView({
               <p className="text-slate-400 text-sm mt-2 mb-6 text-center max-w-[250px]">
                 Prepará el cobro abajo para activar el código QR.
               </p>
-              <div className="bg-white/90 p-5 rounded-3xl shadow-xl opacity-50 grayscale-[50%] transition-all">
-                <QRCodeSVG value={qrUrl} size={180} level="M" />
+              <div className="bg-[#0F172A] p-5 rounded-3xl shadow-xl opacity-60 border border-cyan-500/20 transition-all relative">
+                <QRCodeSVG
+                  value={qrUrl}
+                  size={180}
+                  level="M"
+                  bgColor="#0F172A"
+                  fgColor="#38bdf8"
+                />
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="bg-[#0F172A] px-2 py-1 rounded-xl shadow-lg border border-cyan-500/40">
+                    <img src="/logo.png" alt="Lazoo" className="h-4 w-auto object-contain opacity-75" />
+                  </div>
+                </div>
               </div>
               <div className="flex items-center gap-2 mt-5 text-slate-500 text-xs font-semibold uppercase tracking-wider bg-black/20 px-4 py-2 rounded-full border border-white/5">
                 <Clock className="w-3.5 h-3.5" />

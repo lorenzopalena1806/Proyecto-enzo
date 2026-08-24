@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { Printer, ArrowLeft, Download, Sparkles, CheckCircle2, QrCode } from 'lucide-react';
+import { Printer, ArrowLeft, Download, Sparkles, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 
 interface PrintQRCardProps {
@@ -22,7 +22,6 @@ export function PrintQRCard({
   };
 
   const handleDownloadPNG = () => {
-    // Buscar específicamente el SVG del código QR con su clase identificadora
     const svgElement = qrContainerRef.current?.querySelector('svg.main-qr-svg') as SVGElement | null;
     if (!svgElement) return;
 
@@ -35,47 +34,53 @@ export function PrintQRCard({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Fondo blanco puro
-    ctx.fillStyle = '#ffffff';
+    // 1. Fondo #0F172A
+    ctx.fillStyle = '#0F172A';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const img = new Image();
-    img.onload = () => {
-      // Dibujar QR centrado
-      ctx.drawImage(img, padding, padding, qrSize, qrSize);
+    const qrImg = new Image();
+    qrImg.onload = () => {
+      // 2. Dibujar código QR
+      ctx.drawImage(qrImg, padding, padding, qrSize, qrSize);
 
-      // Dibujar caja central con logo de Lazoo
-      const centerBoxSize = 160;
-      const centerBoxX = (canvas.width - centerBoxSize) / 2;
-      const centerBoxY = (canvas.height - centerBoxSize) / 2;
-      const radius = 30;
+      // 3. Cargar y dibujar el logo oficial de Lazoo en el centro
+      const logoImg = new Image();
+      logoImg.onload = () => {
+        const logoWidth = 320;
+        const logoHeight = (logoImg.height / logoImg.width) * logoWidth;
+        const logoX = (canvas.width - logoWidth) / 2;
+        const logoY = (canvas.height - logoHeight) / 2;
+        const boxPadding = 20;
 
-      ctx.save();
-      ctx.fillStyle = '#090D16';
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 10;
+        // Fondo oscuro con borde cyan para que el logo destaque sobre el QR
+        ctx.save();
+        ctx.fillStyle = '#0F172A';
+        ctx.strokeStyle = '#22d3ee'; // cyan-400
+        ctx.lineWidth = 8;
+        ctx.beginPath();
+        ctx.roundRect(
+          logoX - boxPadding,
+          logoY - boxPadding,
+          logoWidth + boxPadding * 2,
+          logoHeight + boxPadding * 2,
+          24
+        );
+        ctx.fill();
+        ctx.stroke();
 
-      // Rectángulo redondeado
-      ctx.beginPath();
-      ctx.roundRect(centerBoxX, centerBoxY, centerBoxSize, centerBoxSize, radius);
-      ctx.fill();
-      ctx.stroke();
+        // Dibujar el logo oficial
+        ctx.drawImage(logoImg, logoX, logoY, logoWidth, logoHeight);
+        ctx.restore();
 
-      // Texto Lazoo en el centro del QR
-      ctx.fillStyle = '#22d3ee'; // cyan-400
-      ctx.font = 'bold 36px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('LAZOO', canvas.width / 2, canvas.height / 2);
-      ctx.restore();
-
-      // Disparar descarga
-      const link = document.createElement('a');
-      link.download = `QR-Lazoo-${businessName.replace(/\s+/g, '-').toLowerCase()}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
+        // Disparar la descarga
+        const link = document.createElement('a');
+        link.download = `QR-Lazoo-${businessName.replace(/\s+/g, '-').toLowerCase()}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      };
+      logoImg.src = '/logo.png';
     };
-    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
+    qrImg.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
   };
 
   return (
@@ -111,66 +116,67 @@ export function PrintQRCard({
       {/* Cartel para Mostrador */}
       <div className="flex justify-center p-2 sm:p-6 print:p-0">
         <div
-          className="w-full max-w-md bg-white text-slate-900 rounded-[2rem] p-8 sm:p-10 shadow-2xl border-4 border-cyan-500/30 flex flex-col items-center text-center relative overflow-hidden print:border-none print:shadow-none print:max-w-full print:w-[90mm] print:mx-auto print:p-4"
+          className="w-full max-w-md bg-[#0F172A] text-slate-100 rounded-[2.5rem] p-8 sm:p-10 shadow-2xl border-4 border-cyan-500/40 flex flex-col items-center text-center relative overflow-hidden print:border-none print:shadow-none print:max-w-full print:w-[95mm] print:mx-auto print:p-4"
         >
           {/* Header del Cartel */}
-          <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-50 border border-cyan-200 text-xs font-black text-cyan-800 uppercase tracking-widest mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-600" />
+          <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-xs font-black text-cyan-300 uppercase tracking-widest mb-5">
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
             Comercio Adherido
           </div>
 
-          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 uppercase mb-1">
-            Lazoo
-          </h1>
-          <p className="text-xs font-semibold text-cyan-700 uppercase tracking-wider mb-6">
+          <div className="flex justify-center items-center mb-1">
+            <img src="/logo.png" alt="Lazoo" className="h-10 w-auto object-contain" />
+          </div>
+          
+          <p className="text-xs font-semibold text-cyan-400 uppercase tracking-wider mb-6">
             Red de Descuentos & Beneficios
           </p>
 
-          <div className="w-full h-px bg-slate-100 mb-6" />
+          <div className="w-full h-px bg-slate-800 mb-6" />
 
-          <p className="text-sm font-bold text-slate-600 mb-1">Escaneá con tu celular en</p>
-          <h2 className="text-2xl font-extrabold text-slate-900 mb-6">{businessName}</h2>
+          <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Escaneá con tu celular en</p>
+          <h2 className="text-2xl font-black text-white mb-6">{businessName}</h2>
 
-          {/* QR Container con marco y referencia directa */}
+          {/* QR Container con fondo #0F172A */}
           <div
             ref={qrContainerRef}
-            className="p-5 rounded-3xl bg-white border-2 border-slate-900/10 shadow-lg relative mb-6"
+            className="p-5 rounded-3xl bg-[#0F172A] border-2 border-cyan-500/30 shadow-[0_0_30px_rgba(6,182,212,0.15)] relative mb-6"
           >
             <QRCodeSVG
               value={qrUrl}
               size={240}
               level="H"
               includeMargin={false}
-              fgColor="#090D16"
-              bgColor="#ffffff"
+              fgColor="#38bdf8"
+              bgColor="#0F172A"
               className="main-qr-svg"
             />
-            {/* Logo de Lazoo en el centro del cartel */}
+            {/* Logo oficial de Lazoo en el centro del QR */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="h-12 w-12 rounded-xl bg-slate-950 text-cyan-400 flex items-center justify-center shadow-md border-2 border-white">
-                <QrCode className="h-6 w-6" />
+              <div className="bg-[#0F172A] p-2 rounded-2xl shadow-xl border-2 border-cyan-400 flex items-center justify-center">
+                <img src="/logo.png" alt="Lazoo" className="h-6 w-auto object-contain" />
               </div>
             </div>
           </div>
 
           {/* Instrucciones paso a paso */}
-          <div className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-left space-y-2 mb-6">
-            <div className="flex items-center gap-2.5 text-xs font-bold text-slate-800">
-              <CheckCircle2 className="w-4 h-4 text-cyan-600 flex-shrink-0" />
+          <div className="w-full bg-slate-900/90 border border-slate-800 rounded-2xl p-4 text-left space-y-2.5 mb-6">
+            <div className="flex items-center gap-2.5 text-xs font-bold text-slate-200">
+              <CheckCircle2 className="w-4 h-4 text-cyan-400 flex-shrink-0" />
               <span>1. Abrí la cámara o app Lazoo</span>
             </div>
-            <div className="flex items-center gap-2.5 text-xs font-bold text-slate-800">
-              <CheckCircle2 className="w-4 h-4 text-cyan-600 flex-shrink-0" />
+            <div className="flex items-center gap-2.5 text-xs font-bold text-slate-200">
+              <CheckCircle2 className="w-4 h-4 text-cyan-400 flex-shrink-0" />
               <span>2. Escaneá este código QR</span>
             </div>
-            <div className="flex items-center gap-2.5 text-xs font-bold text-slate-800">
-              <CheckCircle2 className="w-4 h-4 text-cyan-600 flex-shrink-0" />
+            <div className="flex items-center gap-2.5 text-xs font-bold text-slate-200">
+              <CheckCircle2 className="w-4 h-4 text-cyan-400 flex-shrink-0" />
               <span>3. Obtené tu descuento en el acto</span>
             </div>
           </div>
 
           {/* Footer del cartel */}
-          <p className="text-[11px] font-semibold text-slate-400">
+          <p className="text-[11px] font-semibold text-slate-500">
             Powered by Lazoo • lazoo.app
           </p>
         </div>
