@@ -57,6 +57,7 @@ export default async function AdminUsersPage() {
                 <th className="px-6 py-4 font-medium">Negocio / Detalles</th>
                 <th className="px-6 py-4 font-medium text-right">Fecha de Registro</th>
                 <th className="px-6 py-4 font-medium text-right">Estado</th>
+                <th className="px-6 py-4 font-medium text-right">Acciones</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/50">
@@ -109,6 +110,11 @@ export default async function AdminUsersPage() {
                   </td>
                   <td className="px-6 py-4 text-right">
                     <SuspendUserButton userId={user.id} isActive={user.is_active} role={user.role} />
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <a href={`/admin/users/${user.id}`} className="text-blue-400 hover:text-blue-300 text-xs font-semibold px-3 py-1.5 bg-blue-500/10 rounded-lg transition-colors inline-block">
+                      Ver Detalles
+                    </a>
                   </td>
                 </tr>
               ))}
