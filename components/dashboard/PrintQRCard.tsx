@@ -15,36 +15,67 @@ export function PrintQRCard({
   businessName,
   qrUrl,
 }: PrintQRCardProps) {
-  const printAreaRef = useRef<HTMLDivElement>(null);
+  const qrContainerRef = useRef<HTMLDivElement>(null);
 
   const handlePrint = () => {
     window.print();
   };
 
   const handleDownloadPNG = () => {
-    const svgElement = printAreaRef.current?.querySelector('svg');
+    // Buscar específicamente el SVG del código QR con su clase identificadora
+    const svgElement = qrContainerRef.current?.querySelector('svg.main-qr-svg') as SVGElement | null;
     if (!svgElement) return;
 
     const svgData = new XMLSerializer().serializeToString(svgElement);
     const canvas = document.createElement('canvas');
-    const size = 600;
-    canvas.width = size;
-    canvas.height = size;
+    const qrSize = 1000;
+    const padding = 100;
+    canvas.width = qrSize + padding * 2;
+    canvas.height = qrSize + padding * 2;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // Fondo blanco puro
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     const img = new Image();
     img.onload = () => {
-      ctx.drawImage(img, 40, 40, size - 80, size - 80);
+      // Dibujar QR centrado
+      ctx.drawImage(img, padding, padding, qrSize, qrSize);
+
+      // Dibujar caja central con logo de Lazoo
+      const centerBoxSize = 160;
+      const centerBoxX = (canvas.width - centerBoxSize) / 2;
+      const centerBoxY = (canvas.height - centerBoxSize) / 2;
+      const radius = 30;
+
+      ctx.save();
+      ctx.fillStyle = '#090D16';
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 10;
+
+      // Rectángulo redondeado
+      ctx.beginPath();
+      ctx.roundRect(centerBoxX, centerBoxY, centerBoxSize, centerBoxSize, radius);
+      ctx.fill();
+      ctx.stroke();
+
+      // Texto Lazoo en el centro del QR
+      ctx.fillStyle = '#22d3ee'; // cyan-400
+      ctx.font = 'bold 36px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('LAZOO', canvas.width / 2, canvas.height / 2);
+      ctx.restore();
+
+      // Disparar descarga
       const link = document.createElement('a');
       link.download = `QR-Lazoo-${businessName.replace(/\s+/g, '-').toLowerCase()}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
     };
-    img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
+    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
   };
 
   return (
@@ -62,14 +93,14 @@ export function PrintQRCard({
         <div className="flex items-center gap-3">
           <button
             onClick={handleDownloadPNG}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-semibold transition-all border border-slate-700"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-semibold transition-all border border-slate-700 cursor-pointer"
           >
             <Download className="w-4 h-4" />
-            Descargar Imagen
+            Descargar Imagen QR
           </button>
           <button
             onClick={handlePrint}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-sm font-bold shadow-lg shadow-cyan-900/30 transition-all hover:scale-105 active:scale-95"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-sm font-bold shadow-lg shadow-cyan-900/30 transition-all hover:scale-105 active:scale-95 cursor-pointer"
           >
             <Printer className="w-4 h-4" />
             Imprimir Cartel
@@ -80,7 +111,6 @@ export function PrintQRCard({
       {/* Cartel para Mostrador */}
       <div className="flex justify-center p-2 sm:p-6 print:p-0">
         <div
-          ref={printAreaRef}
           className="w-full max-w-md bg-white text-slate-900 rounded-[2rem] p-8 sm:p-10 shadow-2xl border-4 border-cyan-500/30 flex flex-col items-center text-center relative overflow-hidden print:border-none print:shadow-none print:max-w-full print:w-[90mm] print:mx-auto print:p-4"
         >
           {/* Header del Cartel */}
@@ -101,8 +131,11 @@ export function PrintQRCard({
           <p className="text-sm font-bold text-slate-600 mb-1">Escaneá con tu celular en</p>
           <h2 className="text-2xl font-extrabold text-slate-900 mb-6">{businessName}</h2>
 
-          {/* QR Container con marco */}
-          <div className="p-5 rounded-3xl bg-white border-2 border-slate-900/10 shadow-lg relative mb-6">
+          {/* QR Container con marco y referencia directa */}
+          <div
+            ref={qrContainerRef}
+            className="p-5 rounded-3xl bg-white border-2 border-slate-900/10 shadow-lg relative mb-6"
+          >
             <QRCodeSVG
               value={qrUrl}
               size={240}
@@ -110,8 +143,9 @@ export function PrintQRCard({
               includeMargin={false}
               fgColor="#090D16"
               bgColor="#ffffff"
+              className="main-qr-svg"
             />
-            {/* Logo de Lazoo en el centro */}
+            {/* Logo de Lazoo en el centro del cartel */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <div className="h-12 w-12 rounded-xl bg-slate-950 text-cyan-400 flex items-center justify-center shadow-md border-2 border-white">
                 <QrCode className="h-6 w-6" />

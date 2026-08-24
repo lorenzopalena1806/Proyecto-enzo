@@ -21,7 +21,7 @@ export function QRDisplay({
 
   // ── Descargar el QR como imagen PNG ──────────────────────
   const handleDownload = useCallback(() => {
-    const svgElement = qrContainerRef.current?.querySelector('svg');
+    const svgElement = qrContainerRef.current?.querySelector('svg.main-qr-svg') as SVGElement | null;
     if (!svgElement) return;
 
     // Serializar SVG a canvas para exportar como PNG
@@ -46,7 +46,7 @@ export function QRDisplay({
       link.href = canvas.toDataURL('image/png');
       link.click();
     };
-    img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
+    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
   }, [size, businessName, userName]);
 
   // ── Compartir via Web Share API (mobile) ─────────────────
@@ -56,7 +56,7 @@ export function QRDisplay({
       return;
     }
 
-    const svgElement = qrContainerRef.current?.querySelector('svg');
+    const svgElement = qrContainerRef.current?.querySelector('svg.main-qr-svg') as SVGElement | null;
     if (!svgElement) return;
 
     try {
@@ -129,6 +129,7 @@ export function QRDisplay({
             includeMargin={false}
             bgColor="#ffffff"
             fgColor="#0f172a"
+            className="main-qr-svg"
           />
           {/* Logo overlay en el centro */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
