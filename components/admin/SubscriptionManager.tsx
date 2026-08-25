@@ -28,7 +28,7 @@ export function SubscriptionManager({ userId, expiresAt }: SubscriptionManagerPr
         setSuccess(true);
         setTimeout(() => setSuccess(false), 3000);
       } else {
-        setError(res.error || 'Error al guardar la fecha');
+        setError(res.error?.message || 'Error al guardar la fecha');
       }
     } catch (err: any) {
       setError(err.message || 'Ocurrió un error');
