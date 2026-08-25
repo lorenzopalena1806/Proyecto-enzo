@@ -72,7 +72,7 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
   const [isExtractingMaps, setIsExtractingMaps] = useState(false);
   const [mapExtractMessage, setMapExtractMessage] = useState({ type: '', text: '' });
 
-  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     if (name === 'category') {
       if (value === 'Otro') {
@@ -260,16 +260,16 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
             <div className="space-y-1.5">
               <label className="block text-sm font-medium text-slate-300">Horarios de Atención</label>
               <div className="relative">
-                <input
+                <textarea
                   name="business_hours"
-                  type="text"
                   value={formData.business_hours}
                   onChange={handleProfileChange}
-                  placeholder="Ej: Lunes a Viernes de 09:00 a 20:00"
-                  className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
+                  placeholder="Ej: Lunes a Viernes de 09:00 a 13:00 y 17:00 a 21:00&#10;Sábados de 10:00 a 14:00"
+                  rows={3}
+                  className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all resize-none"
                 />
               </div>
-              <p className="text-xs text-slate-500">Los clientes verán este horario en tu perfil.</p>
+              <p className="text-xs text-slate-500">Podés usar Enter para escribir en varios renglones (ej. mañana y tarde).</p>
             </div>
 
             <div className="space-y-1.5">

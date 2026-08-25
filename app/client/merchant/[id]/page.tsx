@@ -125,8 +125,9 @@ export default async function MerchantProfilePage({ params }: { params: Promise<
               <Star className="w-3.5 h-3.5 fill-current" /> 5.0 Excelente
             </div>
             {merchant.business_hours && (
-              <div className="flex items-center gap-1 bg-white/5 text-slate-300 px-3 py-1.5 rounded-full text-xs font-medium border border-white/10">
-                <Clock className="w-3.5 h-3.5" /> {merchant.business_hours}
+              <div className="flex items-start gap-1.5 bg-white/5 text-slate-300 px-3 py-2 rounded-xl text-xs font-medium border border-white/10">
+                <Clock className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" /> 
+                <span className="whitespace-pre-wrap leading-relaxed">{merchant.business_hours}</span>
               </div>
             )}
             {!merchant.business_hours && (
