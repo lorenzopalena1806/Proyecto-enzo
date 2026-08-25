@@ -19,6 +19,7 @@ export interface Profile {
   longitude: number | null;
   address: string | null;
   business_hours: string | null;
+  subscription_expires_at: string | null;
   is_active: boolean;
   created_at: string;
 }

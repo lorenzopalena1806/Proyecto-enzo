@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { Store, User, ArrowLeft, CheckCircle2, XCircle, Tag, Calendar, MapPin, Search } from 'lucide-react';
 import Link from 'next/link';
 import { SuspendUserButton } from '@/components/admin/SuspendUserButton';
+import { SubscriptionManager } from '@/components/admin/SubscriptionManager';
 
 export const dynamic = 'force-dynamic';
 
@@ -158,6 +159,9 @@ export default async function AdminUserDetailsPage({ params }: { params: Promise
       {/* MERCHANT SPECIFIC VIEW */}
       {profile.role === 'merchant' && (
         <div className="space-y-8">
+          
+          <SubscriptionManager userId={profile.id} expiresAt={profile.subscription_expires_at} />
+
           {/* Active Offers */}
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-white mt-8">Promociones del Comercio</h2>
