@@ -61,7 +61,7 @@ export default async function DashboardPage() {
 
       {/* Alerta de día */}
       <div className={`
-        flex items-center gap-3 rounded-xl p-4 border
+        flex items-center gap-3 rounded-xl p-4 border mb-4
         ${isDiscountDay
           ? 'bg-emerald-950/40 border-emerald-800 text-emerald-300'
           : 'bg-amber-950/40 border-amber-800 text-amber-300'
@@ -75,6 +75,34 @@ export default async function DashboardPage() {
         </p>
       </div>
 
+      {/* Alerta de Suscripción */}
+      {(() => {
+        if (!profile.subscription_expires_at) return null;
+        const expires = new Date(profile.subscription_expires_at);
+        const diffDays = Math.ceil((expires.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+        
+        if (diffDays <= 0) {
+          return (
+            <div className="flex items-center gap-3 rounded-xl p-4 border bg-red-950/40 border-red-800 text-red-300">
+              <AlertTriangle className="h-5 w-5 flex-shrink-0 text-red-400" />
+              <p className="text-sm font-medium">
+                ❌ Tu suscripción está VENCIDA. Por favor, comunícate con soporte para renovarla.
+              </p>
+            </div>
+          );
+        } else if (diffDays <= 5) {
+          return (
+            <div className="flex items-center gap-3 rounded-xl p-4 border bg-amber-950/40 border-amber-800 text-amber-300">
+              <AlertTriangle className="h-5 w-5 flex-shrink-0 text-amber-400" />
+              <p className="text-sm font-medium">
+                ⚠️ Tu suscripción vence en {diffDays} {diffDays === 1 ? 'día' : 'días'}.
+              </p>
+            </div>
+          );
+        }
+        return null;
+      })()}
+
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 relative z-10">
         <StatCard
@@ -85,9 +113,17 @@ export default async function DashboardPage() {
         />
         <StatCard
           label="Suscripción"
-          value="Activa"
+          value={
+            !profile.subscription_expires_at 
+              ? 'Demo'
+              : (new Date(profile.subscription_expires_at) < today ? 'Vencida' : 'Activa')
+          }
           Icon={TrendingUp}
-          color="emerald"
+          color={
+            !profile.subscription_expires_at 
+              ? 'blue'
+              : (new Date(profile.subscription_expires_at) < today ? 'red' : 'emerald')
+          }
         />
         <div className="glass-panel rounded-2xl p-4 flex flex-col justify-between border-amber-500/20 shadow-[0_0_15px_-3px_rgba(245,158,11,0.1)] relative overflow-hidden group">
           <div className="absolute inset-0 bg-amber-500/5 group-hover:bg-amber-500/10 transition-colors" />
