@@ -248,13 +248,14 @@ function StatCard({
   label: string;
   value: string;
   Icon: React.ElementType;
-  color: 'violet' | 'blue' | 'emerald';
+  color: 'violet' | 'blue' | 'emerald' | 'red';
   className?: string;
 }) {
   const colors = {
     violet: 'bg-violet-500/5 group-hover:bg-violet-500/10 border-violet-500/20 text-violet-400 icon-violet',
     blue: 'bg-blue-500/5 group-hover:bg-blue-500/10 border-blue-500/20 text-blue-400 icon-blue',
     emerald: 'bg-emerald-500/5 group-hover:bg-emerald-500/10 border-emerald-500/20 text-emerald-400 icon-emerald',
+    red: 'bg-red-500/5 group-hover:bg-red-500/10 border-red-500/20 text-red-400 icon-red',
   };
 
   const getIconColor = (color: string) => {
@@ -262,6 +263,7 @@ function StatCard({
       case 'violet': return 'text-violet-300 bg-violet-500/20 border-violet-500/30';
       case 'blue': return 'text-blue-300 bg-blue-500/20 border-blue-500/30';
       case 'emerald': return 'text-emerald-300 bg-emerald-500/20 border-emerald-500/30';
+      case 'red': return 'text-red-300 bg-red-500/20 border-red-500/30';
       default: return 'text-slate-300 bg-slate-500/20 border-slate-500/30';
     }
   };
@@ -269,7 +271,7 @@ function StatCard({
   return (
     <div className={`glass-panel rounded-2xl p-4 flex flex-col justify-between shadow-[0_0_15px_-3px_rgba(0,0,0,0.1)] relative overflow-hidden group ${colors[color]} ${className}`}>
       <div className="relative z-10 flex items-center justify-between mb-2">
-        <p className={`text-xs font-semibold uppercase tracking-wider ${color === 'violet' ? 'text-violet-400' : color === 'blue' ? 'text-blue-400' : 'text-emerald-400'}`}>
+        <p className={`text-xs font-semibold uppercase tracking-wider ${color === 'violet' ? 'text-violet-400' : color === 'blue' ? 'text-blue-400' : color === 'red' ? 'text-red-400' : 'text-emerald-400'}`}>
           {label}
         </p>
         <div className={`p-1.5 rounded-lg border ${getIconColor(color)}`}>
