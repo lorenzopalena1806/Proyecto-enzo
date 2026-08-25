@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { User, Store, Phone, Mail, KeyRound, Loader2, CheckCircle2, Tag, MapPin } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { BusinessHoursEditor } from './BusinessHoursEditor';
 
 const LocationPicker = dynamic(() => import('./LocationPicker'), {
   ssr: false,
@@ -259,17 +260,11 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
 
             <div className="space-y-1.5">
               <label className="block text-sm font-medium text-slate-300">Horarios de Atención</label>
-              <div className="relative">
-                <textarea
-                  name="business_hours"
-                  value={formData.business_hours}
-                  onChange={handleProfileChange}
-                  placeholder="Ej: Lunes a Viernes de 09:00 a 13:00 y 17:00 a 21:00&#10;Sábados de 10:00 a 14:00"
-                  rows={3}
-                  className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all resize-none"
-                />
-              </div>
-              <p className="text-xs text-slate-500">Podés usar Enter para escribir en varios renglones (ej. mañana y tarde).</p>
+              <BusinessHoursEditor
+                value={formData.business_hours}
+                onChange={(val) => setFormData(prev => ({ ...prev, business_hours: val }))}
+              />
+              <p className="text-xs text-slate-500 mt-2">Este horario aparecerá estructurado en tu perfil para los clientes.</p>
             </div>
 
             <div className="space-y-1.5">

@@ -34,6 +34,13 @@ export default async function MerchantProfilePage({ params }: { params: Promise<
 
   const activeOffers = offers || [];
 
+  let hoursData = null;
+  if (merchant.business_hours && merchant.business_hours.startsWith('{')) {
+    try {
+      hoursData = JSON.parse(merchant.business_hours);
+    } catch (e) {}
+  }
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
@@ -124,13 +131,38 @@ export default async function MerchantProfilePage({ params }: { params: Promise<
             <div className="flex items-center gap-1 bg-amber-500/10 text-amber-400 px-3 py-1.5 rounded-full text-xs font-bold border border-amber-500/20">
               <Star className="w-3.5 h-3.5 fill-current" /> 5.0 Excelente
             </div>
-            {merchant.business_hours && (
+            
+            {hoursData ? (
+              <div className="bg-white/5 text-slate-300 px-4 py-3 rounded-xl text-xs font-medium border border-white/10 w-full sm:w-auto min-w-[250px] mt-2">
+                <div className="flex items-center gap-1.5 mb-2 text-white">
+                  <Clock className="w-4 h-4" /> <span className="font-bold">Horarios de Atención</span>
+                </div>
+                <div className="space-y-1.5">
+                  {['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'].map(day => {
+                    const d = hoursData[day];
+                    if (!d) return null;
+                    return (
+                      <div key={day} className="flex justify-between border-b border-white/5 last:border-0 pb-1.5 last:pb-0">
+                        <span className="text-slate-400 w-20">{day}</span>
+                        {d.isOpen ? (
+                          <span className="text-slate-200">
+                            {d.shift1Start}-{d.shift1End} 
+                            {(d.shift2Start && d.shift2End && d.shift2Start !== d.shift2End) ? ` / ${d.shift2Start}-${d.shift2End}` : ''}
+                          </span>
+                        ) : (
+                          <span className="text-slate-500 italic">Cerrado</span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : merchant.business_hours ? (
               <div className="flex items-start gap-1.5 bg-white/5 text-slate-300 px-3 py-2 rounded-xl text-xs font-medium border border-white/10">
                 <Clock className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" /> 
                 <span className="whitespace-pre-wrap leading-relaxed">{merchant.business_hours}</span>
               </div>
-            )}
-            {!merchant.business_hours && (
+            ) : (
               <div className="flex items-center gap-1 bg-white/5 text-slate-300 px-3 py-1.5 rounded-full text-xs font-medium border border-white/10">
                 <Clock className="w-3.5 h-3.5" /> Abierto ahora
               </div>
