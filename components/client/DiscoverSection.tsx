@@ -170,7 +170,7 @@ export function DiscoverSection({
                             newFavs.add(merchant.id);
                           }
                           setFavorites(newFavs);
-                          await toggleFavoriteServer(merchant.id);
+                          await toggleFavoriteServer(merchant.id, favorites.has(merchant.id));
                         }}
                         className="absolute right-0 top-0 p-1 -mt-1 -mr-1"
                       >
