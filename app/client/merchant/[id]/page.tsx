@@ -34,10 +34,63 @@ export default async function MerchantProfilePage({ params }: { params: Promise<
 
   const activeOffers = offers || [];
 
-  let hoursData = null;
+  let hoursData: any = null;
+  let groupedHours: Array<{ label: string, timeStr: string, isOpen: boolean }> = [];
+  
   if (merchant.business_hours && merchant.business_hours.startsWith('{')) {
     try {
       hoursData = JSON.parse(merchant.business_hours);
+      
+      const DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+      const groups = [];
+      let currentGroup: any = null;
+
+      for (let i = 0; i < DAYS.length; i++) {
+        const day = DAYS[i];
+        const d = hoursData[day];
+        if (!d) continue;
+
+        let timeStr = 'Cerrado';
+        if (d.isOpen) {
+          timeStr = `${d.shift1Start} a ${d.shift1End}`;
+          if (d.shift2Start && d.shift2End && d.shift2Start !== d.shift2End) {
+            timeStr += ` y ${d.shift2Start} a ${d.shift2End}`;
+          }
+        }
+
+        if (!currentGroup) {
+          currentGroup = { startDay: day, endDay: day, timeStr, isOpen: d.isOpen };
+        } else {
+          if (currentGroup.timeStr === timeStr) {
+            currentGroup.endDay = day;
+          } else {
+            groups.push(currentGroup);
+            currentGroup = { startDay: day, endDay: day, timeStr, isOpen: d.isOpen };
+          }
+        }
+      }
+      if (currentGroup) {
+        groups.push(currentGroup);
+      }
+
+      groupedHours = groups.map(g => {
+        let dayLabel = g.startDay;
+        if (g.startDay !== g.endDay) {
+          const startIndex = DAYS.indexOf(g.startDay);
+          const endIndex = DAYS.indexOf(g.endDay);
+          if (endIndex - startIndex === 1) {
+            dayLabel = `${g.startDay} y ${g.endDay}`;
+          } else {
+            dayLabel = `${g.startDay} a ${g.endDay}`;
+          }
+        }
+        return {
+          label: dayLabel,
+          timeStr: g.timeStr,
+          isOpen: g.isOpen
+        };
+      });
+
     } catch (e) {}
   }
 
@@ -138,23 +191,14 @@ export default async function MerchantProfilePage({ params }: { params: Promise<
                   <Clock className="w-4 h-4" /> <span className="font-bold">Horarios de Atención</span>
                 </div>
                 <div className="space-y-1.5">
-                  {['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'].map(day => {
-                    const d = hoursData[day];
-                    if (!d) return null;
-                    return (
-                      <div key={day} className="flex justify-between border-b border-white/5 last:border-0 pb-1.5 last:pb-0">
-                        <span className="text-slate-400 w-20">{day}</span>
-                        {d.isOpen ? (
-                          <span className="text-slate-200">
-                            {d.shift1Start}-{d.shift1End} 
-                            {(d.shift2Start && d.shift2End && d.shift2Start !== d.shift2End) ? ` / ${d.shift2Start}-${d.shift2End}` : ''}
-                          </span>
-                        ) : (
-                          <span className="text-slate-500 italic">Cerrado</span>
-                        )}
-                      </div>
-                    );
-                  })}
+                  {groupedHours.map((g, idx) => (
+                    <div key={idx} className="flex justify-between border-b border-white/5 last:border-0 pb-1.5 last:pb-0 gap-4">
+                      <span className="text-slate-400 whitespace-nowrap">{g.label}</span>
+                      <span className={g.isOpen ? "text-slate-200 text-right" : "text-slate-500 italic text-right"}>
+                        {g.timeStr}
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </div>
             ) : merchant.business_hours ? (
