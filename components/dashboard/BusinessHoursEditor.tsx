@@ -87,37 +87,37 @@ export function BusinessHoursEditor({ value, onChange }: BusinessHoursEditorProp
             </div>
 
             {data.isOpen ? (
-              <div className="flex-1 flex flex-col xl:flex-row gap-2">
-                <div className="flex items-center gap-2">
+              <div className="flex-1 flex flex-wrap gap-2 items-center">
+                <div className="flex items-center gap-1.5">
                   <input
                     type="time"
                     value={data.shift1Start}
                     onChange={(e) => updateDay(day, 'shift1Start', e.target.value)}
-                    className="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-sm text-slate-300 w-[95px] focus:outline-none focus:ring-1 focus:ring-violet-500"
+                    className="bg-slate-900 border border-slate-700 rounded-md px-1.5 py-1 text-xs text-slate-300 w-[75px] sm:w-[85px] focus:outline-none focus:ring-1 focus:ring-violet-500"
                   />
                   <span className="text-slate-500 text-xs">a</span>
                   <input
                     type="time"
                     value={data.shift1End}
                     onChange={(e) => updateDay(day, 'shift1End', e.target.value)}
-                    className="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-sm text-slate-300 w-[95px] focus:outline-none focus:ring-1 focus:ring-violet-500"
+                    className="bg-slate-900 border border-slate-700 rounded-md px-1.5 py-1 text-xs text-slate-300 w-[75px] sm:w-[85px] focus:outline-none focus:ring-1 focus:ring-violet-500"
                   />
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
                   <span className="text-slate-600 text-xs px-1">y</span>
                   <input
                     type="time"
                     value={data.shift2Start}
                     onChange={(e) => updateDay(day, 'shift2Start', e.target.value)}
-                    className="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-sm text-slate-300 w-[95px] focus:outline-none focus:ring-1 focus:ring-violet-500"
+                    className="bg-slate-900 border border-slate-700 rounded-md px-1.5 py-1 text-xs text-slate-300 w-[75px] sm:w-[85px] focus:outline-none focus:ring-1 focus:ring-violet-500"
                   />
                   <span className="text-slate-500 text-xs">a</span>
                   <input
                     type="time"
                     value={data.shift2End}
                     onChange={(e) => updateDay(day, 'shift2End', e.target.value)}
-                    className="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-sm text-slate-300 w-[95px] focus:outline-none focus:ring-1 focus:ring-violet-500"
+                    className="bg-slate-900 border border-slate-700 rounded-md px-1.5 py-1 text-xs text-slate-300 w-[75px] sm:w-[85px] focus:outline-none focus:ring-1 focus:ring-violet-500"
                   />
                 </div>
               </div>
