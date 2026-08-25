@@ -10,9 +10,9 @@ export default function SubscriptionRequiredPage() {
         </div>
         
         <div className="space-y-2">
-          <h1 className="text-2xl font-bold text-white">Suscripción Pendiente</h1>
+          <h1 className="text-2xl font-bold text-white">Suscripción Inactiva o Vencida</h1>
           <p className="text-slate-400">
-            Tu cuenta de comercio fue creada con éxito, pero tu suscripción aún no ha sido activada por un administrador.
+            Tu cuenta de comercio no tiene una suscripción activa o la fecha de pago ha vencido.
           </p>
         </div>
 

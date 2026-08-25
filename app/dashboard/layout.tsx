@@ -41,15 +41,16 @@ export default async function DashboardLayout({
 
   // Verificar suscripción activa para merchants
   if (profile.role === 'merchant') {
-    const { data: subscriptions } = await adminClient
-      .from('subscriptions')
-      .select('status')
-      .eq('merchant_id', user.id)
-      .eq('status', 'active')
-      .limit(1);
-
-    if (!subscriptions || subscriptions.length === 0) {
-      redirect('/subscription-required');
+    if (profile.subscription_expires_at) {
+      const expires = new Date(profile.subscription_expires_at);
+      const today = new Date();
+      if (expires < today) {
+        redirect('/subscription-required');
+      }
+    } else {
+      // Demo mode: they have no date set, they can access the dashboard.
+      // If we want to block them too, we would redirect here.
+      // For now, we allow them if no date is set.
     }
   }
 
