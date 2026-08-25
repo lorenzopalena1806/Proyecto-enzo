@@ -102,8 +102,17 @@ export default async function ClientQRPage() {
       offer:merchant_offers(title)
     `)
     .eq('scanned_user_id', user.id)
-    .order('applied_at', { ascending: false })
-    .limit(20);
+    .order('applied_at', { ascending: false });
+
+  // Calcular ahorro total histórico
+  const totalSaved = (clientHistory || []).reduce((acc: number, tx: any) => {
+    if (tx.status !== 'cancelled') {
+      return acc + ((tx.original_amount || 0) - (tx.final_amount || 0));
+    }
+    return acc;
+  }, 0);
+
+  const displayHistory = clientHistory?.slice(0, 20) || [];
 
   // 3. Fetch Locales Adheridos (active merchants)
   const { data: merchants } = await adminClient
@@ -202,10 +211,17 @@ export default async function ClientQRPage() {
         {/* Sección: Bienvenida */}
         <section className="space-y-4">
           <div className="text-center space-y-1 mb-2">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-semibold uppercase tracking-widest mb-2">
-              <Sparkles className="w-3.5 h-3.5" />
-              Club de Beneficios
-            </div>
+            {totalSaved > 0 ? (
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-widest mb-2">
+                <Sparkles className="w-3.5 h-3.5" />
+                Ahorraste ${totalSaved.toLocaleString('es-AR')}
+              </div>
+            ) : (
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-semibold uppercase tracking-widest mb-2">
+                <Sparkles className="w-3.5 h-3.5" />
+                Club de Beneficios
+              </div>
+            )}
             <h1 className="text-2xl font-black text-white tracking-tight">Hola, {profile?.full_name || 'Cliente'}</h1>
             <p className="text-slate-400 text-sm max-w-sm mx-auto">
               Descubrí los mejores locales y ofertas cerca tuyo.
@@ -230,14 +246,14 @@ export default async function ClientQRPage() {
             </div>
           </div>
 
-          {(!clientHistory || clientHistory.length === 0) ? (
+          {(!displayHistory || displayHistory.length === 0) ? (
             <div className="glass-panel rounded-3xl p-8 text-center border-dashed border-white/20">
               <p className="text-slate-400 font-medium">Todavía no usaste ningún descuento.</p>
               <p className="text-slate-500 text-sm mt-1">Visitá un comercio adherido para empezar a ahorrar.</p>
             </div>
           ) : (
             <div className="space-y-3">
-              {clientHistory.map((tx: any) => {
+              {displayHistory.map((tx: any) => {
                 const scanner = tx.scanner as { business_name?: string; full_name?: string } | null;
                 const offer = tx.offer as { title?: string } | null;
                 const merchantName = scanner?.business_name || scanner?.full_name || 'Comercio';

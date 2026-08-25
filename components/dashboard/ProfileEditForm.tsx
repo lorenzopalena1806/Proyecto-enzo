@@ -53,6 +53,7 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
     category: isCustomCategory ? 'Otro' : (profile.category || ''),
     custom_category: isCustomCategory ? profile.category : '',
     address: profile.address || '',
+    business_hours: profile.business_hours || '',
     latitude: profile.latitude || null,
     longitude: profile.longitude || null,
   });
@@ -131,6 +132,7 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
       address: formData.address || null,
       latitude: formData.latitude,
       longitude: formData.longitude,
+      business_hours: formData.business_hours || null,
       category: isCustomCategory ? (formData.custom_category || null) : (formData.category || null),
     });
 
@@ -247,12 +249,27 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
                     type="text"
                     value={formData.custom_category}
                     onChange={handleProfileChange}
-                    placeholder="Escribí tu rubro..."
-                    className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-violet-500/50 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
+                    placeholder="Escribí tu rubro (ej. Servicio Técnico)"
+                    className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
                     autoFocus
                   />
                 </div>
               )}
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-slate-300">Horarios de Atención</label>
+              <div className="relative">
+                <input
+                  name="business_hours"
+                  type="text"
+                  value={formData.business_hours}
+                  onChange={handleProfileChange}
+                  placeholder="Ej: Lunes a Viernes de 09:00 a 20:00"
+                  className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
+                />
+              </div>
+              <p className="text-xs text-slate-500">Los clientes verán este horario en tu perfil.</p>
             </div>
 
             <div className="space-y-1.5">

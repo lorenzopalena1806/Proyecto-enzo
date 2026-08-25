@@ -27,6 +27,7 @@ export function DiscoverSection({
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [favorites, setFavorites] = useState<Set<string>>(new Set(initialFavorites));
 
   // Extract dynamic categories from active merchants
   const availableCategories = useMemo(() => {
@@ -44,11 +45,17 @@ export function DiscoverSection({
     return merchants.filter((m) => {
       const matchesSearch = m.business_name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
                             m.category?.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory = selectedCategory ? m.category === selectedCategory : true;
+      
+      let matchesCategory = true;
+      if (selectedCategory === 'Favoritos') {
+        matchesCategory = favorites.has(m.id);
+      } else if (selectedCategory) {
+        matchesCategory = m.category === selectedCategory;
+      }
       
       return matchesSearch && matchesCategory;
     });
-  }, [merchants, searchQuery, selectedCategory]);
+  }, [merchants, searchQuery, selectedCategory, favorites]);
 
   return (
     <div className="space-y-6">
@@ -88,6 +95,20 @@ export function DiscoverSection({
               <Store className="w-5 h-5" />
             </div>
             <span className="text-[10px] font-bold">Todos</span>
+          </button>
+          
+          <button
+            onClick={() => setSelectedCategory('Favoritos')}
+            className={`flex-shrink-0 flex flex-col items-center justify-center w-[84px] h-[84px] rounded-2xl border transition-all snap-start shadow-md ${
+              selectedCategory === 'Favoritos'
+                ? 'bg-red-500/20 border-red-500/50 text-red-300 shadow-[0_0_15px_rgba(239,68,68,0.2)]' 
+                : 'bg-black/20 border-white/5 text-slate-400 hover:bg-white/5'
+            }`}
+          >
+            <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center mb-1">
+              <Heart className={`w-5 h-5 ${selectedCategory === 'Favoritos' ? 'fill-red-400 text-red-400' : ''}`} />
+            </div>
+            <span className="text-[10px] font-bold">Favoritos</span>
           </button>
           {availableCategories.map((cat) => (
             <button
@@ -136,8 +157,26 @@ export function DiscoverSection({
                   </div>
                   
                   {/* Contenido derecha */}
-                  <div className="min-w-0 flex-1 py-1">
-                    <h3 className="font-bold text-white text-[15px] truncate leading-tight mb-1">{merchant.business_name || 'Comercio Adherido'}</h3>
+                  <div className="min-w-0 flex-1 py-1 relative">
+                    <div className="flex justify-between items-start">
+                      <h3 className="font-bold text-white text-[15px] truncate leading-tight mb-1 pr-6">{merchant.business_name || 'Comercio Adherido'}</h3>
+                      <button
+                        onClick={async (e) => {
+                          e.preventDefault();
+                          const newFavs = new Set(favorites);
+                          if (newFavs.has(merchant.id)) {
+                            newFavs.delete(merchant.id);
+                          } else {
+                            newFavs.add(merchant.id);
+                          }
+                          setFavorites(newFavs);
+                          await toggleFavoriteServer(merchant.id);
+                        }}
+                        className="absolute right-0 top-0 p-1 -mt-1 -mr-1"
+                      >
+                        <Heart className={`w-5 h-5 ${favorites.has(merchant.id) ? 'fill-red-500 text-red-500' : 'text-slate-400'}`} />
+                      </button>
+                    </div>
                     
                     {/* Estrellas y distancia falsa */}
                     <div className="flex items-center gap-0.5 mb-1.5">
