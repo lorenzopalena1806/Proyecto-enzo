@@ -74,7 +74,7 @@ export function BusinessHoursEditor({ value, onChange }: BusinessHoursEditorProp
         const data = hours[day] || defaultHours[day];
         return (
           <div key={day} className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 rounded-xl bg-slate-950/50 border border-slate-800">
-            <div className="w-28 flex items-center gap-2">
+            <div className="w-32 flex-shrink-0 flex items-center gap-2">
               <input
                 type="checkbox"
                 checked={data.isOpen}
@@ -93,14 +93,14 @@ export function BusinessHoursEditor({ value, onChange }: BusinessHoursEditorProp
                     type="time"
                     value={data.shift1Start}
                     onChange={(e) => updateDay(day, 'shift1Start', e.target.value)}
-                    className="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-sm text-slate-300 w-24 focus:outline-none focus:ring-1 focus:ring-violet-500"
+                    className="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-sm text-slate-300 w-[95px] focus:outline-none focus:ring-1 focus:ring-violet-500"
                   />
                   <span className="text-slate-500 text-xs">a</span>
                   <input
                     type="time"
                     value={data.shift1End}
                     onChange={(e) => updateDay(day, 'shift1End', e.target.value)}
-                    className="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-sm text-slate-300 w-24 focus:outline-none focus:ring-1 focus:ring-violet-500"
+                    className="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-sm text-slate-300 w-[95px] focus:outline-none focus:ring-1 focus:ring-violet-500"
                   />
                 </div>
 
@@ -110,33 +110,33 @@ export function BusinessHoursEditor({ value, onChange }: BusinessHoursEditorProp
                     type="time"
                     value={data.shift2Start}
                     onChange={(e) => updateDay(day, 'shift2Start', e.target.value)}
-                    className="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-sm text-slate-300 w-24 focus:outline-none focus:ring-1 focus:ring-violet-500"
+                    className="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-sm text-slate-300 w-[95px] focus:outline-none focus:ring-1 focus:ring-violet-500"
                   />
                   <span className="text-slate-500 text-xs">a</span>
                   <input
                     type="time"
                     value={data.shift2End}
                     onChange={(e) => updateDay(day, 'shift2End', e.target.value)}
-                    className="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-sm text-slate-300 w-24 focus:outline-none focus:ring-1 focus:ring-violet-500"
+                    className="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-sm text-slate-300 w-[95px] focus:outline-none focus:ring-1 focus:ring-violet-500"
                   />
                 </div>
               </div>
             ) : (
               <div className="flex-1 text-sm text-slate-500 italic">Cerrado</div>
             )}
-            
-            {day === 'Lunes' && (
-              <button
-                type="button"
-                onClick={() => copyToAll('Lunes')}
-                className="text-xs text-blue-400 hover:text-blue-300 mt-2 sm:mt-0"
-              >
-                Copiar a Lun-Vie
-              </button>
-            )}
           </div>
         );
       })}
+      
+      <div className="flex justify-end mt-2">
+        <button
+          type="button"
+          onClick={() => copyToAll('Lunes')}
+          className="text-xs text-blue-400 hover:text-blue-300 bg-blue-400/10 hover:bg-blue-400/20 px-3 py-1.5 rounded-lg transition-colors font-medium"
+        >
+          Copiar Lunes a toda la semana
+        </button>
+      </div>
     </div>
   );
 }
