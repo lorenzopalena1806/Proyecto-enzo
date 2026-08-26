@@ -149,15 +149,6 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* ✨ FEATURES ✨ */}
-        <FadeIn>
-          <section id="features" className="py-24 relative">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6">
-              <FeaturesTabs />
-            </div>
-          </section>
-        </FadeIn>
-
         {/* ✨ PURPOSE ✨ */}
         <FadeIn>
           <section className="py-24 relative overflow-hidden">
@@ -173,6 +164,16 @@ export default async function Home() {
             </div>
           </section>
         </FadeIn>
+
+        {/* ✨ FEATURES ✨ */}
+        <FadeIn>
+          <section id="features" className="py-24 relative">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6">
+              <FeaturesTabs />
+            </div>
+          </section>
+        </FadeIn>
+
 
         {/* ✨ HOW IT WORKS ✨ */}
         <section id="how-it-works" className="py-24 relative border-y border-cyan-500/10">
