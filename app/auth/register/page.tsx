@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Store, Loader2, UserPlus, ArrowLeft } from 'lucide-react';
 
@@ -176,9 +177,16 @@ export default function RegisterPage() {
         {/* Logo */}
         <div className="text-center flex flex-col items-center space-y-3">
           <Link href="/">
-            <img src="/logo.png" alt="Lazoo" className="h-20 sm:h-24 w-auto rounded-xl shadow-2xl shadow-blue-900/40 object-contain" />
+            <Image 
+              src="/logo.png" 
+              alt="Lazoo" 
+              width={200} 
+              height={100} 
+              priority 
+              className="h-16 sm:h-20 w-auto object-contain" 
+            />
           </Link>
-          <p className="text-slate-400 text-sm">Únete a la red de descuentos</p>
+          <p className="text-slate-400 text-sm">Creá tu cuenta de comercio en segundos</p>
         </div>
 
         {/* Card */}

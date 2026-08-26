@@ -55,10 +55,10 @@ export default function LoginPage() {
             <Image 
               src="/logo.png" 
               alt="Lazoo" 
-              width={120} 
-              height={120} 
+              width={200} 
+              height={100} 
               priority 
-              className="h-20 sm:h-24 w-auto rounded-xl shadow-2xl shadow-blue-900/40 object-contain" 
+              className="h-16 sm:h-20 w-auto object-contain" 
             />
           </Link>
           <p className="text-slate-400 text-sm">Ingresá a tu panel</p>

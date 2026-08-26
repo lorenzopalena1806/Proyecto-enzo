@@ -189,7 +189,7 @@ export default async function ClientQRPage() {
       {/* Header */}
       <header className="px-4 py-4 border-b border-white/5 flex justify-between items-center bg-black/20 backdrop-blur-md sticky top-0 z-50">
         <div className="flex items-center gap-2">
-          <span className="text-blue-400 font-black text-xl tracking-wide">Lazoo</span>
+          <img src="/logo.png" alt="Lazoo" className="h-7 w-auto object-contain" />
         </div>
         <div className="flex items-center gap-2 text-slate-300 font-medium">
           <ShareButton className="text-xs text-blue-400 border border-blue-500/20 bg-blue-500/10 hover:bg-blue-500/20 px-3 py-1.5 rounded-lg font-semibold" />
