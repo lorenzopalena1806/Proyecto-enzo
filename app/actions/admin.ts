@@ -175,3 +175,15 @@ export async function toggleMerchantFeatured(merchantId: string, isFeatured: boo
     return { success: false, error: error.message };
   }
 }
+
+export async function addFinanceRecordServer(data: any) {
+  const adminClient = createAdminClient();
+  const { data: record, error } = await adminClient.from('admin_finances').insert([data]).select().single();
+  return { record, error };
+}
+
+export async function deleteFinanceRecordServer(id: string) {
+  const adminClient = createAdminClient();
+  const { error } = await adminClient.from('admin_finances').delete().eq('id', id);
+  return { success: !error, error };
+}
