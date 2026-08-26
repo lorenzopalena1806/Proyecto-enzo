@@ -64,9 +64,10 @@ export const metadata: Metadata = {
 };
 
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Analytics } from "@vercel/analytics/next";
+import { Analytics as VercelAnalytics } from "@vercel/analytics/next";
 import NextTopLoader from 'nextjs-toploader';
 import { ScrollToTop } from '@/components/shared/ScrollToTop';
+import { Analytics as CustomAnalytics } from '@/components/shared/Analytics';
 
 export default function RootLayout({
   children,
@@ -93,7 +94,8 @@ export default function RootLayout({
         <InstallPwaPrompt />
         <CookieBanner />
         <SpeedInsights />
-        <Analytics />
+        <CustomAnalytics />
+        <VercelAnalytics />
       </body>
     </html>
   );
