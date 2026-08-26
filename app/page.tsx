@@ -120,26 +120,7 @@ export default async function Home() {
               />
             </div>
 
-            {/* QR Hero visual */}
-            <div className="pt-12 flex justify-center">
-              <div className="relative p-6 rounded-3xl bg-white/5 border border-cyan-500/20 backdrop-blur-xl shadow-[0_0_60px_-10px_rgba(6,182,212,0.2)]">
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-500/5 to-blue-600/5" />
-                <div className="relative flex items-center gap-6">
-                  <div className="w-24 h-24 rounded-2xl bg-white p-2 flex-shrink-0">
-                    <QrCode className="w-full h-full text-slate-900" />
-                  </div>
-                  <div className="text-left">
-                    <p className="text-cyan-300 text-xs font-semibold uppercase tracking-widest mb-1">Tecnología QR</p>
-                    <p className="text-white font-bold text-lg">El cliente te escanea</p>
-                    <p className="text-slate-400 text-sm mt-1">Descuento aplicado al instante</p>
-                    <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-500/15 border border-cyan-500/25 text-cyan-300 text-xs font-medium">
-                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                      Activo ahora
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+
 
             {/* ✨ MARQUEE ✨ */}
             <div className="pt-24 pb-4 overflow-hidden w-full relative">
