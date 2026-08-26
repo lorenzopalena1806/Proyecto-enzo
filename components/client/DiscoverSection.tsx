@@ -185,9 +185,9 @@ export function DiscoverSection({
                       <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
                       <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
                       <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                      <div className="flex items-center gap-1 text-slate-400 text-[10px] ml-2">
-                        <MapPin className="w-3 h-3" />
-                        <span>2.5 km</span>
+                      <div className="flex items-center gap-1 text-slate-400 text-[10px] ml-2 truncate max-w-[100px]">
+                        <MapPin className="w-3 h-3 flex-shrink-0" />
+                        <span className="truncate">{merchant.address || 'Córdoba'}</span>
                       </div>
                     </div>
 
