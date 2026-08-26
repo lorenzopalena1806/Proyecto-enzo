@@ -32,8 +32,10 @@ export async function LazooInsights({ merchantId }: { merchantId: string }) {
     const bestDay = dayNames[dayCounts.indexOf(maxCount)];
     const worstDay = dayNames[dayCounts.indexOf(minCount)];
 
+    const pluralize = (day: string) => (day === 'Sábado' || day === 'Domingo') ? day + 's' : day;
+
     if (maxCount - minCount > 2) {
-      insightMessage = `Notamos que tus días más flojos son los ${worstDay}s y tus mejores los ${bestDay}s. Te sugerimos crear una "Oferta Relámpago" especial de 20% OFF solo para los ${worstDay}s para levantar las ventas en esos horarios muertos.`;
+      insightMessage = `Notamos que tus días más flojos son los ${pluralize(worstDay)} y tus mejores son los ${pluralize(bestDay)}. Te sugerimos crear una "Oferta Relámpago" especial de 20% OFF solo para los ${pluralize(worstDay)} para levantar las ventas en esos horarios muertos.`;
     } else {
       insightMessage = "Tu nivel de ventas está siendo muy estable todos los días de la semana. ¡Excelente trabajo! Podés intentar subir el ticket promedio ofreciendo un beneficio 2x1.";
     }
