@@ -26,7 +26,7 @@ export function OnboardingTutorial({ userId, hasSeen }: { userId: string, hasSee
     },
     {
       title: '2. Escaneá y Ahorrá',
-      desc: 'Mostrale tu código QR al comerciante al momento de pagar para aplicar el descuento al instante.',
+      desc: 'Escaneá el código QR que está en el mostrador del comercio al momento de pagar para aplicar tu descuento.',
       icon: <QrCode className="w-16 h-16 text-violet-400 mb-4" />
     }
   ];
