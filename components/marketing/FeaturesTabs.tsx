@@ -106,7 +106,7 @@ export function FeaturesTabs() {
 
               <div className="mt-10 flex justify-center animate-fade-in">
                 <Link href="/auth/register" className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-lg hover:scale-105 transition-transform shadow-[0_0_30px_rgba(6,182,212,0.3)]">
-                  Unir mi comercio gratis
+                  Unir mi comercio
                   <ArrowRight className="w-5 h-5" />
                 </Link>
               </div>
