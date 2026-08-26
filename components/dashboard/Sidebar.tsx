@@ -70,12 +70,6 @@ const MERCHANT_NAV_ITEMS = [
     exact: false,
   },
   {
-    href: '/dashboard/analytics',
-    label: 'Analíticas y Material',
-    icon: TrendingUp,
-    exact: false,
-  },
-  {
     href: '/dashboard/profile',
     label: 'Mi Perfil',
     icon: Settings,

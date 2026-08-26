@@ -5,6 +5,7 @@ import { createClient, createAdminClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import { Receipt, TrendingUp, Users, DollarSign } from 'lucide-react';
 import { UndoChargeButton } from '@/components/dashboard/UndoChargeButton';
+import { MerchantChart } from '@/components/dashboard/MerchantChart';
 
 export default async function MerchantHistoryPage() {
   const supabase = await createClient();
@@ -46,6 +47,43 @@ export default async function MerchantHistoryPage() {
   const fmt = (n: number) =>
     new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(n);
 
+  // Preparar datos para el gráfico (últimos 7 días)
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+  sevenDaysAgo.setHours(0,0,0,0);
+  
+  const chartData = [];
+  const formatDay = (d: Date) => d.toLocaleDateString('es-AR', { weekday: 'short', day: 'numeric' });
+  
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(sevenDaysAgo);
+    d.setDate(d.getDate() + i);
+    
+    const txsForDay = txList.filter((tx: any) => {
+      const txDate = new Date(tx.applied_at);
+      return txDate.getDate() === d.getDate() && txDate.getMonth() === d.getMonth();
+    });
+    
+    const userScans = new Set();
+    let nuevos = 0;
+    let recurrentes = 0;
+    
+    txsForDay.forEach((tx: any) => {
+      if (userScans.has(tx.scanned_user_id)) {
+        recurrentes++;
+      } else {
+        nuevos++;
+        userScans.add(tx.scanned_user_id);
+      }
+    });
+    
+    chartData.push({
+      day: formatDay(d),
+      nuevos,
+      recurrentes
+    });
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -74,11 +112,20 @@ export default async function MerchantHistoryPage() {
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
           <TrendingUp className="h-5 w-5 text-amber-400" />
           <p className="text-2xl font-bold text-white">{fmt(totalDiscounted)}</p>
-          <p className="text-xs text-slate-400">Total descontado a clientes</p>
+          <p className="text-xs text-slate-400">Total ahorrado por clientes</p>
         </div>
       </div>
 
-      {/* Tabla */}
+      {/* Gráfico de Escaneos */}
+      <div className="glass-panel rounded-2xl p-6 shadow-lg">
+        <h2 className="text-white font-bold text-lg mb-4 flex items-center gap-2">
+          <TrendingUp className="w-5 h-5 text-blue-400" />
+          Escaneos Últimos 7 Días
+        </h2>
+        <MerchantChart data={chartData} />
+      </div>
+
+      {/* Lista */}
       <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
         {txList.length === 0 ? (
           <div className="p-12 text-center">
