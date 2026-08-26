@@ -122,46 +122,33 @@ export function FeaturesTabs() {
                     </div>
                     <div>
                       <h3 className="text-2xl font-bold text-white mb-2">Ahorrá en cada compra</h3>
-                      <p className="text-slate-400">Olvidate de esperar a fin de mes. Sumate y empezá a descontar el 10% o 15% todos los días en la verdulería, peluquería o gimnasio pagando en efectivo o transferencia.</p>
+                      <p className="text-slate-400">Escaneá el código del local desde tu celular y pagá con el medio que prefieras (efectivo, transferencia o tarjeta). El descuento se aplica automático en la caja.</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="group relative overflow-hidden rounded-3xl bg-white/3 border border-cyan-500/15 p-8 hover:border-cyan-400/40 transition-all backdrop-blur-sm hover:shadow-[0_0_40px_-10px_rgba(6,182,212,0.15)]">
-                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="group relative overflow-hidden rounded-3xl bg-white/3 border border-purple-500/15 p-8 hover:border-purple-400/40 transition-all backdrop-blur-sm hover:shadow-[0_0_40px_-10px_rgba(168,85,247,0.15)]">
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   <div className="relative z-10 h-full flex flex-col justify-between">
-                    <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-cyan-500/15 text-cyan-400 mb-6 border border-cyan-500/25">
-                      <Smartphone className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-white mb-2">Una app, mil lugares</h3>
-                      <p className="text-slate-400 text-sm">Descubrí todos los locales adheridos en tu ciudad desde un solo lugar y armá tu recorrido de compras.</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="md:col-span-2 group relative overflow-hidden rounded-3xl bg-white/3 border border-indigo-500/15 p-8 hover:border-indigo-400/40 transition-all backdrop-blur-sm hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.15)]">
-                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="relative z-10 h-full flex flex-col justify-between">
-                    <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-indigo-500/15 text-indigo-400 mb-6 border border-indigo-500/25">
-                      <MapPin className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-white mb-2">Ubicación en tiempo real</h3>
-                      <p className="text-slate-400">Gracias al mapa interactivo, la app detecta dónde estás y te muestra los comercios más cercanos con descuentos activos, calculando la distancia exacta en kilómetros.</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="group relative overflow-hidden rounded-3xl bg-white/3 border border-violet-500/15 p-8 hover:border-violet-400/40 transition-all backdrop-blur-sm hover:shadow-[0_0_40px_-10px_rgba(139,92,246,0.15)]">
-                  <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="relative z-10 h-full flex flex-col justify-between">
-                    <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-violet-500/15 text-violet-400 mb-6 border border-violet-500/25">
+                    <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-purple-500/15 text-purple-400 mb-6 border border-purple-500/25">
                       <Gift className="h-6 w-6" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-white mb-2">Completamente Gratis</h3>
-                      <p className="text-slate-400 text-sm">Ser parte de la comunidad como cliente no tiene ningún costo oculto. Solo te registrás y empezás a disfrutar.</p>
+                      <h3 className="text-xl font-bold text-white mb-2">Descubrí nuevos lugares</h3>
+                      <p className="text-slate-400 text-sm">Explorá el mapa y encontrá promociones exclusivas cerca tuyo todos los días.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="md:col-span-3 group relative overflow-hidden rounded-3xl bg-white/3 border border-teal-500/15 p-8 hover:border-teal-400/40 transition-all backdrop-blur-sm hover:shadow-[0_0_40px_-10px_rgba(20,184,166,0.15)]">
+                  <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="relative z-10 h-full flex flex-col justify-between">
+                    <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-teal-500/15 text-teal-400 mb-6 border border-teal-500/25">
+                      <Smartphone className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-white mb-2">Todo en tu celular, siempre gratis</h3>
+                      <p className="text-slate-400 text-sm">Crear tu cuenta como cliente no cuesta nada y nunca te vamos a cobrar comisión.</p>
                     </div>
                   </div>
                 </div>
