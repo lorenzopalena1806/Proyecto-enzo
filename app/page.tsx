@@ -73,10 +73,31 @@ export default async function Home() {
 
       <Navbar />
 
-      <main className="relative z-10">
+      <main className="relative z-10 pt-24 sm:pt-28">
+        {/* ✨ MARQUEE ✨ */}
+        <div className="pb-8 overflow-hidden w-full relative">
+          <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#060D1A] to-transparent z-10" />
+          <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#060D1A] to-transparent z-10" />
+          <style dangerouslySetInnerHTML={{ __html: `
+            @keyframes marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-100%); } }
+            .animate-marquee { animation: marquee 35s linear infinite; }
+            .hover-pause:hover { animation-play-state: paused; }
+          ` }} />
+          <div className="flex w-max animate-marquee hover-pause items-center">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="flex shrink-0 gap-12 sm:gap-24 items-center px-6 sm:px-12">
+                {['Panaderías', 'Verdulerías', 'Carnicerías', 'Fiambrerías', 'Despensas', 'Kioscos', 'Heladerías', 'Ferreterías', 'Bares', 'Peluquerías'].map((cat, j) => (
+                  <span key={j} className="text-2xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-600 to-slate-800 uppercase tracking-widest whitespace-nowrap">
+                    {cat}
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* ✨ HERO ✨ */}
-        <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <section className="relative pt-8 pb-20 lg:pt-16 lg:pb-32 overflow-hidden">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 text-center space-y-8">
 
             {/* Badge */}
@@ -122,27 +143,7 @@ export default async function Home() {
 
 
 
-            {/* ✨ MARQUEE ✨ */}
-            <div className="pt-24 pb-4 overflow-hidden w-full relative">
-              <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#060D1A] to-transparent z-10" />
-              <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#060D1A] to-transparent z-10" />
-              <style dangerouslySetInnerHTML={{ __html: `
-                @keyframes marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-100%); } }
-                .animate-marquee { animation: marquee 35s linear infinite; }
-                .hover-pause:hover { animation-play-state: paused; }
-              ` }} />
-              <div className="flex w-max animate-marquee hover-pause items-center">
-                {[...Array(2)].map((_, i) => (
-                  <div key={i} className="flex shrink-0 gap-12 sm:gap-24 items-center px-6 sm:px-12">
-                    {['Panaderías', 'Verdulerías', 'Carnicerías', 'Fiambrerías', 'Despensas', 'Kioscos', 'Heladerías', 'Ferreterías', 'Bares', 'Peluquerías'].map((cat, j) => (
-                      <span key={j} className="text-2xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-600 to-slate-800 uppercase tracking-widest whitespace-nowrap">
-                        {cat}
-                      </span>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </div>
+
 
             {/* Stats Ribbon */}
             <AnimatedStats stats={stats} />
