@@ -145,8 +145,7 @@ export default async function Home() {
 
 
 
-            {/* Stats Ribbon */}
-            <AnimatedStats stats={stats} />
+
           </div>
         </section>
 
