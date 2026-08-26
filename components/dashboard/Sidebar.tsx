@@ -23,6 +23,7 @@ import {
   Calculator,
   Filter,
   Printer,
+  Wallet,
 } from 'lucide-react';
 import type { Profile } from '@/types';
 
@@ -98,6 +99,12 @@ const ADMIN_NAV_ITEMS = [
     href: '/admin/notifications',
     label: 'Comunicados Globales',
     icon: Megaphone,
+    exact: false,
+  },
+  {
+    href: '/admin/finances',
+    label: 'Libro Contable',
+    icon: Wallet,
     exact: false,
   },
   {
