@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { QrCode, ShieldCheck, TrendingUp, Zap, Gift, Wallet, Smartphone } from 'lucide-react';
+import { QrCode, ShieldCheck, TrendingUp, Zap, Gift, Wallet, Smartphone, Sparkles, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 export function FeaturesTabs() {
   const [activeTab, setActiveTab] = useState<'comercio' | 'cliente'>('comercio');
@@ -75,18 +76,38 @@ export function FeaturesTabs() {
                 </div>
               </div>
 
-              <div className="md:col-span-2 group relative overflow-hidden rounded-3xl bg-white/3 border border-cyan-500/15 p-8 hover:border-cyan-400/40 transition-all backdrop-blur-sm hover:shadow-[0_0_40px_-10px_rgba(6,182,212,0.15)]">
-                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="group relative overflow-hidden rounded-3xl bg-white/3 border border-fuchsia-500/15 p-8 hover:border-fuchsia-400/40 transition-all backdrop-blur-sm hover:shadow-[0_0_40px_-10px_rgba(217,70,239,0.15)]">
+                <div className="absolute inset-0 bg-gradient-to-br from-fuchsia-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="relative z-10 h-full flex flex-col justify-between">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-cyan-500/15 text-cyan-400 mb-6 border border-cyan-500/25">
-                    <Zap className="h-6 w-6" />
+                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-fuchsia-500/15 text-fuchsia-400 mb-6 border border-fuchsia-500/25">
+                    <Sparkles className="h-6 w-6" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-white mb-2">Beneficios para dueños</h3>
-                    <p className="text-slate-400">Por ser parte de la red, tenés descuentos especiales (mucho más altos) cuando vas a comprar como cliente a otros locales del club. Nos ayudamos entre todos.</p>
+                    <h3 className="text-xl font-bold text-white mb-2">Lazoo Inteligencia Artificial</h3>
+                    <p className="text-slate-400 text-sm">Nuestro asistente virtual analiza tus ventas y te da consejos personalizados para atraer más clientes los días flojos.</p>
                   </div>
                 </div>
               </div>
+
+              <div className="group relative overflow-hidden rounded-3xl bg-white/3 border border-amber-500/15 p-8 hover:border-amber-400/40 transition-all backdrop-blur-sm hover:shadow-[0_0_40px_-10px_rgba(245,158,11,0.15)]">
+                <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative z-10 h-full flex flex-col justify-between">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-amber-500/15 text-amber-400 mb-6 border border-amber-500/25">
+                    <Zap className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white mb-2">Red B2B de dueños</h3>
+                    <p className="text-slate-400 text-sm">Por ser parte de la red, tenés descuentos especiales (mucho más altos) cuando vas a comprar a otros locales.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-10 flex justify-center animate-fade-in">
+              <Link href="/auth/register" className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-lg hover:scale-105 transition-transform shadow-[0_0_30px_rgba(6,182,212,0.3)]">
+                Unir mi comercio gratis
+                <ArrowRight className="w-5 h-5" />
+              </Link>
             </div>
           ) : (
             <div className="grid md:grid-cols-3 gap-6 animate-fade-in">
@@ -128,6 +149,13 @@ export function FeaturesTabs() {
                   </div>
                 </div>
               </div>
+            </div>
+
+            <div className="mt-10 flex justify-center animate-fade-in">
+              <Link href="/auth/register" className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-600 text-white font-bold text-lg hover:scale-105 transition-transform shadow-[0_0_30px_rgba(236,72,153,0.3)]">
+                Empezar a ahorrar gratis
+                <ArrowRight className="w-5 h-5" />
+              </Link>
             </div>
           )}
         </div>
