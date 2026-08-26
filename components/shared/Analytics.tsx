@@ -4,7 +4,7 @@ import Script from 'next/script';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, Suspense } from 'react';
 
-export const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_ID;
+export const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-VE1XD63VFL';
 export const FB_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 
 function AnalyticsTracker() {
