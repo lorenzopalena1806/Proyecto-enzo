@@ -252,7 +252,7 @@ export default async function Home() {
                   <p className="mt-2 text-slate-400">Para siempre. Tu pase de ahorro.</p>
                 </div>
                 <ul className="flex-1 space-y-4 mb-8">
-                  {['QR único personal', 'Acceso a toda la red de comercios', 'Descuentos exclusivos pagando con transferencia', 'Mayores descuentos pagando en efectivo', 'Soporte estándar'].map((feat) => (
+                  {['App web para escanear locales', 'Acceso a toda la red de comercios', 'Descuentos exclusivos pagando con transferencia', 'Mayores descuentos pagando en efectivo', 'Soporte estándar'].map((feat) => (
                     <li key={feat} className="flex items-start gap-3">
                       <CheckCircle2 className="h-5 w-5 text-cyan-400 shrink-0" />
                       <span className="text-slate-300">{feat}</span>
@@ -277,7 +277,7 @@ export default async function Home() {
                   <p className="mt-2 text-cyan-200/70">Plan activado por el administrador.</p>
                 </div>
                 <ul className="flex-1 space-y-4 mb-8">
-                  {['Todo lo del plan Cliente', 'Panel de Comerciante ultra rápido', 'Escáner de QR web integrado', 'Historial de métricas en vivo', 'Descuento exclusivo en la red (Dueño a Dueño)', 'Material de marketing mensual'].map((feat) => (
+                  {['Panel de Comerciante ultra rápido', 'Generación de QR oficial para tu mostrador', 'Historial de métricas en vivo', 'Descuento exclusivo en la red (Dueño a Dueño)', 'Kit físico: Porta QR y Stickers oficiales'].map((feat) => (
                     <li key={feat} className="flex items-start gap-3">
                       <CheckCircle2 className="h-5 w-5 text-cyan-400 shrink-0" />
                       <span className="text-slate-200">{feat}</span>
