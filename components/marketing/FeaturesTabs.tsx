@@ -97,7 +97,7 @@ export function FeaturesTabs() {
                       <Zap className="h-6 w-6" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-white mb-2">Red B2B de dueños</h3>
+                      <h3 className="text-xl font-bold text-white mb-2">Red de dueños</h3>
                       <p className="text-slate-400 text-sm">Por ser parte de la red, tenés descuentos especiales (mucho más altos) cuando vas a comprar a otros locales.</p>
                     </div>
                   </div>
