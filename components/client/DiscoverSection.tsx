@@ -28,6 +28,37 @@ export function DiscoverSection({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<Set<string>>(new Set(initialFavorites));
+  const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
+
+  React.useEffect(() => {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+        },
+        (error) => {
+          console.error("Error obteniendo ubicación:", error);
+        },
+        { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 }
+      );
+    }
+  }, []);
+
+  // Fórmula de Haversine para calcular distancia en km
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const R = 6371; // Radio de la Tierra en km
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
 
   // Extract dynamic categories from active merchants
   const availableCategories = useMemo(() => {
@@ -187,7 +218,11 @@ export function DiscoverSection({
                       <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
                       <div className="flex items-center gap-1 text-slate-400 text-[10px] ml-2 truncate max-w-[100px]">
                         <MapPin className="w-3 h-3 flex-shrink-0" />
-                        <span className="truncate">{merchant.address || 'Córdoba'}</span>
+                        <span className="truncate">
+                          {userLocation && merchant.latitude && merchant.longitude
+                            ? `${calculateDistance(userLocation.lat, userLocation.lng, merchant.latitude, merchant.longitude).toFixed(1)} km`
+                            : merchant.address || 'Córdoba'}
+                        </span>
                       </div>
                     </div>
 
