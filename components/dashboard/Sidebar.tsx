@@ -24,6 +24,7 @@ import {
   Filter,
   Printer,
   Wallet,
+  TrendingUp,
 } from 'lucide-react';
 import type { Profile } from '@/types';
 
@@ -66,6 +67,12 @@ const MERCHANT_NAV_ITEMS = [
     href: '/dashboard/history',
     label: 'Historial',
     icon: History,
+    exact: false,
+  },
+  {
+    href: '/dashboard/analytics',
+    label: 'Analíticas y Material',
+    icon: TrendingUp,
     exact: false,
   },
   {

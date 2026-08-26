@@ -29,15 +29,13 @@ export default async function DashboardPage() {
     { count: totalTransactions },
     { data: recentTransactions },
     { data: ratedTransactions },
-    { count: totalFavorites },
-    { data: chartTransactions }
+    { count: totalFavorites }
   ] = await Promise.all([
     adminClient.from('profiles').select('*').eq('id', user.id).single(),
     adminClient.from('discount_transactions').select('*', { count: 'exact', head: true }).eq('scanner_id', user.id),
     adminClient.from('discount_transactions').select('*, scanned_user:profiles!scanned_user_id(full_name, business_name, role)').eq('scanner_id', user.id).order('applied_at', { ascending: false }).limit(5),
     adminClient.from('discount_transactions').select('rating').eq('scanner_id', user.id).not('rating', 'is', null).limit(100),
-    adminClient.from('favorites').select('*', { count: 'exact', head: true }).eq('merchant_id', user.id),
-    adminClient.from('discount_transactions').select('applied_at, scanned_user_id').eq('scanner_id', user.id).gte('applied_at', sevenDaysAgo.toISOString())
+    adminClient.from('favorites').select('*', { count: 'exact', head: true }).eq('merchant_id', user.id)
   ]);
 
   if (!profile) redirect('/auth/login');
@@ -54,38 +52,7 @@ export default async function DashboardPage() {
     averageRating = Number((sum / totalRatings).toFixed(1));
   }
 
-  // Preparar datos para el gráfico (últimos 7 días)
-  const chartData = [];
-  const formatDay = (d: Date) => d.toLocaleDateString('es-AR', { weekday: 'short', day: 'numeric' });
-  
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(sevenDaysAgo);
-    d.setDate(d.getDate() + i);
-    
-    const txsForDay = (chartTransactions || []).filter((tx: any) => {
-      const txDate = new Date(tx.applied_at);
-      return txDate.getDate() === d.getDate() && txDate.getMonth() === d.getMonth();
-    });
-    
-    const userScans = new Set();
-    let nuevos = 0;
-    let recurrentes = 0;
-    
-    txsForDay.forEach((tx: any) => {
-      if (userScans.has(tx.scanned_user_id)) {
-        recurrentes++;
-      } else {
-        nuevos++;
-        userScans.add(tx.scanned_user_id);
-      }
-    });
-    
-    chartData.push({
-      day: formatDay(d),
-      nuevos,
-      recurrentes
-    });
-  }
+
 
   return (
     <div className="space-y-6">
@@ -192,28 +159,7 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative z-10">
-        <div className="lg:col-span-2 glass-panel rounded-2xl p-6 shadow-lg">
-          <h2 className="text-white font-bold text-lg mb-4 flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-blue-400" />
-            Escaneos Últimos 7 Días
-          </h2>
-          <MerchantChart data={chartData} />
-        </div>
-        
-        <div className="glass-panel rounded-2xl p-6 shadow-lg flex flex-col justify-between">
-          <div>
-            <h2 className="text-white font-bold text-lg mb-2 flex items-center gap-2">
-              <Package className="w-5 h-5 text-amber-400" />
-              Material Físico (QR)
-            </h2>
-            <p className="text-sm text-slate-400 mb-6">
-              Para que los clientes puedan escanear tus ofertas, necesitás el cartel acrílico oficial de Lazoo en tu mostrador.
-            </p>
-          </div>
-          <MaterialRequestButton merchantId={user.id} status={profile.material_status || 'none'} />
-        </div>
-      </div>
+
 
       {/* Accesos rápidos */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
