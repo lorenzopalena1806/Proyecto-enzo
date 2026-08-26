@@ -55,6 +55,7 @@ export default async function AdminUsersPage() {
                 <th className="px-6 py-4 font-medium">Usuario / Email</th>
                 <th className="px-6 py-4 font-medium">Rol</th>
                 <th className="px-6 py-4 font-medium">Negocio / Detalles</th>
+                <th className="px-6 py-4 font-medium">Onboarding</th>
                 <th className="px-6 py-4 font-medium text-right">Fecha de Registro</th>
                 <th className="px-6 py-4 font-medium text-right">Estado</th>
                 <th className="px-6 py-4 font-medium text-right">Acciones</th>
@@ -100,6 +101,33 @@ export default async function AdminUsersPage() {
                       </div>
                     ) : (
                       <span className="text-slate-500 text-xs italic">N/A</span>
+                    )}
+                  </td>
+                  <td className="px-6 py-4">
+                    {user.role === 'merchant' ? (
+                      <div className="space-y-1">
+                        {/* Suscripción status */}
+                        {user.subscription_expires_at ? (
+                          new Date(user.subscription_expires_at) < new Date() ? (
+                            <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 border border-red-500/20">Pago Vencido</span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Suscripción OK</span>
+                          )
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-slate-500/10 text-slate-400 border border-slate-500/20">Falta Pago</span>
+                        )}
+                        
+                        {/* Material Físico status */}
+                        {user.material_status === 'delivered' ? (
+                          <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mt-1">QR Entregado</span>
+                        ) : user.material_status === 'requested' ? (
+                          <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 mt-1">QR Solicitado</span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-slate-500/10 text-slate-400 border border-slate-500/20 mt-1">Sin QR Físico</span>
+                        )}
+                      </div>
+                    ) : (
+                      <span className="text-slate-500 text-xs italic">-</span>
                     )}
                   </td>
                   <td className="px-6 py-4 text-right text-slate-400">

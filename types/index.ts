@@ -20,6 +20,7 @@ export interface Profile {
   address: string | null;
   business_hours: string | null;
   subscription_expires_at: string | null;
+  material_status?: 'none' | 'requested' | 'delivered';
   is_active: boolean;
   created_at: string;
 }

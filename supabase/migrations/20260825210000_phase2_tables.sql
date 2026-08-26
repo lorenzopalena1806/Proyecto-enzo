@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS admin_finances ( id UUID PRIMARY KEY DEFAULT gen_random_uuid(), type VARCHAR(20) NOT NULL, category VARCHAR(50) NOT NULL, amount NUMERIC NOT NULL, description TEXT, date DATE NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW() ); ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS material_status VARCHAR(20) DEFAULT 'none'; 

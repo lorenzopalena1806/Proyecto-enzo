@@ -1,8 +1,10 @@
 import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { QrCode, ScanLine, ImageIcon, TrendingUp, ArrowRight, AlertTriangle, Star, ShieldCheck, Briefcase, Printer } from 'lucide-react';
+import { QrCode, ScanLine, ImageIcon, TrendingUp, ArrowRight, AlertTriangle, Star, ShieldCheck, Briefcase, Printer, Heart, Package } from 'lucide-react';
 import { PushManager } from '@/components/dashboard/PushManager';
+import { MerchantChart } from '@/components/dashboard/MerchantChart';
+import { MaterialRequestButton } from '@/components/dashboard/MaterialRequestButton';
 
 export const metadata = {
   title: 'Panel Principal | Lazoo',
@@ -17,17 +19,25 @@ export default async function DashboardPage() {
 
   const adminClient = createAdminClient();
 
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+  sevenDaysAgo.setHours(0,0,0,0);
+
   // Obtener perfil y estadísticas en PARALELO para máxima velocidad de carga
   const [
     { data: profile },
     { count: totalTransactions },
     { data: recentTransactions },
-    { data: ratedTransactions }
+    { data: ratedTransactions },
+    { count: totalFavorites },
+    { data: chartTransactions }
   ] = await Promise.all([
     adminClient.from('profiles').select('*').eq('id', user.id).single(),
     adminClient.from('discount_transactions').select('*', { count: 'exact', head: true }).eq('scanner_id', user.id),
     adminClient.from('discount_transactions').select('*, scanned_user:profiles!scanned_user_id(full_name, business_name, role)').eq('scanner_id', user.id).order('applied_at', { ascending: false }).limit(5),
-    adminClient.from('discount_transactions').select('rating').eq('scanner_id', user.id).not('rating', 'is', null).limit(100)
+    adminClient.from('discount_transactions').select('rating').eq('scanner_id', user.id).not('rating', 'is', null).limit(100),
+    adminClient.from('favorites').select('*', { count: 'exact', head: true }).eq('merchant_id', user.id),
+    adminClient.from('discount_transactions').select('applied_at, scanned_user_id').eq('scanner_id', user.id).gte('applied_at', sevenDaysAgo.toISOString())
   ]);
 
   if (!profile) redirect('/auth/login');
@@ -42,6 +52,39 @@ export default async function DashboardPage() {
     totalRatings = ratedTransactions.length;
     const sum = ratedTransactions.reduce((acc: number, tx: any) => acc + (tx.rating || 0), 0);
     averageRating = Number((sum / totalRatings).toFixed(1));
+  }
+
+  // Preparar datos para el gráfico (últimos 7 días)
+  const chartData = [];
+  const formatDay = (d: Date) => d.toLocaleDateString('es-AR', { weekday: 'short', day: 'numeric' });
+  
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(sevenDaysAgo);
+    d.setDate(d.getDate() + i);
+    
+    const txsForDay = (chartTransactions || []).filter((tx: any) => {
+      const txDate = new Date(tx.applied_at);
+      return txDate.getDate() === d.getDate() && txDate.getMonth() === d.getMonth();
+    });
+    
+    const userScans = new Set();
+    let nuevos = 0;
+    let recurrentes = 0;
+    
+    txsForDay.forEach((tx: any) => {
+      if (userScans.has(tx.scanned_user_id)) {
+        recurrentes++;
+      } else {
+        nuevos++;
+        userScans.add(tx.scanned_user_id);
+      }
+    });
+    
+    chartData.push({
+      day: formatDay(d),
+      nuevos,
+      recurrentes
+    });
   }
 
   return (
@@ -104,12 +147,18 @@ export default async function DashboardPage() {
       })()}
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 relative z-10">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 relative z-10">
         <StatCard
           label="Escaneos totales"
           value={String(totalTransactions ?? 0)}
           Icon={ScanLine}
           color="violet"
+        />
+        <StatCard
+          label="Favoritos"
+          value={String(totalFavorites ?? 0)}
+          Icon={Heart}
+          color="blue"
         />
         <StatCard
           label="Suscripción"
@@ -140,6 +189,29 @@ export default async function DashboardPage() {
             </div>
             <p className="text-xs text-slate-400 mt-1 font-medium">{totalRatings} calificaciones</p>
           </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative z-10">
+        <div className="lg:col-span-2 glass-panel rounded-2xl p-6 shadow-lg">
+          <h2 className="text-white font-bold text-lg mb-4 flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-blue-400" />
+            Escaneos Últimos 7 Días
+          </h2>
+          <MerchantChart data={chartData} />
+        </div>
+        
+        <div className="glass-panel rounded-2xl p-6 shadow-lg flex flex-col justify-between">
+          <div>
+            <h2 className="text-white font-bold text-lg mb-2 flex items-center gap-2">
+              <Package className="w-5 h-5 text-amber-400" />
+              Material Físico (QR)
+            </h2>
+            <p className="text-sm text-slate-400 mb-6">
+              Para que los clientes puedan escanear tus ofertas, necesitás el cartel acrílico oficial de Lazoo en tu mostrador.
+            </p>
+          </div>
+          <MaterialRequestButton merchantId={user.id} status={profile.material_status || 'none'} />
         </div>
       </div>
 
