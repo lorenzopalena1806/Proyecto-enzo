@@ -8,6 +8,7 @@ import { User, Sparkles, Clock, Scan, ClipboardList } from 'lucide-react';
 import Link from 'next/link';
 import { DiscoverSection } from '@/components/client/DiscoverSection';
 import { ShareButton } from '@/components/shared/ShareButton';
+import { OnboardingTutorial } from '@/components/client/OnboardingTutorial';
 
 export default async function ClientQRPage() {
   const supabase = await createClient();
@@ -22,7 +23,7 @@ export default async function ClientQRPage() {
 
   // Obtener perfil y QR en PARALELO
   const [{ data: profile }, { data: initialQrData }] = await Promise.all([
-    adminClient.from('profiles').select('full_name, is_active').eq('id', user.id).single(),
+    adminClient.from('profiles').select('full_name, is_active, has_seen_tutorial').eq('id', user.id).single(),
     adminClient.from('qr_codes').select('qr_token').eq('user_id', user.id).single(),
   ]);
 
@@ -132,6 +133,7 @@ export default async function ClientQRPage() {
 
   return (
     <div className="min-h-screen app-bg flex flex-col font-sans">
+      <OnboardingTutorial userId={user.id} hasSeen={profile?.has_seen_tutorial || false} />
       <style>{`
         .app-bg {
           background: radial-gradient(ellipse at top, #0f1f4a 0%, #060d1f 50%, #000510 100%);

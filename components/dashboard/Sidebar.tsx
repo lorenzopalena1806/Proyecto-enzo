@@ -25,6 +25,7 @@ import {
   Printer,
   Wallet,
   TrendingUp,
+  Crown,
 } from 'lucide-react';
 import type { Profile } from '@/types';
 
@@ -61,6 +62,12 @@ const MERCHANT_NAV_ITEMS = [
     href: '/dashboard/offers',
     label: 'Mis Ofertas',
     icon: Tag,
+    exact: false,
+  },
+  {
+    href: '/dashboard/pro',
+    label: 'Lazoo PRO',
+    icon: Crown,
     exact: false,
   },
   {
