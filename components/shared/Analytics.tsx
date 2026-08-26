@@ -2,12 +2,12 @@
 
 import Script from 'next/script';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 
 export const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_ID;
 export const FB_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 
-export function Analytics() {
+function AnalyticsTracker() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -31,8 +31,16 @@ export function Analytics() {
     }
   }, [pathname, searchParams]);
 
+  return null;
+}
+
+export function Analytics() {
   return (
     <>
+      <Suspense fallback={null}>
+        <AnalyticsTracker />
+      </Suspense>
+
       {/* Global Site Tag (gtag.js) - Google Analytics */}
       {GA_TRACKING_ID && (
         <>
