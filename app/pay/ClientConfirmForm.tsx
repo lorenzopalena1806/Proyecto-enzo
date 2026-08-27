@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle2, Loader2, XCircle, ShieldCheck, Star } from 'lucide-react';
 import { confirmScannedPaymentServer, rateTransactionServer } from '@/app/actions/charge';
@@ -43,10 +43,13 @@ export function ClientConfirmForm({
   const [hoverRating, setHoverRating] = useState<number>(0);
   const [isRatingSubmitting, setIsRatingSubmitting] = useState(false);
   const [ratingSubmitted, setRatingSubmitted] = useState(false);
+  const successRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (status === 'success') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => {
+        successRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
     }
   }, [status]);
 
@@ -102,6 +105,7 @@ export function ClientConfirmForm({
   if (status === 'success') {
     return (
       <div
+        ref={successRef}
         className="w-full rounded-3xl p-8 flex flex-col items-center text-center space-y-5"
         style={{
           background: 'rgba(16,185,129,0.08)',
