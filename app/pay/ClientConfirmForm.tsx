@@ -68,8 +68,8 @@ export function ClientConfirmForm({
         return;
       }
 
-      if (res.transactionId) {
-        setCreatedTxId(res.transactionId);
+      if ('transactionId' in res && res.transactionId) {
+        setCreatedTxId(res.transactionId as string);
       }
 
       const resolvedFinal = ('finalAmount' in res && res.finalAmount !== undefined) ? res.finalAmount : finalAmount;
