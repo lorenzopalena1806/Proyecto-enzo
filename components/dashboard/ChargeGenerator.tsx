@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { createClient } from '@/lib/supabase';
 import { processPaymentByShortCodeServer } from '@/app/actions/charge';
@@ -66,10 +66,11 @@ export function ChargeGenerator({ merchantId, activeOffers = [] }: ChargeGenerat
   const [status, setStatus] = useState<'idle' | 'waiting' | 'success' | 'error' | 'processing'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const [successData, setSuccessData] = useState<{ amount: number; final: number; transactionId?: string } | null>(null);
+  const successRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (status === 'success') {
-      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+      setTimeout(() => successRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
     }
   }, [status]);
 
@@ -413,7 +414,10 @@ export function ChargeGenerator({ merchantId, activeOffers = [] }: ChargeGenerat
 
       {/* ── ESTADO: SUCCESS ───────────────────────────────── */}
       {status === 'success' && successData && (
-        <div className="rounded-2xl border border-emerald-700 bg-emerald-950/30 backdrop-blur-sm p-8 text-center space-y-6 shadow-2xl shadow-emerald-900/20">
+        <div 
+          ref={successRef}
+          className="rounded-2xl border border-emerald-700 bg-emerald-950/30 backdrop-blur-sm p-8 text-center space-y-6 shadow-2xl shadow-emerald-900/20"
+        >
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-900 border border-emerald-700">
             <CheckCircle2 className="h-8 w-8 text-emerald-400" />
           </div>

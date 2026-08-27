@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { employeeCreatePendingCharge, employeeCancelPendingCharge, employeeCheckPendingChargeStatus } from '@/app/actions/employee';
 import {
   QrCode,
@@ -37,10 +37,11 @@ export function EmployeeChargeGenerator({ merchantId, activeOffers = [] }: Emplo
   const [errorMessage, setErrorMessage] = useState('');
   const [successData, setSuccessData] = useState<any>(null);
   const [secondsLeft, setSecondsLeft] = useState(0);
+  const successRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (successData) {
-      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+      setTimeout(() => successRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
     }
   }, [successData]);
 
@@ -184,7 +185,7 @@ export function EmployeeChargeGenerator({ merchantId, activeOffers = [] }: Emplo
   // ESTADO EXITO
   if (successData) {
     return (
-      <div className="w-full max-w-lg mx-auto rounded-2xl border border-emerald-700 bg-emerald-950/30 backdrop-blur-sm p-8 text-center space-y-6 shadow-2xl shadow-emerald-900/20 mt-10">
+      <div ref={successRef} className="w-full max-w-lg mx-auto rounded-2xl border border-emerald-700 bg-emerald-950/30 backdrop-blur-sm p-8 text-center space-y-6 shadow-2xl shadow-emerald-900/20 mt-10">
         <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-[0_0_30px_rgba(16,185,129,0.4)] border-4 border-emerald-900">
           <CheckCircle2 className="h-10 w-10 text-white" />
         </div>
