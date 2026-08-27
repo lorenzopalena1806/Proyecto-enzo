@@ -67,6 +67,12 @@ export function ChargeGenerator({ merchantId, activeOffers = [] }: ChargeGenerat
   const [errorMessage, setErrorMessage] = useState('');
   const [successData, setSuccessData] = useState<{ amount: number; final: number; transactionId?: string } | null>(null);
 
+  useEffect(() => {
+    if (status === 'success') {
+      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+    }
+  }, [status]);
+
   // Calcula el precio final estimado basado en la oferta seleccionada
   const numAmount = parseFloat(amount);
   const isValidAmount = !isNaN(numAmount) && numAmount > 0;

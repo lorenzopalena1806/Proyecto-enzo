@@ -38,6 +38,12 @@ export function EmployeeChargeGenerator({ merchantId, activeOffers = [] }: Emplo
   const [successData, setSuccessData] = useState<any>(null);
   const [secondsLeft, setSecondsLeft] = useState(0);
 
+  useEffect(() => {
+    if (successData) {
+      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+    }
+  }, [successData]);
+
   const [manualCode, setManualCode] = useState('');
   const [manualCodeLoading, setManualCodeLoading] = useState(false);
   const [manualCodeError, setManualCodeError] = useState('');
