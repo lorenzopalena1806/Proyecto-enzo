@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Store, User, Mail, Calendar, ShieldAlert, Search, Filter, TrendingUp, ScanBarcode } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Store, User, Mail, Calendar, ShieldAlert, Search, Filter, TrendingUp, ScanBarcode, ChevronRight } from 'lucide-react';
 import { SuspendUserButton } from '@/components/admin/SuspendUserButton';
 
 type EnrichedUser = {
@@ -20,6 +21,7 @@ type EnrichedUser = {
 };
 
 export default function AdminUsersTableClient({ initialUsers }: { initialUsers: EnrichedUser[] }) {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState<'all' | 'merchant' | 'client' | 'superadmin'>('all');
   const [sortBy, setSortBy] = useState<'newest' | 'sales_desc' | 'scans_desc'>('newest');
@@ -50,7 +52,7 @@ export default function AdminUsersTableClient({ initialUsers }: { initialUsers: 
         if (a.role === 'merchant' && b.role === 'merchant') {
             return b.total_sales - a.total_sales;
         }
-        return 0; // Si no son comercios, no los ordenamos por venta
+        return 0;
       }
       
       if (sortBy === 'scans_desc') {
@@ -136,12 +138,16 @@ export default function AdminUsersTableClient({ initialUsers }: { initialUsers: 
                 <th className="px-6 py-4 font-medium">Onboarding</th>
                 <th className="px-6 py-4 font-medium text-right">Fecha</th>
                 <th className="px-6 py-4 font-medium text-right">Estado</th>
-                <th className="px-6 py-4 font-medium text-right">Acciones</th>
+                <th className="px-6 py-4 font-medium text-right"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/50">
               {filteredAndSortedUsers.map((user: any) => (
-                <tr key={user.id} className="hover:bg-slate-800/30 transition-colors">
+                <tr 
+                  key={user.id} 
+                  onClick={() => router.push(`/admin/users/${user.id}`)}
+                  className="hover:bg-slate-800/50 cursor-pointer transition-colors group"
+                >
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 ${
@@ -154,7 +160,7 @@ export default function AdminUsersTableClient({ initialUsers }: { initialUsers: 
                          <User className="h-5 w-5" />}
                       </div>
                       <div>
-                        <div className="font-semibold text-white">{user.full_name || 'Sin nombre'}</div>
+                        <div className="font-semibold text-white group-hover:text-blue-400 transition-colors">{user.full_name || 'Sin nombre'}</div>
                         <div className="text-slate-400 text-xs flex items-center gap-1 mt-0.5">
                           <Mail className="h-3 w-3" /> {user.email}
                         </div>
@@ -236,13 +242,11 @@ export default function AdminUsersTableClient({ initialUsers }: { initialUsers: 
                       {new Date(user.created_at).toLocaleDateString('es-AR')}
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-right">
+                  <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>
                     <SuspendUserButton userId={user.id} isActive={user.is_active} role={user.role} />
                   </td>
-                  <td className="px-6 py-4 text-right">
-                    <a href={`/admin/users/${user.id}`} className="text-blue-400 hover:text-blue-300 text-xs font-semibold px-3 py-1.5 bg-blue-500/10 rounded-lg transition-colors inline-block whitespace-nowrap">
-                      Ver Detalles
-                    </a>
+                  <td className="px-6 py-4 text-right text-slate-500 group-hover:text-blue-400 transition-colors">
+                    <ChevronRight className="h-5 w-5 ml-auto" />
                   </td>
                 </tr>
               ))}
