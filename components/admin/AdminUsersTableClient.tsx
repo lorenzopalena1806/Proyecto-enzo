@@ -131,14 +131,14 @@ export default function AdminUsersTableClient({ initialUsers }: { initialUsers: 
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-950/50 text-slate-400 border-b border-slate-800">
               <tr>
-                <th className="px-6 py-4 font-medium">Usuario / Email</th>
-                <th className="px-6 py-4 font-medium">Rol</th>
-                <th className="px-6 py-4 font-medium">Negocio / Detalles</th>
-                <th className="px-6 py-4 font-medium">Estadísticas</th>
-                <th className="px-6 py-4 font-medium">Onboarding</th>
-                <th className="px-6 py-4 font-medium text-right">Fecha</th>
-                <th className="px-6 py-4 font-medium text-right">Estado</th>
-                <th className="px-6 py-4 font-medium text-right"></th>
+                <th className="px-3 py-3 font-medium">Usuario / Email</th>
+                <th className="px-3 py-3 font-medium">Rol</th>
+                <th className="px-3 py-3 font-medium">Negocio / Detalles</th>
+                <th className="px-3 py-3 font-medium">Estadísticas</th>
+                <th className="px-3 py-3 font-medium">Onboarding</th>
+                <th className="px-3 py-3 font-medium text-right">Fecha</th>
+                <th className="px-3 py-3 font-medium text-right">Estado</th>
+                <th className="px-3 py-3 font-medium text-right"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/50">
@@ -148,27 +148,27 @@ export default function AdminUsersTableClient({ initialUsers }: { initialUsers: 
                   onClick={() => router.push(`/admin/users/${user.id}`)}
                   className="hover:bg-slate-800/50 cursor-pointer transition-colors group"
                 >
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className={`h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                  <td className="px-3 py-3">
+                    <div className="flex items-center gap-2">
+                      <div className={`h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 ${
                         user.role === 'merchant' ? 'bg-violet-900/50 text-violet-400' : 
                         user.role === 'superadmin' ? 'bg-amber-900/50 text-amber-400' :
                         'bg-emerald-900/50 text-emerald-400'
                       }`}>
-                        {user.role === 'merchant' ? <Store className="h-5 w-5" /> : 
-                         user.role === 'superadmin' ? <ShieldAlert className="h-5 w-5" /> :
-                         <User className="h-5 w-5" />}
+                        {user.role === 'merchant' ? <Store className="h-4 w-4" /> : 
+                         user.role === 'superadmin' ? <ShieldAlert className="h-4 w-4" /> :
+                         <User className="h-4 w-4" />}
                       </div>
                       <div>
-                        <div className="font-semibold text-white group-hover:text-blue-400 transition-colors">{user.full_name || 'Sin nombre'}</div>
-                        <div className="text-slate-400 text-xs flex items-center gap-1 mt-0.5">
-                          <Mail className="h-3 w-3" /> {user.email}
+                        <div className="font-semibold text-white group-hover:text-blue-400 transition-colors line-clamp-1">{user.full_name || 'Sin nombre'}</div>
+                        <div className="text-slate-400 text-[10px] sm:text-xs flex items-center gap-1 mt-0.5 line-clamp-1">
+                          <Mail className="h-3 w-3 flex-shrink-0" /> {user.email}
                         </div>
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
-                    <span className={`px-2.5 py-1 rounded-md text-xs font-medium uppercase tracking-wider ${
+                  <td className="px-3 py-3">
+                    <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${
                       user.role === 'merchant' ? 'bg-violet-950 text-violet-400 border border-violet-800/50' : 
                       user.role === 'superadmin' ? 'bg-amber-950 text-amber-400 border border-amber-800/50' :
                       'bg-emerald-950 text-emerald-400 border border-emerald-800/50'
@@ -177,76 +177,76 @@ export default function AdminUsersTableClient({ initialUsers }: { initialUsers: 
                        user.role === 'superadmin' ? 'Superadmin' : 'Cliente'}
                     </span>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-3 py-3">
                     {user.role === 'merchant' ? (
                       <div>
-                        <div className="text-white font-medium">{user.business_name || 'Sin nombre'}</div>
-                        {user.phone && <div className="text-slate-400 text-xs mt-0.5">Tel: {user.phone}</div>}
+                        <div className="text-white font-medium line-clamp-1">{user.business_name || 'Sin nombre'}</div>
+                        {user.phone && <div className="text-slate-400 text-[10px] mt-0.5">{user.phone}</div>}
                       </div>
                     ) : (
-                      <span className="text-slate-500 text-xs italic">N/A</span>
+                      <span className="text-slate-500 text-[10px] italic">N/A</span>
                     )}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-3 py-3">
                     <div className="space-y-1">
                       {user.role === 'merchant' ? (
                         <>
-                          <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-400">
-                            <TrendingUp className="h-3.5 w-3.5" /> ${user.total_sales.toLocaleString('es-AR')}
+                          <div className="flex items-center gap-1 text-[11px] font-medium text-emerald-400 whitespace-nowrap">
+                            <TrendingUp className="h-3 w-3" /> ${user.total_sales.toLocaleString('es-AR')}
                           </div>
-                          <div className="flex items-center gap-1.5 text-xs text-slate-400">
-                            <ScanBarcode className="h-3.5 w-3.5" /> {user.total_scans} op.
+                          <div className="flex items-center gap-1 text-[11px] text-slate-400 whitespace-nowrap">
+                            <ScanBarcode className="h-3 w-3" /> {user.total_scans} op.
                           </div>
                         </>
                       ) : user.role === 'client' ? (
                         <>
-                          <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-400">
-                            <ScanBarcode className="h-3.5 w-3.5" /> {user.total_scans} usos
+                          <div className="flex items-center gap-1 text-[11px] font-medium text-emerald-400 whitespace-nowrap">
+                            <ScanBarcode className="h-3 w-3" /> {user.total_scans} usos
                           </div>
                         </>
                       ) : (
-                        <span className="text-slate-500 text-xs italic">-</span>
+                        <span className="text-slate-500 text-[11px] italic">-</span>
                       )}
                     </div>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-3 py-3">
                     {user.role === 'merchant' ? (
                       <div className="space-y-1 flex flex-col items-start">
                         {/* Suscripción status */}
                         {user.subscription_expires_at ? (
                           new Date(user.subscription_expires_at) < new Date() ? (
-                            <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 border border-red-500/20">Pago Vencido</span>
+                            <span className="inline-flex items-center gap-1 text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/20 whitespace-nowrap">Vencido</span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Suscripción OK</span>
+                            <span className="inline-flex items-center gap-1 text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 whitespace-nowrap">Susc. OK</span>
                           )
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-slate-500/10 text-slate-400 border border-slate-500/20">Falta Pago</span>
+                          <span className="inline-flex items-center gap-1 text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-slate-500/10 text-slate-400 border border-slate-500/20 whitespace-nowrap">Sin Pago</span>
                         )}
                         
                         {/* Material Físico status */}
                         {user.material_status === 'delivered' ? (
-                          <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mt-1">QR Entregado</span>
+                          <span className="inline-flex items-center gap-1 text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mt-0.5 whitespace-nowrap">QR OK</span>
                         ) : user.material_status === 'requested' ? (
-                          <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 mt-1">QR Solicitado</span>
+                          <span className="inline-flex items-center gap-1 text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 mt-0.5 whitespace-nowrap">QR Pedido</span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-slate-500/10 text-slate-400 border border-slate-500/20 mt-1">Sin QR Físico</span>
+                          <span className="inline-flex items-center gap-1 text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-slate-500/10 text-slate-400 border border-slate-500/20 mt-0.5 whitespace-nowrap">Sin QR</span>
                         )}
                       </div>
                     ) : (
-                      <span className="text-slate-500 text-xs italic">-</span>
+                      <span className="text-slate-500 text-[10px] italic">-</span>
                     )}
                   </td>
-                  <td className="px-6 py-4 text-right text-slate-400">
-                    <div className="flex items-center justify-end gap-1.5 text-xs">
-                      <Calendar className="h-3.5 w-3.5" />
-                      {new Date(user.created_at).toLocaleDateString('es-AR')}
+                  <td className="px-3 py-3 text-right text-slate-400">
+                    <div className="flex items-center justify-end gap-1 text-[11px] whitespace-nowrap">
+                      <Calendar className="h-3 w-3" />
+                      {new Date(user.created_at).toLocaleDateString('es-AR', {day: 'numeric', month: 'numeric', year: '2-digit'})}
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>
+                  <td className="px-3 py-3 text-right" onClick={(e) => e.stopPropagation()}>
                     <SuspendUserButton userId={user.id} isActive={user.is_active} role={user.role} />
                   </td>
-                  <td className="px-6 py-4 text-right text-slate-500 group-hover:text-blue-400 transition-colors">
-                    <ChevronRight className="h-5 w-5 ml-auto" />
+                  <td className="px-3 py-3 text-right text-slate-500 group-hover:text-blue-400 transition-colors">
+                    <ChevronRight className="h-4 w-4 ml-auto" />
                   </td>
                 </tr>
               ))}
