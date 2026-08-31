@@ -2,7 +2,6 @@ import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { QrCode, ScanLine, ImageIcon, TrendingUp, ArrowRight, AlertTriangle, Star, ShieldCheck, Briefcase, Printer, Heart, Package } from 'lucide-react';
-import { PushManager } from '@/components/dashboard/PushManager';
 import { MerchantChart } from '@/components/dashboard/MerchantChart';
 import { MaterialRequestButton } from '@/components/dashboard/MaterialRequestButton';
 import { LazooInsights } from '@/components/dashboard/LazooInsights';
@@ -66,9 +65,6 @@ export default async function DashboardPage() {
           {today.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}
         </p>
       </div>
-
-      {/* Gestor de Notificaciones Push */}
-      <PushManager />
 
       {/* Alerta de día */}
       <div className={`

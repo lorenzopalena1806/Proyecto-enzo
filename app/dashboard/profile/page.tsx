@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { Package } from 'lucide-react';
 import { ProfileEditForm } from '@/components/dashboard/ProfileEditForm';
 import { MaterialRequestButton } from '@/components/dashboard/MaterialRequestButton';
+import { PushManager } from '@/components/dashboard/PushManager';
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -26,6 +27,8 @@ export default async function ProfilePage() {
         <h1 className="text-3xl font-bold text-white tracking-tight">Mi Perfil</h1>
         <p className="text-slate-400 mt-1">Actualizá los datos de tu cuenta.</p>
       </div>
+
+      <PushManager />
 
       {profile.role === 'merchant' && (
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg mb-8">

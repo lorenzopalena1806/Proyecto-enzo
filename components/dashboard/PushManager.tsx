@@ -98,17 +98,19 @@ export function PushManager() {
   }
 
   return (
-    <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-5 flex items-center justify-between shadow-lg">
-      <div className="flex items-center gap-4">
-        <div className={`h-12 w-12 rounded-xl flex items-center justify-center border ${isSubscribed ? 'bg-blue-500/20 border-blue-500/40' : 'bg-slate-700 border-slate-600'}`}>
-          {isSubscribed ? <BellRing className="h-6 w-6 text-blue-400" /> : <BellOff className="h-6 w-6 text-slate-400" />}
+    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm mb-6">
+      <div className="flex items-center gap-3">
+        <div className={`flex h-10 w-10 items-center justify-center rounded-full ${isSubscribed ? 'bg-emerald-500/10' : 'bg-slate-800'}`}>
+          {isSubscribed ? <BellRing className="h-5 w-5 text-emerald-400" /> : <BellOff className="h-5 w-5 text-slate-400" />}
         </div>
         <div>
-          <h3 className="text-white font-bold">{isSubscribed ? 'Notificaciones Activadas' : 'Activar Notificaciones'}</h3>
-          <p className="text-sm text-slate-400 max-w-xs">
+          <h3 className="text-white text-sm font-medium">
+            {isSubscribed ? 'Notificaciones activadas' : 'Notificaciones desactivadas'}
+          </h3>
+          <p className="text-xs text-slate-400">
             {isSubscribed 
-              ? 'Recibirás avisos en este dispositivo cuando un cliente pague exitosamente.' 
-              : 'Activá los avisos para enterarte al instante de los pagos exitosos.'}
+              ? 'Recibís avisos de pagos en este dispositivo.' 
+              : 'Activá para recibir alertas de pagos.'}
           </p>
         </div>
       </div>
@@ -116,13 +118,13 @@ export function PushManager() {
       <button
         onClick={isSubscribed ? handleUnsubscribe : handleSubscribe}
         disabled={loading}
-        className={`px-5 py-2.5 rounded-xl font-bold transition-all disabled:opacity-50 flex items-center gap-2 ${
+        className={`text-xs px-4 py-2 rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${
           isSubscribed 
-            ? 'bg-slate-700 hover:bg-slate-600 text-white' 
-            : 'bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]'
+            ? 'bg-slate-800 hover:bg-slate-700 text-slate-300' 
+            : 'bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20'
         }`}
       >
-        {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+        {loading && <Loader2 className="h-3 w-3 animate-spin" />}
         {isSubscribed ? 'Desactivar' : 'Activar'}
       </button>
     </div>
