@@ -82,24 +82,24 @@ export default async function PayPage({
     if (branchData) branchName = branchData.name;
   }
 
-  // Buscar si el cliente tiene una suscripción activa
+  // Buscar si el COMERCIO tiene una suscripción activa
   const { data: subscription } = await adminClient
     .from('subscriptions')
     .select('status, expires_at')
-    .eq('user_id', user.id)
+    .eq('merchant_id', m)
     .single();
 
-  const isClientActive = subscription && 
+  const isMerchantActive = subscription && 
     (subscription.status === 'active' || subscription.status === 'trialing') && 
     new Date(subscription.expires_at) > new Date();
 
-  if (!isClientActive && clientProfile.role !== 'merchant') {
+  if (!isMerchantActive) {
     return (
       <div className="min-h-screen pay-bg flex flex-col items-center justify-center p-4">
         <div className="glass-card p-8 text-center rounded-3xl max-w-sm w-full">
           <AlertTriangle className="h-12 w-12 text-red-500 mb-4 mx-auto" />
-          <p className="text-red-400 font-semibold mb-2">Suscripción Inactiva</p>
-          <p className="text-slate-400 text-sm">Para acceder a este descuento, necesitás tener tu suscripción a Lazoo al día.</p>
+          <p className="text-red-400 font-semibold mb-2">Comercio Inactivo</p>
+          <p className="text-slate-400 text-sm">Este comercio no tiene su suscripción a Lazoo al día para cobrar con la app.</p>
         </div>
       </div>
     );
