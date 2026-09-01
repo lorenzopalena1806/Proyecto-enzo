@@ -503,19 +503,7 @@ export function POSView({
                 Esperando monto...
               </div>
 
-              {/* Botón para imprimir cartel físico para el mostrador */}
-              <div className="mt-6 pt-5 border-t border-white/10 w-full flex flex-col items-center">
-                <Link
-                  href="/dashboard/print-qr"
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-cyan-500/10 border border-cyan-500/30 hover:border-cyan-400 text-cyan-300 hover:text-cyan-200 text-xs font-bold transition-all hover:scale-105"
-                >
-                  <Printer className="w-4 h-4 text-cyan-400" />
-                  Imprimir Cartel QR de Mostrador
-                </Link>
-                <p className="text-[11px] text-slate-500 mt-2 text-center">
-                  Descargá o imprimí el QR oficial de tu local en alta calidad
-                </p>
-              </div>
+
             </>
           )}
         </div>
@@ -642,13 +630,7 @@ export function POSView({
       )}
 
       {/* Botones auxiliares */}
-      <div className="grid grid-cols-2 gap-4">
-        <button
-          onClick={() => window.print()}
-          className="py-3.5 rounded-xl glass-panel hover:bg-white/5 text-slate-300 text-sm font-semibold transition-all border-white/10"
-        >
-          Imprimir QR estático
-        </button>
+      <div className="grid grid-cols-1 gap-4">
         <button
           onClick={() => { navigator.clipboard.writeText(qrUrl); alert('¡Enlace de cobro copiado!'); }}
           className="py-3.5 rounded-xl bg-blue-500/10 border border-blue-500/20 hover:bg-blue-500/20 text-blue-300 text-sm font-semibold transition-all"

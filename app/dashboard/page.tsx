@@ -183,12 +183,7 @@ export default async function DashboardPage() {
           description="Cargar QR de cobro"
           Icon={ScanLine}
         />
-        <QuickLink
-          href="/dashboard/print-qr"
-          title="Imprimir QR"
-          description="Cartel para mostrador"
-          Icon={Printer}
-        />
+
         <QuickLink
           href="/dashboard/qr"
           title="Beneficios B2B"
