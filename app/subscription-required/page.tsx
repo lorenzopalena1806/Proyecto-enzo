@@ -1,8 +1,14 @@
 import Link from 'next/link';
 import { AlertCircle, LogOut } from 'lucide-react';
 import { ProSubscriptionButtons } from '@/app/dashboard/pro/ProSubscriptionButtons';
+import { createClient } from '@/lib/supabase-server';
+import { redirect } from 'next/navigation';
 
-export default function SubscriptionRequiredPage() {
+export default async function SubscriptionRequiredPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect('/auth/login');
+
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-xl bg-slate-900/50 border border-slate-800 rounded-2xl p-8 text-center space-y-6 shadow-2xl">
@@ -20,8 +26,8 @@ export default function SubscriptionRequiredPage() {
         <div className="pt-4 border-t border-slate-800">
           <h3 className="text-lg font-bold text-white mb-4">Elegí tu Plan para Renovar</h3>
           <div className="grid grid-cols-1 gap-4">
-            <ProSubscriptionButtons type="basic" />
-            <ProSubscriptionButtons type="pro" />
+            <ProSubscriptionButtons type="basic" userId={user.id} />
+            <ProSubscriptionButtons type="pro" userId={user.id} />
           </div>
         </div>
 

@@ -63,7 +63,7 @@ export default async function SuscripcionesPage() {
               Plan Actual Activo
             </div>
           ) : (
-            <ProSubscriptionButtons type="basic" />
+            <ProSubscriptionButtons type="basic" userId={user.id} />
           )}
         </div>
 
@@ -102,7 +102,7 @@ export default async function SuscripcionesPage() {
               Plan PRO Activo
             </div>
           ) : (
-            <ProSubscriptionButtons type="pro" />
+            <ProSubscriptionButtons type="pro" userId={user.id} />
           )}
         </div>
       </div>

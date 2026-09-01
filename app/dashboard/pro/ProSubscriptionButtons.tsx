@@ -4,12 +4,12 @@ import { useState } from 'react';
 import { createSubscription } from '@/app/actions/mp';
 import { Loader2 } from 'lucide-react';
 
-export function ProSubscriptionButtons({ type }: { type: 'basic' | 'pro' }) {
+export function ProSubscriptionButtons({ type, userId }: { type: 'basic' | 'pro', userId: string }) {
   const [loading, setLoading] = useState(false);
 
   const handleSubscribe = async () => {
     setLoading(true);
-    const res = await createSubscription(type);
+    const res = await createSubscription(type, userId);
     setLoading(false);
 
     if (res.error) {
