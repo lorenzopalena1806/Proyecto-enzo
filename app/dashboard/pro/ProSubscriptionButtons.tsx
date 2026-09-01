@@ -18,6 +18,8 @@ export function ProSubscriptionButtons({ type }: { type: 'basic' | 'pro' }) {
     }
 
     if (res.init_point) {
+      console.log('Redirigiendo a:', res.init_point);
+      // alert('Yendo a MP: ' + res.init_point); // Descomentar si falla de nuevo
       window.location.href = res.init_point;
     }
   };
