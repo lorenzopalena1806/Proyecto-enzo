@@ -72,10 +72,11 @@ const MERCHANT_NAV_ITEMS = [
   },
   {
     href: '/dashboard/pro',
-    label: 'Lazoo PRO',
+    label: 'Planes y Suscripción',
     icon: Crown,
     exact: false,
     id: 'tour-pro',
+    badge: 'PRO',
   },
   {
     href: '/dashboard/history',
