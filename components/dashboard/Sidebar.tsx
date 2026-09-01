@@ -50,13 +50,6 @@ const MERCHANT_NAV_ITEMS = [
     id: 'tour-pos',
   },
   {
-    href: '/dashboard/print-qr',
-    label: 'Imprimir Cartel QR',
-    icon: Printer,
-    exact: false,
-    id: 'tour-print',
-  },
-  {
     href: '/dashboard/qr',
     label: 'Comprar / B2B',
     icon: QrCode,
@@ -124,6 +117,12 @@ const ADMIN_NAV_ITEMS = [
     href: '/admin/notifications',
     label: 'Comunicados Globales',
     icon: Megaphone,
+    exact: false,
+  },
+  {
+    href: '/admin/qrs',
+    label: 'QRs Físicos',
+    icon: QrCode,
     exact: false,
   },
   {

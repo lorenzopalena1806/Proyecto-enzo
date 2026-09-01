@@ -63,15 +63,6 @@ export function OnboardingTour() {
           }
         },
         {
-          element: '#tour-print',
-          popover: {
-            title: 'Tu Cartel Oficial 🖨️',
-            description: 'Hacé clic acá para descargar e imprimir el código QR oficial de Lazoo. ¡Es clave que lo pegues en tu mostrador para que los clientes te escaneen!',
-            side: 'right',
-            align: 'start'
-          }
-        },
-        {
           element: '#tour-offers',
           popover: {
             title: 'Atraé más clientes 🎁',
