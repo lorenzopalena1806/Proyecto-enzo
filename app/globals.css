@@ -134,3 +134,12 @@ input[type="number"] {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+@keyframes premium-bounce {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -4px); }
+}
+
+@keyframes premium-ping {
+  75%, 100% { transform: scale(1.6); opacity: 0; }
+}
