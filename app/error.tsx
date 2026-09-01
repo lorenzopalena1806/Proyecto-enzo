@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { reportErrorToServer } from '@/app/actions/error';
 
 export default function Error({
   error,
@@ -11,7 +12,14 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Acá en la Fase 2/3 mandaríamos esto a la base de datos o Sentry
+    // Reportar el error al panel de control (Superadmin logs)
+    reportErrorToServer({
+      message: error.message,
+      stack: error.stack,
+      digest: error.digest,
+      url: typeof window !== 'undefined' ? window.location.href : 'unknown',
+    }).catch(console.error);
+    
     console.error('Lazoo App Error:', error);
   }, [error]);
 

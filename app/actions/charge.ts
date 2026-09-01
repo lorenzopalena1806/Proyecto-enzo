@@ -1,11 +1,19 @@
 'use server';
 
+import { headers } from 'next/headers';
 import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { calculateDiscount } from '@/lib/discount-logic';
+import { checkRateLimit } from '@/lib/rate-limit';
 import type { PaymentMethod, Profile } from '@/types';
 import { sendPushNotification } from './push';
 
 export async function processPaymentByShortCodeServer(merchantId: string, amount: number, method: PaymentMethod, shortCode: string, offerId?: string) {
+  const ip = (await headers()).get('x-forwarded-for') ?? 'unknown';
+  const rl = checkRateLimit(ip, 5, 30000);
+  if (!rl.success) {
+    return { success: false, reason: 'Por seguridad, demasiados intentos. Esperá unos segundos.' };
+  }
+
   const adminClient = createAdminClient();
 
   const { data: qrRecords } = await adminClient
@@ -28,6 +36,12 @@ export async function processPaymentByShortCodeServer(merchantId: string, amount
 }
 
 export async function confirmScannedPaymentServer(merchantId: string, amount: number, method: PaymentMethod, offerId?: string) {
+  const ip = (await headers()).get('x-forwarded-for') ?? 'unknown';
+  const rl = checkRateLimit(ip, 5, 30000);
+  if (!rl.success) {
+    return { success: false, reason: 'Demasiados intentos de pago. Esperá unos segundos por seguridad.' };
+  }
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   

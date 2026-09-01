@@ -38,7 +38,7 @@ export default async function MapPage() {
 
   const { data: merchants } = await adminClient
     .from('profiles')
-    .select('id, business_name, avatar_url, category, address, latitude, longitude')
+    .select('id, business_name, avatar_url, category, address, latitude, longitude, is_premium')
     .eq('role', 'merchant')
     .eq('is_active', true)
     .not('latitude', 'is', null)

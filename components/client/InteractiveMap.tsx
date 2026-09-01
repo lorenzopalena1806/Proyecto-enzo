@@ -30,8 +30,34 @@ const svgIcon = L.divIcon({
   popupAnchor: [0, -30]
 });
 
-const createMerchantIcon = (avatarUrl: string | null) => {
+const createMerchantIcon = (avatarUrl: string | null, isPremium?: boolean) => {
   if (!avatarUrl) return svgIcon;
+  
+  if (isPremium) {
+    return L.divIcon({
+      className: 'custom-merchant-icon-premium',
+      html: `
+        <div style="position: relative;">
+          <!-- Corona animada flotando -->
+          <div style="position: absolute; top: -14px; left: 50%; transform: translateX(-50%); font-size: 20px; animation: bounce 2s infinite;">👑</div>
+          <!-- Avatar más grande con borde dorado brillante -->
+          <div style="width: 54px; height: 54px; border-radius: 50%; border: 3px solid #fbbf24; box-shadow: 0 0 20px rgba(251,191,36,0.6); overflow: hidden; background-color: #0f172a; position: relative; z-index: 10;">
+            <img src="${avatarUrl}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'" />
+          </div>
+          <!-- Pulso de radar dorado -->
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; border: 2px solid #fbbf24; animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite; z-index: 1; pointer-events: none;"></div>
+        </div>
+        <style>
+          @keyframes bounce { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -4px); } }
+          @keyframes ping { 75%, 100% { transform: scale(1.6); opacity: 0; } }
+        </style>
+      `,
+      iconSize: [54, 54],
+      iconAnchor: [27, 54],
+      popupAnchor: [0, -54]
+    });
+  }
+
   return L.divIcon({
     className: 'custom-merchant-icon',
     html: `<div style="width: 44px; height: 44px; border-radius: 50%; border: 3px solid #8b5cf6; box-shadow: 0 4px 10px rgba(0,0,0,0.4); overflow: hidden; background-color: #0f172a;"><img src="${avatarUrl}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'" /></div>`,
@@ -49,6 +75,7 @@ interface MerchantLocation {
   address: string | null;
   latitude: number;
   longitude: number;
+  is_premium?: boolean;
 }
 
 interface MapProps {
@@ -94,7 +121,8 @@ export default function InteractiveMap({ merchants }: MapProps) {
           <Marker 
             key={merchant.id} 
             position={[merchant.latitude, merchant.longitude]}
-            icon={createMerchantIcon(merchant.avatar_url)}
+            icon={createMerchantIcon(merchant.avatar_url, merchant.is_premium)}
+            zIndexOffset={merchant.is_premium ? 1000 : 0} // Asegura que los premium estén arriba
           >
             <Popup className="merchant-popup" closeButton={false}>
               <div className="p-1 min-w-[220px]">
