@@ -152,6 +152,12 @@ const ADMIN_NAV_ITEMS = [
     icon: Calculator,
     exact: false,
   },
+  {
+    href: '/admin/settings',
+    label: 'Configuración',
+    icon: Settings,
+    exact: false,
+  },
 ];
 
 import { BranchSwitcher } from './BranchSwitcher';

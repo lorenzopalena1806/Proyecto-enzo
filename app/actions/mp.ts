@@ -22,8 +22,16 @@ export async function createSubscription(planType: 'basic' | 'pro', userId: stri
   // Usamos el mail oficial, o un fallback fantasma si por algún motivo no existe
   const userEmail = authUser?.user?.email || `comercio-${userId.substring(0, 8)}@lazoo.com.ar`;
 
-  // Definir precio según plan (TEMPORAL PARA PRUEBAS: 1000 y 2000)
-  const amount = planType === 'basic' ? 1000 : 2000;
+  // Obtener precios dinámicos
+  const { data: settingsData } = await adminClient.from('app_settings').select('*');
+  const getSetting = (key: string, defaultValue: number) => {
+    const row = settingsData?.find(s => s.key === key);
+    return row ? row.value.amount : defaultValue;
+  };
+  const basicPrice = getSetting('pricing_basic', 55000);
+  const proPrice = getSetting('pricing_pro', 80000);
+
+  const amount = planType === 'basic' ? basicPrice : proPrice;
   const reason = planType === 'basic' ? 'Lazoo Plan Básico' : 'Lazoo Plan PRO';
 
   try {

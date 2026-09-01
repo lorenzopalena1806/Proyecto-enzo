@@ -21,6 +21,18 @@ export default async function SuscripcionesPage() {
 
   if (!profile || profile.role !== 'merchant') redirect('/dashboard');
 
+  // Obtener precios dinámicos
+  const { data: settingsData } = await adminClient.from('app_settings').select('*');
+  const getSetting = (key: string, defaultValue: number) => {
+    const row = settingsData?.find(s => s.key === key);
+    return row ? row.value.amount : defaultValue;
+  };
+  const basicPrice = getSetting('pricing_basic', 55000);
+  const proPrice = getSetting('pricing_pro', 80000);
+
+  // Función para formatear moneda
+  const formatPrice = (price: number) => new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(price);
+
   return (
     <div className="max-w-5xl mx-auto pb-12">
       <div className="text-center mb-12">
@@ -42,7 +54,7 @@ export default async function SuscripcionesPage() {
           
           <div className="mb-8">
             <div className="flex items-end gap-1">
-              <span className="text-5xl font-black text-white">$1.000</span>
+              <span className="text-5xl font-black text-white">{formatPrice(basicPrice)}</span>
               <span className="text-slate-400 mb-1">/mes</span>
             </div>
             <p className="text-xs text-slate-500 mt-2">* Alta inicial por única vez: $80.000 (Incluye 1er mes y Kit Físico)</p>
@@ -82,7 +94,7 @@ export default async function SuscripcionesPage() {
           
           <div className="mb-8">
             <div className="flex items-end gap-1">
-              <span className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">$2.000</span>
+              <span className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">{formatPrice(proPrice)}</span>
               <span className="text-slate-400 mb-1">/mes</span>
             </div>
             <p className="text-xs text-slate-500 mt-2">* Alta inicial por única vez: $110.000 (Incluye 1er mes y Kit VIP)</p>
