@@ -11,17 +11,31 @@ export const metadata = {
 export default async function CashierLoginPage({ params }: { params: { employee_id: string } }) {
   const adminClient = createAdminClient();
   
-  // Buscar datos básicos para mostrar
-  const { data: emp } = await adminClient
+  // Buscar datos básicos del empleado
+  const { data: emp, error: empErr } = await adminClient
     .from('merchant_employees')
-    .select('name, branch_id, branch:merchant_branches(name), merchant:profiles!merchant_id(business_name)')
+    .select('*')
     .eq('id', params.employee_id)
     .single();
 
-  if (!emp) notFound();
+  if (empErr || !emp) {
+    console.error('Error fetching employee:', empErr);
+    notFound();
+  }
 
-  const merchantData = Array.isArray(emp.merchant) ? emp.merchant[0] : emp.merchant;
-  const branchData = Array.isArray(emp.branch) ? emp.branch[0] : emp.branch;
+  // Buscar sucursal
+  const { data: branchData } = await adminClient
+    .from('merchant_branches')
+    .select('name')
+    .eq('id', emp.branch_id)
+    .single();
+
+  // Buscar comercio
+  const { data: merchantData } = await adminClient
+    .from('profiles')
+    .select('business_name')
+    .eq('id', emp.merchant_id)
+    .single();
 
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">

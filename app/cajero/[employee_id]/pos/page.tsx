@@ -17,14 +17,23 @@ export default async function CashierPOSPage({ params }: { params: { employee_id
     redirect(`/cajero/${params.employee_id}`);
   }
 
-  const adminClient = createAdminClient();
-  const { data: emp } = await adminClient
+  const { data: emp, error: empErr } = await adminClient
     .from('merchant_employees')
-    .select('name, merchant_id, branch_id, merchant:profiles!merchant_id(business_name)')
+    .select('*')
     .eq('id', params.employee_id)
     .single();
 
-  if (!emp) notFound();
+  if (empErr || !emp) {
+    console.error('Error fetching employee for POS:', empErr);
+    notFound();
+  }
+
+  // Buscar comercio
+  const { data: merchantData } = await adminClient
+    .from('profiles')
+    .select('business_name')
+    .eq('id', emp.merchant_id)
+    .single();
 
   // Traer las ofertas activas del comercio
   const { data: offers } = await adminClient
@@ -33,7 +42,6 @@ export default async function CashierPOSPage({ params }: { params: { employee_id
     .eq('merchant_id', emp.merchant_id)
     .eq('is_active', true);
 
-  const merchantData = Array.isArray(emp.merchant) ? emp.merchant[0] : emp.merchant;
 
   // Renderizamos una version reducida usando el mismo POSView, 
   // pero pasándole flags para ocultar el header normal si quisiéramos.
