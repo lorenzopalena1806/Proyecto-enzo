@@ -179,6 +179,7 @@ export function OffersManager({ initialOffers, branches = [] }: OffersManagerPro
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none appearance-none"
                   >
                     <option value="">Aplica a Todas las Sucursales</option>
+                    <option value="central">Solo Sede Central</option>
                     {branches.map(b => (
                       <option key={b.id} value={b.id}>Solo {b.name}</option>
                     ))}

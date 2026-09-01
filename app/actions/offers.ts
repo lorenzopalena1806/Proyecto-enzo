@@ -38,7 +38,10 @@ export async function createOffer(formData: FormData) {
   const image_url_raw = formData.get('image_url') as string;
   const image_url = image_url_raw && image_url_raw.startsWith('http') ? image_url_raw : null;
 
-  const branch_id = formData.get('branch_id') as string | null;
+  let branch_id = formData.get('branch_id') as string | null;
+  if (branch_id === 'central' || branch_id === '') {
+    branch_id = null;
+  }
 
   const adminClient = createAdminClient();
   const { error } = await adminClient.from('merchant_offers').insert({
@@ -101,7 +104,10 @@ export async function updateOffer(offerId: string, formData: FormData) {
   const image_url_raw = formData.get('image_url') as string;
   const image_url = image_url_raw && image_url_raw.startsWith('http') ? image_url_raw : null;
 
-  const branch_id = formData.get('branch_id') as string | null;
+  let branch_id = formData.get('branch_id') as string | null;
+  if (branch_id === 'central' || branch_id === '') {
+    branch_id = null;
+  }
 
   const adminClient = createAdminClient();
   const { error } = await adminClient.from('merchant_offers').update({

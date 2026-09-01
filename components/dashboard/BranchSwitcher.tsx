@@ -29,7 +29,9 @@ export function BranchSwitcher({ branches, activeBranchId }: BranchSwitcherProps
   };
 
   const activeBranch = branches.find(b => b.id === activeBranchId);
-  const label = activeBranch ? activeBranch.name : 'Visión Global (Todas)';
+  let label = 'Visión Global (Todas)';
+  if (activeBranchId === 'central') label = 'Sede Central';
+  else if (activeBranch) label = activeBranch.name;
 
   return (
     <div className="relative px-3 py-2 w-full">
@@ -68,6 +70,17 @@ export function BranchSwitcher({ branches, activeBranchId }: BranchSwitcherProps
                 <span className="text-sm font-medium text-white">Visión Global</span>
               </div>
               {!activeBranchId && <Check className="h-4 w-4 text-emerald-400" />}
+            </button>
+            
+            <button
+              onClick={() => handleSelect('central')}
+              className={`w-full px-4 py-3 flex items-center justify-between hover:bg-slate-800 transition-colors ${activeBranchId === 'central' ? 'bg-slate-800/50' : ''}`}
+            >
+              <div className="flex items-center gap-2">
+                <Store className="h-4 w-4 text-blue-400" />
+                <span className="text-sm font-medium text-white">Sede Central</span>
+              </div>
+              {activeBranchId === 'central' && <Check className="h-4 w-4 text-blue-400" />}
             </button>
             
             <div className="h-px bg-slate-800 my-1 mx-2"></div>
