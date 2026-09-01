@@ -21,6 +21,15 @@ export default async function ProfilePage() {
 
   if (!profile) redirect('/auth/login');
 
+  const { data: subscription } = await adminClient
+    .from('subscriptions')
+    .select('status')
+    .eq('merchant_id', user.id)
+    .eq('status', 'active')
+    .limit(1);
+    
+  const isPro = !!(subscription && subscription.length > 0);
+
   return (
     <div className="max-w-xl mx-auto space-y-6">
       <div>
@@ -43,7 +52,7 @@ export default async function ProfilePage() {
         </div>
       )}
 
-      <ProfileEditForm profile={profile} userEmail={user.email || ''} />
+      <ProfileEditForm profile={profile} userEmail={user.email || ''} isPro={isPro} />
     </div>
   );
 }

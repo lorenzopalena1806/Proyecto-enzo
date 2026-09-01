@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { User, Store, Phone, Mail, KeyRound, Loader2, CheckCircle2, Tag, MapPin } from 'lucide-react';
+import { User, Store, Phone, Mail, KeyRound, Loader2, CheckCircle2, Tag, MapPin, Instagram } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { BusinessHoursEditor } from './BusinessHoursEditor';
 
@@ -14,8 +14,8 @@ const LocationPicker = dynamic(() => import('./LocationPicker'), {
 const SUGGESTED_CATEGORIES = [
   '🥩 Carnicería',
   '🥦 Verdulería / Frutería',
-  '🏪 Kiosco',
-  '🥖 Panadería',
+  '🍬 Kiosco',
+  '🥐 Panadería',
   '🍰 Pastelería',
   '🧀 Fiambrería',
   '🛒 Almacén / Despensa',
@@ -27,20 +27,21 @@ const SUGGESTED_CATEGORIES = [
   '💊 Farmacia',
   '👕 Tienda de ropa',
   '👟 Zapatería',
-  '💇 Peluquería',
+  '✂️ Peluquería',
   '💅 Estética / Manicuría',
-  '🔧 Ferretería',
+  '🔨 Ferretería',
   '📱 Accesorios para celulares',
   '🐶 Pet shop / Veterinaria',
-  '🧹 Artículos de limpieza',
+  '🧼 Artículos de limpieza',
 ];
 
 interface ProfileEditFormProps {
   profile: any;
   userEmail: string;
+  isPro?: boolean;
 }
 
-export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
+export function ProfileEditForm({ profile, userEmail, isPro = false }: ProfileEditFormProps) {
   const [isCustomCategory, setIsCustomCategory] = useState(
     profile.category && !SUGGESTED_CATEGORIES.includes(profile.category) ? true : false
   );
@@ -51,6 +52,7 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
     phone: profile.phone || '',
     avatar_url: profile.avatar_url || '',
     maps_url: profile.maps_url || '',
+    instagram: profile.instagram || '',
     category: isCustomCategory ? 'Otro' : (profile.category || ''),
     custom_category: isCustomCategory ? profile.category : '',
     address: profile.address || '',
@@ -130,6 +132,7 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
       phone: formData.phone || null,
       avatar_url: formData.avatar_url || null,
       maps_url: formData.maps_url || null,
+      instagram: formData.instagram || null,
       address: formData.address || null,
       latitude: formData.latitude,
       longitude: formData.longitude,
@@ -357,6 +360,28 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
             />
           </div>
         </div>
+
+        {isPro && profile.role === 'merchant' && (
+          <div className="space-y-1.5 pt-2 border-t border-white/5">
+            <label className="block text-sm font-medium text-slate-300">
+              <span className="flex items-center gap-2">
+                Instagram <span className="bg-amber-500/20 text-amber-400 text-[10px] px-1.5 py-0.5 rounded uppercase font-bold tracking-wider">Plan Pro</span>
+              </span>
+            </label>
+            <div className="relative">
+              <Instagram className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+              <input
+                name="instagram"
+                type="text"
+                value={formData.instagram}
+                onChange={handleProfileChange}
+                placeholder="Ej: milocal.ok (Sin el @)"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
+              />
+            </div>
+            <p className="text-xs text-slate-500">Agregará un botón directo en tu perfil hacia la app de Instagram.</p>
+          </div>
+        )}
 
         {profileError && (
           <div className="rounded-lg bg-red-950/60 border border-red-700 p-3">
