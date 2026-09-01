@@ -331,7 +331,7 @@ function QuickLink({
   return (
     <Link
       href={href}
-      className="glass-panel group flex items-center gap-4 rounded-2xl p-4 hover:bg-white/5 transition-all duration-300 relative overflow-hidden"
+      className="glass-panel group flex items-center gap-4 rounded-2xl p-4 hover:bg-white/5 active:scale-95 active:bg-white/10 transition-all duration-300 relative overflow-hidden"
     >
       <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/0 to-blue-500/5 group-hover:opacity-100 opacity-0 transition-opacity" />
       <div className="relative z-10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-white/5 border border-white/10 group-hover:bg-blue-500/20 group-hover:border-blue-500/30 transition-all">
