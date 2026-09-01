@@ -172,7 +172,7 @@ export async function LazooInsights({ merchantId }: { merchantId: string }) {
       {displayInsights.map((insight, idx) => (
         <div key={idx} className={`glass-panel rounded-2xl p-5 shadow-lg border relative overflow-hidden group ${getStyle(insight.type)}`}>
           <div className="absolute top-0 right-0 p-3 opacity-10 pointer-events-none">
-            {React.cloneElement(insight.icon as React.ReactElement, { className: 'w-16 h-16' })}
+            {React.cloneElement(insight.icon as React.ReactElement<any>, { className: 'w-16 h-16' })}
           </div>
           <h3 className="text-white font-bold text-[15px] mb-2 flex items-center gap-2 relative z-10">
             {insight.icon}
