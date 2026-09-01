@@ -19,11 +19,12 @@ export default async function MerchantHistoryPage() {
 
   const { data: profile } = await adminClient
     .from('profiles')
-    .select('role')
+    .select('role, plan_type')
     .eq('id', user.id)
     .single();
 
-  if (!profile || profile.role !== 'merchant') redirect('/dashboard');
+  if (profile?.role !== 'merchant') redirect('/dashboard');
+  if (profile?.plan_type === 'basic') redirect('/dashboard/pro');
 
   const cookieStore = await cookies();
   const activeBranchId = cookieStore.get('lazoo_active_branch')?.value || null;

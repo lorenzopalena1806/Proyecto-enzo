@@ -361,8 +361,16 @@ export function ProfileEditForm({ profile, userEmail, isPro = false }: ProfileEd
           </div>
         </div>
 
-        {isPro && profile.role === 'merchant' && (
-          <div className="space-y-1.5 pt-2 border-t border-white/5">
+        {profile.role === 'merchant' && (
+          <div className="space-y-1.5 pt-2 border-t border-white/5 relative">
+            {!isPro && (
+              <a href="/dashboard/pro" className="absolute inset-0 bg-slate-950/60 backdrop-blur-[1px] z-10 flex flex-col items-center justify-center rounded-xl cursor-pointer hover:bg-slate-950/40 transition-colors">
+                <div className="bg-slate-900 border border-slate-700 px-4 py-2 rounded-lg flex items-center gap-2 shadow-xl">
+                  <svg className="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                  <span className="text-sm text-slate-300 font-medium">Exclusivo Plan PRO</span>
+                </div>
+              </a>
+            )}
             <label className="block text-sm font-medium text-slate-300">
               <span className="flex items-center gap-2">
                 Instagram <span className="bg-amber-500/20 text-amber-400 text-[10px] px-1.5 py-0.5 rounded uppercase font-bold tracking-wider">Plan Pro</span>
@@ -375,8 +383,9 @@ export function ProfileEditForm({ profile, userEmail, isPro = false }: ProfileEd
                 type="text"
                 value={formData.instagram}
                 onChange={handleProfileChange}
+                disabled={!isPro}
                 placeholder="Ej: milocal.ok (Sin el @)"
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all disabled:opacity-50"
               />
             </div>
             <p className="text-xs text-slate-500">Agregará un botón directo en tu perfil hacia la app de Instagram.</p>
