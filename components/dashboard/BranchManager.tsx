@@ -18,6 +18,33 @@ export function BranchManager({ branches }: { branches: Branch[] }) {
 
   const [lat, setLat] = useState<number | null>(null);
   const [lng, setLng] = useState<number | null>(null);
+  const [mapsUrl, setMapsUrl] = useState('');
+  const [isExtractingMaps, setIsExtractingMaps] = useState(false);
+  const [mapExtractMessage, setMapExtractMessage] = useState({ type: '', text: '' });
+
+  const handleExtractMaps = async () => {
+    if (!mapsUrl) {
+      setMapExtractMessage({ type: 'error', text: 'Ingresá un link.' });
+      return;
+    }
+    setIsExtractingMaps(true);
+    setMapExtractMessage({ type: '', text: '' });
+    try {
+      const { extractCoordinatesFromMapsUrl } = await import('@/app/actions/map');
+      const res = await extractCoordinatesFromMapsUrl(mapsUrl);
+      if (res.success && res.lat && res.lng) {
+        setLat(res.lat);
+        setLng(res.lng);
+        setMapExtractMessage({ type: 'success', text: '¡Coordenadas obtenidas!' });
+      } else {
+        setMapExtractMessage({ type: 'error', text: res.error || 'No se pudo obtener la ubicación.' });
+      }
+    } catch (err) {
+      setMapExtractMessage({ type: 'error', text: 'Error de servidor.' });
+    } finally {
+      setIsExtractingMaps(false);
+    }
+  };
 
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
@@ -173,10 +200,40 @@ export function BranchManager({ branches }: { branches: Branch[] }) {
 
               <div className="pt-2">
                 <label className="block text-sm font-medium text-slate-300 mb-2">Ubicación en el Mapa</label>
+                
+                <div className="flex gap-2 mb-3">
+                  <input
+                    type="url"
+                    value={mapsUrl}
+                    onChange={(e) => setMapsUrl(e.target.value)}
+                    placeholder="Link de Google Maps..."
+                    className="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-white focus:ring-2 focus:ring-violet-500 outline-none text-sm"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleExtractMaps}
+                    disabled={isExtractingMaps || !mapsUrl}
+                    className="bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-slate-200 px-4 py-2 rounded-xl text-sm font-medium transition-colors flex items-center justify-center border border-slate-700 whitespace-nowrap"
+                  >
+                    {isExtractingMaps ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Extraer'}
+                  </button>
+                </div>
+                {mapExtractMessage.text && (
+                  <p className={`text-xs mb-3 ${mapExtractMessage.type === 'success' ? 'text-emerald-400' : 'text-amber-400'}`}>
+                    {mapExtractMessage.text}
+                  </p>
+                )}
+
+                <div className="relative flex items-center py-2">
+                  <div className="flex-grow border-t border-slate-800"></div>
+                  <span className="flex-shrink-0 mx-4 text-slate-500 text-xs">o también podés</span>
+                  <div className="flex-grow border-t border-slate-800"></div>
+                </div>
+
                 <button
                   type="button"
                   onClick={handleGetLocation}
-                  className="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 py-3 rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2 border border-slate-700"
+                  className="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 py-3 rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2 border border-slate-700 mt-3"
                 >
                   <MapPin className="h-4 w-4" />
                   {lat && lng ? '✅ Coordenadas Obtenidas' : 'Obtener mi ubicación actual'}

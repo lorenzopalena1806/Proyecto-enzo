@@ -34,6 +34,13 @@ export default async function MerchantProfilePage({ params }: { params: Promise<
 
   const activeOffers = offers || [];
 
+  // Obtener sucursales
+  const { data: branches } = await supabase
+    .from('merchant_branches')
+    .select('*')
+    .eq('merchant_id', merchantId);
+  const allBranches = branches || [];
+
   let hoursData: any = null;
   let groupedHours: Array<{ label: string, timeStr: string, isOpen: boolean }> = [];
   
@@ -216,22 +223,51 @@ export default async function MerchantProfilePage({ params }: { params: Promise<
 
         {/* Detalles Rápidos */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-          {merchant.address && (
-            <div className="glass-panel p-4 rounded-2xl flex items-start gap-3">
-              <div className="p-2 bg-blue-500/10 rounded-xl text-blue-400 flex-shrink-0">
-                <MapPin className="w-5 h-5" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-xs text-slate-400 font-medium mb-0.5">Ubicación</p>
-                <p className="text-white text-sm font-medium line-clamp-2">{merchant.address}</p>
-                {merchant.maps_url && (
-                  <a href={merchant.maps_url} target="_blank" rel="noreferrer" className="text-blue-400 text-xs font-bold mt-1 inline-flex items-center gap-1 hover:text-blue-300">
-                    Ver en mapa <Navigation className="w-3 h-3" />
-                  </a>
+          <div className="glass-panel p-4 rounded-2xl flex items-start gap-3 sm:col-span-2">
+            <div className="p-2 bg-blue-500/10 rounded-xl text-blue-400 flex-shrink-0">
+              <MapPin className="w-5 h-5" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs text-slate-400 font-medium mb-2">Ubicaciones</p>
+              <div className="space-y-3">
+                {/* Sede Central (Perfil) */}
+                {merchant.address && (
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-white/5 pb-3 last:border-0 last:pb-0">
+                    <div>
+                      <span className="text-white text-sm font-bold block">Sede Central</span>
+                      <span className="text-slate-300 text-sm line-clamp-2">{merchant.address}</span>
+                    </div>
+                    {merchant.maps_url ? (
+                      <a href={merchant.maps_url} target="_blank" rel="noreferrer" className="text-blue-400 text-xs font-bold inline-flex items-center gap-1 hover:text-blue-300 bg-blue-500/10 px-3 py-1.5 rounded-lg whitespace-nowrap self-start sm:self-auto">
+                        Ver en mapa <Navigation className="w-3 h-3" />
+                      </a>
+                    ) : (
+                      (merchant.latitude && merchant.longitude) && (
+                        <a href={`https://www.google.com/maps/search/?api=1&query=${merchant.latitude},${merchant.longitude}`} target="_blank" rel="noreferrer" className="text-blue-400 text-xs font-bold inline-flex items-center gap-1 hover:text-blue-300 bg-blue-500/10 px-3 py-1.5 rounded-lg whitespace-nowrap self-start sm:self-auto">
+                          Ver en mapa <Navigation className="w-3 h-3" />
+                        </a>
+                      )
+                    )}
+                  </div>
                 )}
+                
+                {/* Sucursales */}
+                {allBranches.map((branch: any) => (
+                  <div key={branch.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-white/5 pb-3 last:border-0 last:pb-0">
+                    <div>
+                      <span className="text-white text-sm font-bold block">{branch.name}</span>
+                      <span className="text-slate-300 text-sm line-clamp-2">{branch.address || 'Sin dirección específica'}</span>
+                    </div>
+                    {branch.latitude && branch.longitude && (
+                      <a href={`https://www.google.com/maps/search/?api=1&query=${branch.latitude},${branch.longitude}`} target="_blank" rel="noreferrer" className="text-blue-400 text-xs font-bold inline-flex items-center gap-1 hover:text-blue-300 bg-blue-500/10 px-3 py-1.5 rounded-lg whitespace-nowrap self-start sm:self-auto">
+                        Ver en mapa <Navigation className="w-3 h-3" />
+                      </a>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
-          )}
+          </div>
 
           {merchant.phone && (
             <div className="glass-panel p-4 rounded-2xl flex items-start gap-3">
