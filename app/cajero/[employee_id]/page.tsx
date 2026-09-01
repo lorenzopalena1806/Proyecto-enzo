@@ -8,14 +8,15 @@ export const metadata = {
   title: 'Acceso de Cajero | Lazoo',
 };
 
-export default async function CashierLoginPage({ params }: { params: { employee_id: string } }) {
+export default async function CashierLoginPage({ params }: { params: Promise<{ employee_id: string }> }) {
   const adminClient = createAdminClient();
+  const { employee_id } = await params;
   
   // Buscar datos básicos del empleado
   const { data: emp, error: empErr } = await adminClient
     .from('merchant_employees')
     .select('*')
-    .eq('id', params.employee_id)
+    .eq('id', employee_id)
     .single();
 
   if (empErr || !emp) {
@@ -50,7 +51,7 @@ export default async function CashierLoginPage({ params }: { params: { employee_
           <p className="text-sm text-slate-400 mt-2">Cajero: {emp.name}</p>
         </div>
 
-        <CashierLoginForm employeeId={params.employee_id} />
+        <CashierLoginForm employeeId={employee_id} />
       </div>
     </div>
   );

@@ -9,12 +9,13 @@ export const metadata = {
   title: 'Terminal de Cobro | Lazoo',
 };
 
-export default async function CashierPOSPage({ params }: { params: { employee_id: string } }) {
+export default async function CashierPOSPage({ params }: { params: Promise<{ employee_id: string }> }) {
+  const { employee_id } = await params;
   const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get(`lazoo_emp_${params.employee_id}`);
+  const sessionCookie = cookieStore.get(`lazoo_emp_${employee_id}`);
   
   if (!sessionCookie) {
-    redirect(`/cajero/${params.employee_id}`);
+    redirect(`/cajero/${employee_id}`);
   }
 
   const adminClient = createAdminClient();
@@ -22,7 +23,7 @@ export default async function CashierPOSPage({ params }: { params: { employee_id
   const { data: emp, error: empErr } = await adminClient
     .from('merchant_employees')
     .select('*')
-    .eq('id', params.employee_id)
+    .eq('id', employee_id)
     .single();
 
   if (empErr || !emp) {
@@ -65,9 +66,9 @@ export default async function CashierPOSPage({ params }: { params: { employee_id
             'use server';
             const { cookies } = await import('next/headers');
             const cs = await cookies();
-            cs.delete(`lazoo_emp_${params.employee_id}`);
+            cs.delete(`lazoo_emp_${employee_id}`);
             const { redirect } = await import('next/navigation');
-            redirect(`/cajero/${params.employee_id}`);
+            redirect(`/cajero/${employee_id}`);
           }}>
             <button type="submit" className="text-xs bg-red-500/20 text-red-400 px-3 py-1.5 rounded-lg font-semibold hover:bg-red-500/30">
               Salir
@@ -80,7 +81,7 @@ export default async function CashierPOSPage({ params }: { params: { employee_id
           branchId={emp.branch_id}
           businessName={merchantData?.business_name || 'Comercio'}
           offers={offers || []}
-          employeeId={params.employee_id}
+          employeeId={employee_id}
         />
       </div>
     </div>
