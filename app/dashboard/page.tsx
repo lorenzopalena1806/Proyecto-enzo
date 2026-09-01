@@ -1,10 +1,11 @@
 import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { QrCode, ScanLine, ImageIcon, TrendingUp, ArrowRight, AlertTriangle, Star, ShieldCheck, Briefcase, Printer, Heart, Package } from 'lucide-react';
+import { QrCode, ScanLine, ImageIcon, TrendingUp, ArrowRight, AlertTriangle, Star, ShieldCheck, Briefcase, Printer, Heart, Package, CheckCircle2 } from 'lucide-react';
 import { MerchantChart } from '@/components/dashboard/MerchantChart';
 import { MaterialRequestButton } from '@/components/dashboard/MaterialRequestButton';
 import { LazooInsights } from '@/components/dashboard/LazooInsights';
+import { RestartTourButton } from '@/components/dashboard/RestartTourButton';
 
 export const metadata = {
   title: 'Panel Principal | Lazoo',
@@ -57,13 +58,16 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Saludo */}
-      <div>
-        <h1 className="text-2xl font-bold text-white">
-          ¡Hola, {profile.business_name ?? profile.full_name ?? 'Comerciante'}! 👋
-        </h1>
-        <p className="text-slate-400 mt-1">
-          {today.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}
-        </p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-2xl font-bold text-white">
+            ¡Hola, {profile.business_name ?? profile.full_name ?? 'Comerciante'}! 👋
+          </h1>
+          <p className="text-slate-400 mt-1">
+            {today.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}
+          </p>
+        </div>
+        <RestartTourButton />
       </div>
 
       {/* Alerta de día */}

@@ -40,42 +40,49 @@ const MERCHANT_NAV_ITEMS = [
     label: 'Inicio',
     icon: LayoutDashboard,
     exact: true,
+    id: 'tour-inicio',
   },
   {
     href: '/dashboard/pos',
     label: 'Cobrar con QR (POS)',
     icon: ScanLine,
     exact: false,
+    id: 'tour-pos',
   },
   {
     href: '/dashboard/print-qr',
     label: 'Imprimir Cartel QR',
     icon: Printer,
     exact: false,
+    id: 'tour-print',
   },
   {
     href: '/dashboard/qr',
     label: 'Comprar / B2B',
     icon: QrCode,
     exact: false,
+    id: 'tour-b2b',
   },
   {
     href: '/dashboard/offers',
     label: 'Mis Ofertas',
     icon: Tag,
     exact: false,
+    id: 'tour-offers',
   },
   {
     href: '/dashboard/pro',
     label: 'Lazoo PRO',
     icon: Crown,
     exact: false,
+    id: 'tour-pro',
   },
   {
     href: '/dashboard/history',
     label: 'Historial',
     icon: History,
     exact: false,
+    id: 'tour-history',
   },
   {
     href: '/dashboard/branches',
@@ -83,12 +90,14 @@ const MERCHANT_NAV_ITEMS = [
     icon: MapPin,
     exact: false,
     badge: 'PRO',
+    id: 'tour-branches',
   },
   {
     href: '/dashboard/profile',
     label: 'Mi Perfil',
     icon: Settings,
     exact: false,
+    id: 'tour-profile',
   },
 ];
 
@@ -181,6 +190,7 @@ export function Sidebar({ profile }: SidebarProps) {
           return (
             <Link
               key={item.href}
+              id={(item as any).id}
               href={item.href}
               onClick={() => setMobileOpen(false)}
               className={`

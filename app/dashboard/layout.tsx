@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { Sidebar } from '@/components/dashboard/Sidebar';
 import { GlobalNotificationBanner } from '@/components/dashboard/GlobalNotificationBanner';
 import { SupportModeBanner } from '@/components/dashboard/SupportModeBanner';
+import { OnboardingTour } from '@/components/dashboard/OnboardingTour';
 
 export default async function DashboardLayout({
   children,
@@ -56,6 +57,7 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex min-h-screen app-bg text-white">
+      <OnboardingTour />
       <style>{`
         .app-bg {
           background: radial-gradient(ellipse at top, #0f1f4a 0%, #060d1f 50%, #000510 100%);

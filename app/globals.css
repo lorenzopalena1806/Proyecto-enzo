@@ -141,3 +141,53 @@ input[type="number"] {
 @keyframes premium-ping {
   75%, 100% { transform: scale(1.6); opacity: 0; }
 }
+
+/* Custom theme for driver.js */
+.driver-theme-lazoo {
+  background-color: #0f172a !important; /* bg-slate-900 */
+  border: 1px solid #1e293b !important; /* border-slate-800 */
+  border-radius: 1rem !important;
+  color: #f8fafc !important; /* text-slate-50 */
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+}
+.driver-theme-lazoo .driver-popover-title {
+  font-size: 1.125rem !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  margin-bottom: 0.5rem !important;
+}
+.driver-theme-lazoo .driver-popover-description {
+  color: #94a3b8 !important; /* text-slate-400 */
+  font-size: 0.875rem !important;
+  line-height: 1.5 !important;
+}
+.driver-theme-lazoo .driver-popover-footer {
+  margin-top: 1.5rem !important;
+}
+.driver-theme-lazoo .driver-popover-progress-text {
+  color: #64748b !important;
+}
+.driver-theme-lazoo .driver-popover-btn-next,
+.driver-theme-lazoo .driver-popover-btn-prev {
+  background-color: #7c3aed !important; /* violet-600 */
+  color: white !important;
+  border: none !important;
+  border-radius: 0.5rem !important;
+  padding: 0.5rem 1rem !important;
+  font-weight: 600 !important;
+  text-shadow: none !important;
+}
+.driver-theme-lazoo .driver-popover-btn-next:hover,
+.driver-theme-lazoo .driver-popover-btn-prev:hover {
+  background-color: #6d28d9 !important; /* violet-700 */
+}
+.driver-theme-lazoo .driver-popover-btn-disabled {
+  opacity: 0.5 !important;
+  pointer-events: none !important;
+}
+.driver-theme-lazoo .driver-popover-close-btn {
+  color: #94a3b8 !important;
+}
+.driver-theme-lazoo .driver-popover-close-btn:hover {
+  color: white !important;
+}
