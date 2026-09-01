@@ -19,6 +19,7 @@ interface Props {
   paymentMethod: string;
   offerId?: string;
   offerTitle?: string;
+  branchId?: string;
 }
 
 export function ClientConfirmForm({
@@ -32,6 +33,7 @@ export function ClientConfirmForm({
   paymentMethod,
   offerId,
   offerTitle,
+  branchId,
 }: Props) {
   const router = useRouter();
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -63,6 +65,7 @@ export function ClientConfirmForm({
         amount,
         paymentMethod as PaymentMethod,
         offerId,
+        branchId
       );
 
       if (!res.success) {

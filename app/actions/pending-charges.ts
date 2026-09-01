@@ -21,6 +21,7 @@ export async function createPendingCharge(formData: FormData) {
   const amount = parseFloat(formData.get('amount') as string);
   const payment_method = formData.get('payment_method') as string;
   const offer_title = formData.get('offer_title') as string | null;
+  const branch_id = formData.get('branch_id') as string | null;
 
   if (!amount || amount <= 0 || !payment_method) {
     return { success: false, error: 'Datos inválidos. Revisá el monto y el método de pago.' };
@@ -30,11 +31,13 @@ export async function createPendingCharge(formData: FormData) {
     .from('pending_charges')
     .insert({
       merchant_id: user.id,
+      branch_id: branch_id || null,
       offer_id: offer_id || null,
       offer_title: offer_title || null,
       amount,
       payment_method,
       status: 'active',
+      expires_at: new Date(Date.now() + 5 * 60 * 1000).toISOString(), // Expira en 5 minutos
     })
     .select('id')
     .single();

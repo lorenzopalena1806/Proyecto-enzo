@@ -22,6 +22,14 @@ export default async function OffersPage() {
     .eq('merchant_id', user.id)
     .order('created_at', { ascending: false });
 
+  // Fetch branches
+  const { data: branches } = await supabase
+    .from('merchant_branches')
+    .select('id, name')
+    .eq('merchant_id', user.id)
+    .eq('is_active', true)
+    .order('created_at', { ascending: true });
+
   return (
     <div className="space-y-6">
       <div>
@@ -31,7 +39,7 @@ export default async function OffersPage() {
         </p>
       </div>
 
-      <OffersManager initialOffers={offers || []} />
+      <OffersManager initialOffers={offers || []} branches={branches || []} />
     </div>
   );
 }

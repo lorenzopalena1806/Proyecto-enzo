@@ -303,6 +303,7 @@ export default async function PayPage({
             paymentMethod={method}
             offerId={pendingCharge.offer_id || undefined}
             offerTitle={offerTitle || undefined}
+            branchId={pendingCharge.branch_id}
           />
         </div>
 

@@ -40,10 +40,12 @@ interface RecentTx {
 
 export function POSView({
   merchantId,
+  branchId,
   businessName,
   offers,
 }: {
   merchantId: string;
+  branchId: string | null;
   businessName: string;
   offers: Offer[];
 }) {
@@ -52,8 +54,12 @@ export function POSView({
   // Generar URL completa SOLO en el cliente (después de hidratación)
   const [qrUrl, setQrUrl] = useState('');
   useEffect(() => {
-    setQrUrl(`${window.location.origin}/pay?m=${merchantId}`);
-  }, [merchantId]);
+    let url = `${window.location.origin}/pay?m=${merchantId}`;
+    if (branchId) {
+      url += `&b=${branchId}`;
+    }
+    setQrUrl(url);
+  }, [merchantId, branchId]);
 
   // Estado del formulario
   const [selectedOfferId, setSelectedOfferId] = useState('');
@@ -196,6 +202,9 @@ export function POSView({
     }
     formData.set('amount', amount);
     formData.set('payment_method', paymentMethod);
+    if (branchId) {
+      formData.set('branch_id', branchId);
+    }
 
     const res = await createPendingCharge(formData);
     setLoading(false);

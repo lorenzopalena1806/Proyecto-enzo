@@ -1,4 +1,5 @@
-import { createClient, createAdminClient } from '@/lib/supabase-server';
+import { cookies } from 'next/headers';
+import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import { Sidebar } from '@/components/dashboard/Sidebar';
 import { GlobalNotificationBanner } from '@/components/dashboard/GlobalNotificationBanner';
@@ -40,6 +41,28 @@ export default async function DashboardLayout({
     redirect('/client/qr');
   }
 
+  // Leer sucursales y sucursal activa
+  let branches: { id: string, name: string }[] = [];
+  let activeBranchId: string | null = null;
+  
+  if (profile.role === 'merchant') {
+    const { data: bData } = await adminClient
+      .from('merchant_branches')
+      .select('id, name')
+      .eq('merchant_id', user.id)
+      .eq('is_active', true)
+      .order('created_at', { ascending: true });
+      
+    branches = bData || [];
+    
+    const cookieStore = await cookies();
+    const cookieBranchId = cookieStore.get('lazoo_active_branch')?.value;
+    
+    if (cookieBranchId && branches.some(b => b.id === cookieBranchId)) {
+      activeBranchId = cookieBranchId;
+    }
+  }
+
   // Verificar suscripción activa para merchants
   if (profile.role === 'merchant') {
     if (profile.subscription_expires_at) {
@@ -48,10 +71,6 @@ export default async function DashboardLayout({
       if (expires < today) {
         redirect('/subscription-required');
       }
-    } else {
-      // Demo mode: they have no date set, they can access the dashboard.
-      // If we want to block them too, we would redirect here.
-      // For now, we allow them if no date is set.
     }
   }
 
@@ -113,7 +132,7 @@ export default async function DashboardLayout({
         }
         .glow-pulse { animation: pulse-glow 2s ease-in-out infinite; }
       `}</style>
-      <Sidebar profile={profile} />
+      <Sidebar profile={profile} branches={branches} activeBranchId={activeBranchId} />
       {/* Spacer para mobile header */}
       <div className="flex-1 flex flex-col lg:overflow-auto relative z-10">
         <div className="lg:hidden h-14 flex-shrink-0" />

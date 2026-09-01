@@ -35,7 +35,7 @@ export async function processPaymentByShortCodeServer(merchantId: string, amount
   return await executePaymentServer(merchantId, qrRecord.user_id, amount, method, qrRecord.qr_token, offerId);
 }
 
-export async function confirmScannedPaymentServer(merchantId: string, amount: number, method: PaymentMethod, offerId?: string) {
+export async function confirmScannedPaymentServer(merchantId: string, amount: number, method: PaymentMethod, offerId?: string, branchId?: string) {
   const ip = (await headers()).get('x-forwarded-for') ?? 'unknown';
   const rl = checkRateLimit(ip, 5, 30000);
   if (!rl.success) {
@@ -158,6 +158,7 @@ async function executePaymentServer(merchantId: string, clientId: string, amount
   // 5. Insert Transaction
   const { data: insertedTx, error: insertError } = await adminClient.from('discount_transactions').insert({
     scanner_id: merchantId,
+    branch_id: branchId || null,
     scanned_user_id: clientId,
     original_amount: amount,
     discount_pct: finalPct,

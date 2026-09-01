@@ -38,9 +38,12 @@ export async function createOffer(formData: FormData) {
   const image_url_raw = formData.get('image_url') as string;
   const image_url = image_url_raw && image_url_raw.startsWith('http') ? image_url_raw : null;
 
+  const branch_id = formData.get('branch_id') as string | null;
+
   const adminClient = createAdminClient();
   const { error } = await adminClient.from('merchant_offers').insert({
     merchant_id: user.id,
+    branch_id: branch_id || null,
     title,
     description,
     discount_pct,
@@ -98,6 +101,8 @@ export async function updateOffer(offerId: string, formData: FormData) {
   const image_url_raw = formData.get('image_url') as string;
   const image_url = image_url_raw && image_url_raw.startsWith('http') ? image_url_raw : null;
 
+  const branch_id = formData.get('branch_id') as string | null;
+
   const adminClient = createAdminClient();
   const { error } = await adminClient.from('merchant_offers').update({
     title,
@@ -109,6 +114,7 @@ export async function updateOffer(offerId: string, formData: FormData) {
     image_url,
     stock_limit,
     valid_days,
+    branch_id: branch_id || null
   }).eq('id', offerId).eq('merchant_id', user.id);
 
   if (error) {

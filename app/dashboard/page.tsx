@@ -7,6 +7,8 @@ import { MaterialRequestButton } from '@/components/dashboard/MaterialRequestBut
 import { LazooInsights } from '@/components/dashboard/LazooInsights';
 import { RestartTourButton } from '@/components/dashboard/RestartTourButton';
 
+import { cookies } from 'next/headers';
+
 export const metadata = {
   title: 'Panel Principal | Lazoo',
   description: 'Tu panel de control en Lazoo.',
@@ -20,9 +22,23 @@ export default async function DashboardPage() {
 
   const adminClient = createAdminClient();
 
+  const cookieStore = await cookies();
+  const activeBranchId = cookieStore.get('lazoo_active_branch')?.value || null;
+
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
   sevenDaysAgo.setHours(0,0,0,0);
+
+  // Queries base
+  let txCountQuery = adminClient.from('discount_transactions').select('*', { count: 'exact', head: true }).eq('scanner_id', user.id);
+  let recentTxQuery = adminClient.from('discount_transactions').select('*, scanned_user:profiles!scanned_user_id(full_name, business_name, role)').eq('scanner_id', user.id).order('applied_at', { ascending: false }).limit(5);
+  let ratingQuery = adminClient.from('discount_transactions').select('rating').eq('scanner_id', user.id).not('rating', 'is', null).limit(100);
+
+  if (activeBranchId) {
+    txCountQuery = txCountQuery.eq('branch_id', activeBranchId);
+    recentTxQuery = recentTxQuery.eq('branch_id', activeBranchId);
+    ratingQuery = ratingQuery.eq('branch_id', activeBranchId);
+  }
 
   // Obtener perfil y estadísticas en PARALELO para máxima velocidad de carga
   const [
@@ -33,9 +49,9 @@ export default async function DashboardPage() {
     { count: totalFavorites }
   ] = await Promise.all([
     adminClient.from('profiles').select('*').eq('id', user.id).single(),
-    adminClient.from('discount_transactions').select('*', { count: 'exact', head: true }).eq('scanner_id', user.id),
-    adminClient.from('discount_transactions').select('*, scanned_user:profiles!scanned_user_id(full_name, business_name, role)').eq('scanner_id', user.id).order('applied_at', { ascending: false }).limit(5),
-    adminClient.from('discount_transactions').select('rating').eq('scanner_id', user.id).not('rating', 'is', null).limit(100),
+    txCountQuery,
+    recentTxQuery,
+    ratingQuery,
     adminClient.from('favorites').select('*', { count: 'exact', head: true }).eq('merchant_id', user.id)
   ]);
 

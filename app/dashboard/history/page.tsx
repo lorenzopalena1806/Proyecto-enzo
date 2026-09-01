@@ -7,6 +7,7 @@ import { Receipt, TrendingUp, Users, DollarSign } from 'lucide-react';
 import { UndoChargeButton } from '@/components/dashboard/UndoChargeButton';
 import { MerchantChart } from '@/components/dashboard/MerchantChart';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { cookies } from 'next/headers';
 
 export default async function MerchantHistoryPage() {
   const supabase = await createClient();
@@ -23,8 +24,11 @@ export default async function MerchantHistoryPage() {
 
   if (!profile || profile.role !== 'merchant') redirect('/dashboard');
 
+  const cookieStore = await cookies();
+  const activeBranchId = cookieStore.get('lazoo_active_branch')?.value || null;
+
   // Obtener todas las transacciones del comercio
-  const { data: transactions } = await adminClient
+  let txQuery = adminClient
     .from('discount_transactions')
     .select(`
       *,
@@ -33,6 +37,12 @@ export default async function MerchantHistoryPage() {
     `)
     .eq('scanner_id', user.id)
     .order('applied_at', { ascending: false });
+
+  if (activeBranchId) {
+    txQuery = txQuery.eq('branch_id', activeBranchId);
+  }
+
+  const { data: transactions } = await txQuery;
 
   const txList = transactions || [];
 

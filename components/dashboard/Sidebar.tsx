@@ -30,8 +30,15 @@ import {
 } from 'lucide-react';
 import type { Profile } from '@/types';
 
+interface Branch {
+  id: string;
+  name: string;
+}
+
 interface SidebarProps {
   profile: Profile;
+  branches?: Branch[];
+  activeBranchId?: string | null;
 }
 
 const MERCHANT_NAV_ITEMS = [
@@ -139,7 +146,9 @@ const ADMIN_NAV_ITEMS = [
   },
 ];
 
-export function Sidebar({ profile }: SidebarProps) {
+import { BranchSwitcher } from './BranchSwitcher';
+
+export function Sidebar({ profile, branches = [], activeBranchId = null }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
@@ -180,6 +189,13 @@ export function Sidebar({ profile }: SidebarProps) {
           </div>
         </div>
       </div>
+
+      {/* Selector de Sucursal (Solo para Merchants) */}
+      {profile.role === 'merchant' && (
+        <div className="border-b border-slate-800">
+          <BranchSwitcher branches={branches} activeBranchId={activeBranchId} />
+        </div>
+      )}
 
       {/* Navegación */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">

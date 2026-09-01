@@ -15,7 +15,17 @@ const DAYS = [
   { value: '0', label: 'D' },
 ];
 
-export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
+interface Branch {
+  id: string;
+  name: string;
+}
+
+interface OffersManagerProps {
+  initialOffers: any[];
+  branches: Branch[];
+}
+
+export function OffersManager({ initialOffers, branches = [] }: OffersManagerProps) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingOffer, setEditingOffer] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
@@ -28,7 +38,8 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
     original_price: '',
     final_price: '',
     discount_pct: '',
-    target_role: 'client'
+    target_role: 'client',
+    branch_id: ''
   });
 
   // Handle opening form
@@ -42,7 +53,8 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
         original_price: offer.original_price || '',
         final_price: offer.final_price || '',
         discount_pct: offer.discount_pct || '',
-        target_role: offer.target_role || 'client'
+        target_role: offer.target_role || 'client',
+        branch_id: offer.branch_id || ''
       });
     } else {
       setEditingOffer(null);
@@ -53,7 +65,8 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
         original_price: '',
         final_price: '',
         discount_pct: '',
-        target_role: 'client'
+        target_role: 'client',
+        branch_id: ''
       });
     }
     setIsFormOpen(true);
@@ -155,6 +168,23 @@ export function OffersManager({ initialOffers }: { initialOffers: any[] }) {
                 <label className="block text-sm font-medium text-slate-400 mb-1">Descripción corta (opcional)</label>
                 <input name="description" value={preview.description} onChange={handleChange} placeholder="Ej: Válido llevando dos remeras lisas" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none" />
               </div>
+
+              {branches.length > 0 && (
+                <div>
+                  <label className="block text-sm font-medium text-slate-400 mb-1">Sucursal (opcional)</label>
+                  <select 
+                    name="branch_id" 
+                    value={preview.branch_id} 
+                    onChange={handleChange} 
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none appearance-none"
+                  >
+                    <option value="">Aplica a Todas las Sucursales</option>
+                    {branches.map(b => (
+                      <option key={b.id} value={b.id}>Solo {b.name}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
 
               <div>
                 <label className="block text-sm font-medium text-slate-400 mb-1">Enlace (URL) de la Foto (opcional pero recomendado)</label>
