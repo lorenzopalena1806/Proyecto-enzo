@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { QrCode, ScanLine, ImageIcon, TrendingUp, ArrowRight, AlertTriangle, Star, ShieldCheck, Briefcase, Printer, Heart, Package, CheckCircle2 } from 'lucide-react';
 import { MerchantChart } from '@/components/dashboard/MerchantChart';
 import { MaterialRequestButton } from '@/components/dashboard/MaterialRequestButton';
-import { LazooInsights } from '@/components/dashboard/LazooInsights';
 import { RestartTourButton } from '@/components/dashboard/RestartTourButton';
 
 import { cookies } from 'next/headers';
@@ -175,8 +174,6 @@ export default async function DashboardPage() {
           </div>
         </div>
       </div>
-
-      <LazooInsights merchantId={user.id} />
 
       {/* Accesos rápidos */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">

@@ -79,7 +79,7 @@ const MERCHANT_NAV_ITEMS = [
   },
   {
     href: '/dashboard/history',
-    label: 'Historial',
+    label: 'Ventas',
     icon: History,
     exact: false,
     id: 'tour-history',

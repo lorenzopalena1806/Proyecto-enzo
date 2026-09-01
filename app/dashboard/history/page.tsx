@@ -7,6 +7,7 @@ import { Receipt, TrendingUp, Users, DollarSign } from 'lucide-react';
 import { UndoChargeButton } from '@/components/dashboard/UndoChargeButton';
 import { MerchantChart } from '@/components/dashboard/MerchantChart';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { LazooInsights } from '@/components/dashboard/LazooInsights';
 import { cookies } from 'next/headers';
 
 export default async function MerchantHistoryPage() {
@@ -28,37 +29,31 @@ export default async function MerchantHistoryPage() {
   const activeBranchId = cookieStore.get('lazoo_active_branch')?.value || null;
 
   // Obtener todas las transacciones del comercio
-  let txQuery = adminClient
+  let query = adminClient
     .from('discount_transactions')
-    .select(`
-      *,
-      scanned_user:profiles!scanned_user_id(full_name, business_name, role),
-      offer:merchant_offers(title, original_price, final_price)
-    `)
+    .select('*, scanned_user:profiles!scanned_user_id(full_name, business_name, role), offer:merchant_offers!offer_id(title)')
     .eq('scanner_id', user.id)
     .order('applied_at', { ascending: false });
 
   if (activeBranchId) {
-    txQuery = txQuery.eq('branch_id', activeBranchId);
+    query = query.eq('branch_id', activeBranchId);
   }
 
-  const { data: transactions } = await txQuery;
-
+  const { data: transactions } = await query;
+  
   const txList = transactions || [];
 
-  // Calcular totales
+  // Calcular mtricas
   const totalTx = txList.length;
-  const totalDiscounted = txList.reduce((sum: number, tx: any) => {
-    const saved = (tx.original_amount || 0) - (tx.final_amount || 0);
-    return sum + saved;
-  }, 0);
-  const totalRevenue = txList.reduce((sum: number, tx: any) => sum + (tx.final_amount || 0), 0);
   const uniqueClients = new Set(txList.map((tx: any) => tx.scanned_user_id)).size;
+  const totalRevenue = txList.reduce((acc: number, tx: any) => acc + (tx.final_amount || 0), 0);
+  const totalDiscounted = txList.reduce((acc: number, tx: any) => {
+    const orig = tx.original_amount || 0;
+    const fin = tx.final_amount || 0;
+    return acc + (orig - fin);
+  }, 0);
 
-  const fmt = (n: number) =>
-    new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(n);
-
-  // Preparar datos para el gráfico (últimos 7 días)
+  // Generar datos para el grfico de los ltimos 7 das
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
   sevenDaysAgo.setHours(0,0,0,0);
@@ -95,13 +90,17 @@ export default async function MerchantHistoryPage() {
     });
   }
 
+  const fmt = (n: number) => new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(n);
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-white tracking-tight">Historial de Transacciones</h1>
-        <p className="text-slate-400 mt-1">Todos los descuentos que aplicaste en tu comercio.</p>
+        <h1 className="text-3xl font-bold text-white tracking-tight">Ventas y Estadísticas</h1>
+        <p className="text-slate-400 mt-1">Métricas, sugerencias de negocio y el registro completo de tus ventas.</p>
       </div>
+
+      <LazooInsights merchantId={user.id} />
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
