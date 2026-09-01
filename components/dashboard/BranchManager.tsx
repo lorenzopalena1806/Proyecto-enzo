@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { MapPin, Plus, Store, Trash2, X, Loader2 } from 'lucide-react';
-import { createBranchAction, deleteBranchAction } from '@/app/actions/branches';
+import { MapPin, Plus, Store, Trash2, X, Loader2, Edit2 } from 'lucide-react';
+import { createBranchAction, deleteBranchAction, updateBranchAction } from '@/app/actions/branches';
 
 interface Branch {
   id: string;
@@ -12,6 +12,7 @@ interface Branch {
 
 export function BranchManager({ branches }: { branches: Branch[] }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingBranch, setEditingBranch] = useState<Branch | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -34,16 +35,23 @@ export function BranchManager({ branches }: { branches: Branch[] }) {
     );
   };
 
-  const handleCreate = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setErrorMsg('');
 
     const formData = new FormData(e.currentTarget);
-    const result = await createBranchAction(formData);
+    
+    let result;
+    if (editingBranch) {
+      result = await updateBranchAction(editingBranch.id, formData);
+    } else {
+      result = await createBranchAction(formData);
+    }
 
     if (result.success) {
       setIsModalOpen(false);
+      setEditingBranch(null);
     } else {
       setErrorMsg(result.reason || 'Error desconocido');
     }
@@ -69,7 +77,10 @@ export function BranchManager({ branches }: { branches: Branch[] }) {
           </p>
         </div>
         <button 
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            setEditingBranch(null);
+            setIsModalOpen(true);
+          }}
           className="bg-violet-600 hover:bg-violet-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95"
         >
           <Plus className="h-5 w-5" />
@@ -100,12 +111,23 @@ export function BranchManager({ branches }: { branches: Branch[] }) {
                     </p>
                   </div>
                 </div>
-                <button 
-                  onClick={() => handleDelete(branch.id)}
-                  className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors active:scale-95"
-                >
-                  <Trash2 className="h-5 w-5" />
-                </button>
+                <div className="flex gap-2">
+                  <button 
+                    onClick={() => {
+                      setEditingBranch(branch);
+                      setIsModalOpen(true);
+                    }}
+                    className="p-2 text-slate-500 hover:text-violet-400 hover:bg-violet-400/10 rounded-lg transition-colors active:scale-95"
+                  >
+                    <Edit2 className="h-5 w-5" />
+                  </button>
+                  <button 
+                    onClick={() => handleDelete(branch.id)}
+                    className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors active:scale-95"
+                  >
+                    <Trash2 className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -116,19 +138,22 @@ export function BranchManager({ branches }: { branches: Branch[] }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
           <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl w-full max-w-md shadow-2xl">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-white">Agregar Sucursal</h2>
+              <h2 className="text-xl font-bold text-white">
+                {editingBranch ? 'Editar Sucursal' : 'Agregar Sucursal'}
+              </h2>
               <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white transition-colors">
                 <X className="h-6 w-6" />
               </button>
             </div>
 
-            <form onSubmit={handleCreate} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1">Nombre de Sucursal</label>
                 <input 
                   type="text" 
                   name="name" 
                   required 
+                  defaultValue={editingBranch?.name || ''}
                   placeholder="Ej: Sucursal Nueva Córdoba"
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-violet-500 outline-none" 
                 />
@@ -140,6 +165,7 @@ export function BranchManager({ branches }: { branches: Branch[] }) {
                   type="text" 
                   name="address" 
                   required 
+                  defaultValue={editingBranch?.address || ''}
                   placeholder="Ej: Independencia 500"
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-violet-500 outline-none" 
                 />
@@ -167,10 +193,10 @@ export function BranchManager({ branches }: { branches: Branch[] }) {
 
               <button 
                 type="submit" 
-                disabled={isLoading || !lat || !lng}
+                disabled={isLoading || (!editingBranch && (!lat || !lng))}
                 className="w-full bg-violet-600 hover:bg-violet-500 disabled:bg-slate-800 disabled:text-slate-500 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-lg mt-4 flex justify-center items-center"
               >
-                {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Guardar Sucursal'}
+                {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : (editingBranch ? 'Guardar Cambios' : 'Guardar Sucursal')}
               </button>
             </form>
           </div>

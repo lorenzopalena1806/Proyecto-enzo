@@ -54,3 +54,39 @@ export async function deleteBranchAction(branchId: string) {
   revalidatePath('/client/map');
   return { success: true };
 }
+export async function updateBranchAction(branchId: string, formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) return { success: false, reason: 'No autenticado' };
+
+  const name = formData.get('name') as string;
+  const address = formData.get('address') as string;
+  const latStr = formData.get('latitude') as string;
+  const lngStr = formData.get('longitude') as string;
+
+  if (!name) {
+    return { success: false, reason: 'El nombre es obligatorio' };
+  }
+
+  const payload: any = { name, address };
+  if (latStr && lngStr) {
+    payload.latitude = parseFloat(latStr);
+    payload.longitude = parseFloat(lngStr);
+  }
+
+  const { error } = await supabase
+    .from('merchant_branches')
+    .update(payload)
+    .eq('id', branchId)
+    .eq('merchant_id', user.id);
+
+  if (error) {
+    console.error(error);
+    return { success: false, reason: 'Hubo un error al actualizar la sucursal' };
+  }
+
+  revalidatePath('/dashboard/branches');
+  revalidatePath('/client/map');
+  return { success: true };
+}
