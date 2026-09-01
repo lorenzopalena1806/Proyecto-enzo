@@ -26,6 +26,8 @@ export function BranchSwitcher({ branches, activeBranchId }: BranchSwitcherProps
     setIsPending(true);
     await setActiveBranchCookie(id);
     setIsPending(false);
+  };
+
   const activeBranch = branches.find(b => b.id === activeBranchId);
   const label = activeBranch ? activeBranch.name : 'Visión Global (Todas)';
 
