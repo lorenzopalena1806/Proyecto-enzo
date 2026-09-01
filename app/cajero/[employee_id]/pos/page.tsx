@@ -27,7 +27,7 @@ export default async function CashierPOSPage({ params }: { params: { employee_id
   // Traer las ofertas activas del comercio
   const { data: offers } = await adminClient
     .from('merchant_offers')
-    .select('id, title, discount_pct, original_price')
+    .select('id, title, discount_pct, original_price, final_price')
     .eq('merchant_id', emp.merchant_id)
     .eq('is_active', true);
 
