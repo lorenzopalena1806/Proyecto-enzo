@@ -137,7 +137,8 @@ export async function completePendingChargeWithCode(chargeId: string, shortCode:
     charge.amount, 
     charge.payment_method as any, 
     shortCode, 
-    charge.offer_id || undefined
+    charge.offer_id || undefined,
+    charge.branch_id || undefined
   );
 
   if (!paymentRes.success) {

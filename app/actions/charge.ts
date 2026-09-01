@@ -7,7 +7,7 @@ import { checkRateLimit } from '@/lib/rate-limit';
 import type { PaymentMethod, Profile } from '@/types';
 import { sendPushNotification } from './push';
 
-export async function processPaymentByShortCodeServer(merchantId: string, amount: number, method: PaymentMethod, shortCode: string, offerId?: string) {
+export async function processPaymentByShortCodeServer(merchantId: string, amount: number, method: PaymentMethod, shortCode: string, offerId?: string, branchId?: string) {
   const ip = (await headers()).get('x-forwarded-for') ?? 'unknown';
   const rl = checkRateLimit(ip, 5, 30000);
   if (!rl.success) {
@@ -32,7 +32,7 @@ export async function processPaymentByShortCodeServer(merchantId: string, amount
     return { success: false, reason: 'El código de este cliente está desactivado.' };
   }
 
-  return await executePaymentServer(merchantId, qrRecord.user_id, amount, method, qrRecord.qr_token, offerId);
+  return await executePaymentServer(merchantId, qrRecord.user_id, amount, method, qrRecord.qr_token, offerId, undefined, branchId);
 }
 
 export async function confirmScannedPaymentServer(merchantId: string, amount: number, method: PaymentMethod, offerId?: string, branchId?: string) {
@@ -61,10 +61,10 @@ export async function confirmScannedPaymentServer(merchantId: string, amount: nu
     return { success: false, reason: 'No tienes un código QR activo para recibir beneficios.' };
   }
 
-  return await executePaymentServer(merchantId, user.id, amount, method, qrData.qr_token, offerId);
+  return await executePaymentServer(merchantId, user.id, amount, method, qrData.qr_token, offerId, undefined, branchId);
 }
 
-async function executePaymentServer(merchantId: string, clientId: string, amount: number, method: PaymentMethod, qrToken: string, offerId?: string, offerTitle?: string) {
+async function executePaymentServer(merchantId: string, clientId: string, amount: number, method: PaymentMethod, qrToken: string, offerId?: string, offerTitle?: string, branchId?: string) {
   const adminClient = createAdminClient();
 
   // 1. Get Merchant Profile
