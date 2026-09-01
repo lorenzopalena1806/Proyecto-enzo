@@ -26,10 +26,18 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-@layer base {
-  button {
-    @apply transition-transform active:scale-95;
-  }
+button,
+a[class*="bg-"],
+div[role="button"] {
+  transition-property: transform !important;
+  transition-duration: 150ms !important;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+button:active:not(:disabled),
+a[class*="bg-"]:active,
+div[role="button"]:active {
+  transform: scale(0.96) !important;
 }
 
 /* ── SCROLLBAR PERSONALIZADA ──────────────────────────────────── */
