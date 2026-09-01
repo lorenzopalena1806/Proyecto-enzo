@@ -15,8 +15,11 @@ export async function createSubscription(planType: 'basic' | 'pro', userId: stri
   if (!userId) return { error: 'No autorizado. Por favor iniciá sesión nuevamente.' };
 
   const adminClient = createAdminClient();
-  const { data: profile } = await adminClient.from('profiles').select('email').eq('id', userId).single();
-  const userEmail = profile?.email || 'test@example.com';
+  const { data: profile } = await adminClient.from('profiles').select('*').eq('id', userId).single();
+  
+  // Usamos un email único autogenerado para evitar el error "guest_site_mismatch" de Mercado Pago
+  // que ocurre si usamos un email genérico que ya existe en otro país.
+  const userEmail = profile?.email || `comercio-${userId.substring(0, 8)}@lazoo.com.ar`;
 
   // Definir precio según plan (TEMPORAL PARA PRUEBAS: 1000 y 2000)
   const amount = planType === 'basic' ? 1000 : 2000;
