@@ -26,6 +26,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+@layer base {
+  button {
+    @apply transition-transform active:scale-95;
+  }
+}
+
 /* ── SCROLLBAR PERSONALIZADA ──────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 6px;

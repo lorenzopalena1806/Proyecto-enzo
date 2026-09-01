@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { Receipt, TrendingUp, Users, DollarSign } from 'lucide-react';
 import { UndoChargeButton } from '@/components/dashboard/UndoChargeButton';
 import { MerchantChart } from '@/components/dashboard/MerchantChart';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 export default async function MerchantHistoryPage() {
   const supabase = await createClient();
@@ -128,11 +129,11 @@ export default async function MerchantHistoryPage() {
       {/* Lista */}
       <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
         {txList.length === 0 ? (
-          <div className="p-12 text-center">
-            <Receipt className="h-12 w-12 text-slate-700 mx-auto mb-4" />
-            <p className="text-slate-400 font-medium">Todavía no registraste ninguna transacción.</p>
-            <p className="text-slate-500 text-sm mt-1">Cuando escanees el QR de un cliente, aparecerá acá.</p>
-          </div>
+          <EmptyState
+            icon={Receipt}
+            title="Sin transacciones"
+            description="Todavía no registraste ninguna transacción. Cuando cobres usando la app, aparecerán acá."
+          />
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
