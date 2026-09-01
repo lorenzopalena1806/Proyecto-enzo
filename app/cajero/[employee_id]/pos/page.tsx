@@ -17,6 +17,8 @@ export default async function CashierPOSPage({ params }: { params: { employee_id
     redirect(`/cajero/${params.employee_id}`);
   }
 
+  const adminClient = createAdminClient();
+
   const { data: emp, error: empErr } = await adminClient
     .from('merchant_employees')
     .select('*')
