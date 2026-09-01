@@ -49,6 +49,8 @@ export default async function MapPage() {
     .from('merchant_branches')
     .select('id, merchant_id, name, address, latitude, longitude, is_active')
     .eq('is_active', true)
+    .not('latitude', 'is', null)
+    .not('longitude', 'is', null)
     .in('merchant_id', activeMerchantIds);
 
   // Unificar sedes centrales y sucursales
