@@ -39,7 +39,7 @@ export async function createOffer(formData: FormData) {
   const image_url = image_url_raw && image_url_raw.startsWith('http') ? image_url_raw : null;
 
   let branch_id = formData.get('branch_id') as string | null;
-  if (branch_id === 'central' || branch_id === '') {
+  if (branch_id === '') {
     branch_id = null;
   }
 
@@ -105,7 +105,7 @@ export async function updateOffer(offerId: string, formData: FormData) {
   const image_url = image_url_raw && image_url_raw.startsWith('http') ? image_url_raw : null;
 
   let branch_id = formData.get('branch_id') as string | null;
-  if (branch_id === 'central' || branch_id === '') {
+  if (branch_id === '') {
     branch_id = null;
   }
 
