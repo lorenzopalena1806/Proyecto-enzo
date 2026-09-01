@@ -1,8 +1,6 @@
 'use server';
 
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
-import { createAdminClient } from '@/lib/supabase-server';
+import { createClient, createAdminClient } from '@/lib/supabase-server';
 
 const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://lazoo.vercel.app';
@@ -12,21 +10,11 @@ export async function createSubscription(planType: 'basic' | 'pro') {
     return { error: 'Las credenciales de Mercado Pago no están configuradas.' };
   }
 
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-      },
-    }
-  );
+  const supabase = await createClient();
 
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: 'No autorizado' };
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  if (userError) console.error("Error getUser en MP:", userError);
+  if (!user) return { error: 'No autorizado. Por favor iniciá sesión nuevamente.' };
 
   // Definir precio según plan (TEMPORAL PARA PRUEBAS: 1000 y 2000)
   const amount = planType === 'basic' ? 1000 : 2000;
