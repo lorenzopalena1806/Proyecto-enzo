@@ -13,6 +13,7 @@ export default async function PayPage({
 }) {
   const resolvedParams = await searchParams;
   const m = typeof resolvedParams.m === 'string' ? resolvedParams.m : null;
+  const branchId = typeof resolvedParams.b === 'string' ? resolvedParams.b : null;
 
   if (!m) {
     return (
@@ -29,45 +30,81 @@ export default async function PayPage({
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect(`/auth/login?redirectTo=${encodeURIComponent(`/pay?m=${m}`)}`);
+    redirect(`/auth/login?redirectTo=/pay?m=${m}${branchId ? `&b=${branchId}` : ''}`);
   }
 
   const adminClient = createAdminClient();
 
-  const { data: merchantProfile } = await adminClient
-    .from('profiles')
-    .select('business_name, full_name, is_active, role')
-    .eq('id', m)
-    .single();
-
-  if (!merchantProfile || !merchantProfile.is_active || merchantProfile.role !== 'merchant') {
-    return (
-      <div className="min-h-screen pay-bg flex flex-col items-center justify-center p-4">
-        <div className="glass-card p-8 text-center rounded-3xl max-w-sm w-full">
-          <AlertTriangle className="h-12 w-12 text-amber-400 mb-4 mx-auto" />
-          <p className="text-white font-semibold">Este comercio no es válido.</p>
-        </div>
-      </div>
-    );
-  }
-
-  const merchantName = merchantProfile.business_name || merchantProfile.full_name || 'Comercio';
-
+  // Buscar perfil del cliente (que est escaneando)
   const { data: clientProfile } = await adminClient
     .from('profiles')
     .select('role, is_active, full_name')
     .eq('id', user.id)
     .single();
 
-  if (!clientProfile || !clientProfile.is_active) {
+  if (!clientProfile) {
     return (
       <div className="min-h-screen pay-bg flex flex-col items-center justify-center p-4">
         <div className="glass-card p-8 text-center rounded-3xl max-w-sm w-full">
+          <AlertTriangle className="h-12 w-12 text-amber-400 mb-4 mx-auto" />
+          <p className="text-white font-semibold">Tu cuenta no está activa.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Buscar el comercio
+  const { data: merchantUser } = await adminClient
+    .from('profiles')
+    .select('role, is_active, business_name, full_name')
+    .eq('id', m)
+    .single();
+
+  if (!merchantUser || merchantUser.role !== 'merchant' || !merchantUser.is_active) {
+    return (
+      <div className="min-h-screen pay-bg flex flex-col items-center justify-center p-4">
+        <div className="glass-card p-8 text-center rounded-3xl max-w-sm w-full">
+          <Store className="h-12 w-12 text-slate-500 mb-4 mx-auto" />
+          <p className="text-slate-400 font-semibold">El comercio no está disponible.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Si tiene branchId, buscar el nombre de la sucursal para mostrarlo
+  let branchName = null;
+  if (branchId) {
+    const { data: branchData } = await adminClient
+      .from('merchant_branches')
+      .select('name')
+      .eq('id', branchId)
+      .single();
+    if (branchData) branchName = branchData.name;
+  }
+
+  // Buscar si el cliente tiene una suscripción activa
+  const { data: subscription } = await adminClient
+    .from('subscriptions')
+    .select('status, expires_at')
+    .eq('user_id', user.id)
+    .single();
+
+  const isClientActive = subscription && 
+    (subscription.status === 'active' || subscription.status === 'trialing') && 
+    new Date(subscription.expires_at) > new Date();
+
+  if (!isClientActive && clientProfile.role !== 'merchant') {
+    return (
+      <div className="min-h-screen pay-bg flex flex-col items-center justify-center p-4">
+        <div className="glass-card p-8 text-center rounded-3xl max-w-sm w-full">
+          <AlertTriangle className="h-12 w-12 text-red-500 mb-4 mx-auto" />
           <p className="text-red-400 font-semibold">Tu cuenta no está activa.</p>
         </div>
       </div>
     );
   }
+
+  const merchantName = merchantUser.business_name || merchantUser.full_name || 'Comercio';
 
   let pendingQuery = adminClient
     .from('pending_charges')
@@ -78,8 +115,8 @@ export default async function PayPage({
     .order('created_at', { ascending: false })
     .limit(1);
     
-  if (b) {
-    pendingQuery = pendingQuery.eq('branch_id', b);
+  if (branchId) {
+    pendingQuery = pendingQuery.eq('branch_id', branchId);
   } else {
     // Si no tiene 'b' en la URL, es el QR global. Solo debería agarrar cobros globales (branch_id nulo)
     pendingQuery = pendingQuery.is('branch_id', null);
