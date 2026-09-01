@@ -47,7 +47,7 @@ export default async function PayPage({
       <div className="min-h-screen pay-bg flex flex-col items-center justify-center p-4">
         <div className="glass-card p-8 text-center rounded-3xl max-w-sm w-full">
           <AlertTriangle className="h-12 w-12 text-amber-400 mb-4 mx-auto" />
-          <p className="text-white font-semibold">Tu cuenta no está activa.</p>
+          <p className="text-white font-semibold">Hubo un problema al cargar tu perfil. Contactá a soporte.</p>
         </div>
       </div>
     );
@@ -98,7 +98,8 @@ export default async function PayPage({
       <div className="min-h-screen pay-bg flex flex-col items-center justify-center p-4">
         <div className="glass-card p-8 text-center rounded-3xl max-w-sm w-full">
           <AlertTriangle className="h-12 w-12 text-red-500 mb-4 mx-auto" />
-          <p className="text-red-400 font-semibold">Tu cuenta no está activa.</p>
+          <p className="text-red-400 font-semibold mb-2">Suscripción Inactiva</p>
+          <p className="text-slate-400 text-sm">Para acceder a este descuento, necesitás tener tu suscripción a Lazoo al día.</p>
         </div>
       </div>
     );
