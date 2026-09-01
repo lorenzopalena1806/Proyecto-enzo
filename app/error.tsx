@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
-import { reportErrorToServer } from '@/app/actions/error';
 
 export default function Error({
   error,
@@ -12,15 +11,19 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Reportar el error al panel de control (Superadmin logs)
-    reportErrorToServer({
-      message: error.message,
-      stack: error.stack,
-      digest: error.digest,
-      url: typeof window !== 'undefined' ? window.location.href : 'unknown',
-    }).catch(console.error);
+    console.error('Lazoo App Error (Browser):', error);
     
-    console.error('Lazoo App Error:', error);
+    // Enviar al servidor mediante API Route
+    fetch('/api/log', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: error.message,
+        stack: error.stack,
+        digest: error.digest,
+        url: typeof window !== 'undefined' ? window.location.href : 'unknown',
+      })
+    }).catch(() => {}); // Ignorar errores de red en el reporte
   }, [error]);
 
   return (
