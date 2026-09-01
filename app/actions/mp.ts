@@ -47,7 +47,7 @@ export async function createSubscription(planType: 'basic' | 'pro', userId: stri
 
     if (!response.ok) {
       console.error('Error de MP:', data);
-      return { error: 'Error al generar el link de pago.' };
+      return { error: `MP Error: ${JSON.stringify(data)}` };
     }
 
     // Guardar la intención de suscripción en el perfil (como pending)
