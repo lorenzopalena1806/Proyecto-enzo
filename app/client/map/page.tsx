@@ -45,6 +45,38 @@ export default async function MapPage() {
     .not('longitude', 'is', null)
     .in('id', activeMerchantIds);
 
+  const { data: branches } = await adminClient
+    .from('merchant_branches')
+    .select('id, merchant_id, name, address, latitude, longitude, is_active')
+    .eq('is_active', true)
+    .in('merchant_id', activeMerchantIds);
+
+  // Unificar sedes centrales y sucursales
+  let allLocations = merchants || [];
+  
+  if (branches && branches.length > 0 && merchants) {
+    const branchesAsMerchants = branches.map(branch => {
+      // Buscar la cuenta madre para heredar logo y categoría
+      const mother = merchants.find(m => m.id === branch.merchant_id);
+      return {
+        id: branch.id, // Usamos el ID de la sucursal para que la key de React no choque, pero para el link al perfil usaremos el merchant_id
+        merchant_id: branch.merchant_id, // Guardamos referencia a la madre
+        business_name: mother ? `${mother.business_name} (${branch.name})` : branch.name,
+        avatar_url: mother?.avatar_url || null,
+        category: mother?.category || 'Sucursal',
+        address: branch.address,
+        latitude: branch.latitude,
+        longitude: branch.longitude,
+        is_premium: mother?.is_premium || false
+      };
+    });
+    
+    // Convertir profiles a la misma estructura asegurando que tengan merchant_id
+    allLocations = merchants.map(m => ({ ...m, merchant_id: m.id })).concat(branchesAsMerchants as any);
+  } else if (merchants) {
+    allLocations = merchants.map(m => ({ ...m, merchant_id: m.id }));
+  }
+
   return (
     <div className="relative w-full h-screen overflow-hidden flex flex-col bg-slate-950">
       
@@ -66,7 +98,7 @@ export default async function MapPage() {
       
       {/* ── MAPA ── */}
       <div className="flex-1 w-full h-full">
-        <MapWrapper merchants={merchants || []} />
+        <MapWrapper merchants={allLocations} />
       </div>
 
       {/* ── BOTTOM NAV BAR ── */}

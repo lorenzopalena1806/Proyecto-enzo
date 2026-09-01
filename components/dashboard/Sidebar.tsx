@@ -26,6 +26,7 @@ import {
   Wallet,
   TrendingUp,
   Crown,
+  MapPin,
 } from 'lucide-react';
 import type { Profile } from '@/types';
 
@@ -75,6 +76,13 @@ const MERCHANT_NAV_ITEMS = [
     label: 'Historial',
     icon: History,
     exact: false,
+  },
+  {
+    href: '/dashboard/branches',
+    label: 'Mis Sucursales',
+    icon: MapPin,
+    exact: false,
+    badge: 'PRO',
   },
   {
     href: '/dashboard/profile',
@@ -185,7 +193,12 @@ export function Sidebar({ profile }: SidebarProps) {
             >
               <Icon className={`h-4 w-4 flex-shrink-0 ${active ? 'text-white' : 'text-slate-500 group-hover:text-white'}`} />
               <span>{item.label}</span>
-              {active && <ChevronRight className="h-3 w-3 ml-auto" />}
+              {(item as any).badge && (
+                <span className="ml-auto bg-violet-600/20 text-violet-300 border border-violet-500/30 text-[9px] px-1.5 py-0.5 rounded-full uppercase tracking-wider font-bold">
+                  {(item as any).badge}
+                </span>
+              )}
+              {active && !(item as any).badge && <ChevronRight className="h-3 w-3 ml-auto" />}
             </Link>
           );
         })}

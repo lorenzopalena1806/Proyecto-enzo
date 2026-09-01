@@ -27,6 +27,18 @@ export interface Profile {
   created_at: string;
 }
 
+// ------ SUCURSALES (MÚLTIPLES LOCALES) -------------------------
+export interface MerchantBranch {
+  id: string;
+  merchant_id: string;
+  name: string;
+  address: string | null;
+  latitude: number;
+  longitude: number;
+  is_active: boolean;
+  created_at: string;
+}
+
 // ------ SUSCRIPCIÓN -----------------------------------------
 export type SubscriptionStatus = 'active' | 'inactive' | 'trial' | 'expired';
 

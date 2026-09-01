@@ -65,6 +65,7 @@ const createMerchantIcon = (avatarUrl: string | null, isPremium?: boolean) => {
 
 interface MerchantLocation {
   id: string;
+  merchant_id?: string;
   business_name: string | null;
   avatar_url: string | null;
   category: string | null;
@@ -158,7 +159,7 @@ export default function InteractiveMap({ merchants }: MapProps) {
                     Cómo llegar
                   </a>
                   <Link 
-                    href={`/client/merchant/${merchant.id}`} 
+                    href={`/client/merchant/${merchant.merchant_id || merchant.id}`} 
                     className="flex flex-col items-center justify-center flex-1 py-2 px-1 bg-white hover:bg-slate-100 text-slate-900 rounded-xl text-[11px] font-black transition-colors shadow-lg border border-white"
                   >
                     <ExternalLink className="h-4 w-4 mb-0.5" />
