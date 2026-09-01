@@ -1,6 +1,7 @@
 import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import { Lock, Crown, BarChart3, Users } from 'lucide-react';
+import { ProSubscriptionButtons } from './ProSubscriptionButtons';
 
 export const metadata = {
   title: 'Lazoo PRO | Reportes Avanzados',
@@ -49,13 +50,7 @@ export default async function ProReportsPage() {
             </div>
           </div>
 
-          <a 
-            href="https://api.whatsapp.com/send?phone=5493512388658&text=Hola!%20Quiero%20informaci%C3%B3n%20sobre%20Lazoo%20PRO."
-            target="_blank"
-            className="block w-full py-4 rounded-xl font-bold text-slate-900 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 transition-all shadow-lg shadow-amber-500/25"
-          >
-            Contactar para adquirir PRO
-          </a>
+          <ProSubscriptionButtons />
         </div>
       </div>
     );
