@@ -69,15 +69,23 @@ export default async function PayPage({
     );
   }
 
-  const { data: pendingCharge } = await adminClient
+  let pendingQuery = adminClient
     .from('pending_charges')
     .select('*')
     .eq('merchant_id', m)
     .eq('status', 'active')
     .gt('expires_at', new Date().toISOString())
     .order('created_at', { ascending: false })
-    .limit(1)
-    .maybeSingle();
+    .limit(1);
+    
+  if (b) {
+    pendingQuery = pendingQuery.eq('branch_id', b);
+  } else {
+    // Si no tiene 'b' en la URL, es el QR global. Solo debería agarrar cobros globales (branch_id nulo)
+    pendingQuery = pendingQuery.is('branch_id', null);
+  }
+
+  const { data: pendingCharge } = await pendingQuery.maybeSingle();
 
   // Sin cobro activo → pantalla de espera
   if (!pendingCharge) {
