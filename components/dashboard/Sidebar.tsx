@@ -85,6 +85,13 @@ const MERCHANT_NAV_ITEMS = [
     id: 'tour-history',
   },
   {
+    href: '/dashboard/employee',
+    label: 'Cajeros',
+    icon: Users,
+    exact: false,
+    id: 'tour-employee',
+  },
+  {
     href: '/dashboard/branches',
     label: 'Mis Sucursales',
     icon: MapPin,
