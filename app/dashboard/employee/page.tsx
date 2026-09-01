@@ -1,6 +1,6 @@
-import { createClient } from '@/lib/supabase-server';
+import { createClient, createAdminClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
-import { EmployeeConfigForm } from './EmployeeConfigForm';
+import { EmployeeManager } from '@/components/dashboard/EmployeeManager';
 
 export const metadata = {
   title: 'Modo Empleado | Lazoo',
@@ -11,20 +11,38 @@ export default async function EmployeeModePage() {
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) redirect('/auth/login');
+  
+  const adminClient = createAdminClient();
+
+  // Traer empleados
+  const { data: employees } = await adminClient
+    .from('merchant_employees')
+    .select('*')
+    .eq('merchant_id', user.id)
+    .order('created_at', { ascending: false });
+
+  // Traer sucursales
+  const { data: branches } = await adminClient
+    .from('merchant_branches')
+    .select('id, name')
+    .eq('merchant_id', user.id);
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://lazoo.vercel.app';
-  const posUrl = `${baseUrl}/pos/${user.id}`;
 
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
-        <h1 className="text-2xl font-bold text-white">Modo Empleado</h1>
+        <h1 className="text-2xl font-bold text-white">Sistema de Cajeros</h1>
         <p className="text-slate-400 mt-1">
-          Configurá un PIN de acceso rápido para que tus cajeros puedan cobrar descuentos sin ver el resto de tu cuenta.
+          Creá usuarios para tus empleados. Podrán cobrar directamente desde sus celulares o una tablet del mostrador, sin ver tu facturación.
         </p>
       </div>
 
-      <EmployeeConfigForm posUrl={posUrl} merchantId={user.id} />
+      <EmployeeManager 
+        employees={employees || []} 
+        branches={branches || []} 
+        baseUrl={baseUrl} 
+      />
     </div>
   );
 }

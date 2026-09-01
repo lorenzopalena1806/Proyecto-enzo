@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { createClient } from '@/lib/supabase';
 import { createPendingCharge, cancelPendingCharge, completePendingChargeWithCode } from '@/app/actions/pending-charges';
+import { employeeCreatePendingCharge, employeeCancelPendingCharge, employeeCompletePendingChargeWithCode } from '@/app/actions/employee';
 import Link from 'next/link';
 import {
   Store, BellRing, Banknote, ArrowLeftRight,
@@ -43,11 +44,13 @@ export function POSView({
   branchId,
   businessName,
   offers,
+  employeeId,
 }: {
   merchantId: string;
   branchId: string | null;
   businessName: string;
   offers: Offer[];
+  employeeId?: string;
 }) {
   const supabase = createClient();
 
@@ -206,7 +209,9 @@ export function POSView({
       formData.set('branch_id', branchId);
     }
 
-    const res = await createPendingCharge(formData);
+    const res = employeeId 
+      ? await employeeCreatePendingCharge(employeeId, formData)
+      : await createPendingCharge(formData);
     setLoading(false);
 
     if (!res.success) {
@@ -232,7 +237,11 @@ export function POSView({
 
   const handleCancelCharge = async () => {
     if (!activeCharge) return;
-    await cancelPendingCharge(activeCharge.id);
+    if (employeeId) {
+      await employeeCancelPendingCharge(employeeId, activeCharge.id);
+    } else {
+      await cancelPendingCharge(activeCharge.id);
+    }
     setActiveCharge(null);
   };
 
@@ -247,7 +256,7 @@ export function POSView({
     if (!activeCharge) return;
 
     setManualCodeLoading(true);
-    const res = await completePendingChargeWithCode(activeCharge.id, manualCode);
+    const res = employeeId ? await employeeCompletePendingChargeWithCode(employeeId, activeCharge.id, manualCode) : await completePendingChargeWithCode(activeCharge.id, manualCode);
     setManualCodeLoading(false);
 
     if (!res.success) {
