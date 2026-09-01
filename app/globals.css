@@ -26,17 +26,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-button,
-a[class*="bg-"],
-div[role="button"] {
+button:not(.leaflet-marker-icon),
+a[class*="bg-"]:not(.leaflet-marker-icon) {
   transition-property: transform !important;
   transition-duration: 150ms !important;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-button:active:not(:disabled),
-a[class*="bg-"]:active,
-div[role="button"]:active {
+button:active:not(:disabled):not(.leaflet-marker-icon),
+a[class*="bg-"]:active:not(.leaflet-marker-icon) {
   transform: scale(0.96) !important;
 }
 
