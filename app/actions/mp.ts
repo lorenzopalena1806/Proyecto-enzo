@@ -28,8 +28,8 @@ export async function createSubscription(planType: 'basic' | 'pro') {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'No autorizado' };
 
-  // Definir precio según plan
-  const amount = planType === 'basic' ? 55000 : 80000;
+  // Definir precio según plan (TEMPORAL PARA PRUEBAS: 1000 y 2000)
+  const amount = planType === 'basic' ? 1000 : 2000;
   const reason = planType === 'basic' ? 'Lazoo Plan Básico' : 'Lazoo Plan PRO';
 
   try {

@@ -42,7 +42,7 @@ export default async function SuscripcionesPage() {
           
           <div className="mb-8">
             <div className="flex items-end gap-1">
-              <span className="text-5xl font-black text-white">$55.000</span>
+              <span className="text-5xl font-black text-white">$1.000</span>
               <span className="text-slate-400 mb-1">/mes</span>
             </div>
             <p className="text-xs text-slate-500 mt-2">* Alta inicial por única vez: $80.000 (Incluye 1er mes y Kit Físico)</p>
@@ -82,7 +82,7 @@ export default async function SuscripcionesPage() {
           
           <div className="mb-8">
             <div className="flex items-end gap-1">
-              <span className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">$80.000</span>
+              <span className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">$2.000</span>
               <span className="text-slate-400 mb-1">/mes</span>
             </div>
             <p className="text-xs text-slate-500 mt-2">* Alta inicial por única vez: $110.000 (Incluye 1er mes y Kit VIP)</p>
