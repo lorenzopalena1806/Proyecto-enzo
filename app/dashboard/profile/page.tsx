@@ -21,14 +21,7 @@ export default async function ProfilePage() {
 
   if (!profile) redirect('/auth/login');
 
-  const { data: subscription } = await adminClient
-    .from('subscriptions')
-    .select('status')
-    .eq('merchant_id', user.id)
-    .eq('status', 'active')
-    .limit(1);
-    
-  const isPro = !!(subscription && subscription.length > 0);
+  const isPro = profile.plan_type === 'pro' && profile.mp_subscription_status === 'authorized';
 
   return (
     <div className="max-w-xl mx-auto space-y-6">

@@ -14,6 +14,9 @@ export default async function EmployeeModePage() {
   
   const adminClient = createAdminClient();
 
+  // Fetch profile to get plan type
+  const { data: profile } = await adminClient.from('profiles').select('plan_type').eq('id', user.id).single();
+
   // Traer empleados
   const { data: employees } = await adminClient
     .from('merchant_employees')
@@ -42,6 +45,7 @@ export default async function EmployeeModePage() {
         employees={employees || []} 
         branches={branches || []} 
         baseUrl={baseUrl} 
+        planType={profile?.plan_type || 'basic'}
       />
     </div>
   );

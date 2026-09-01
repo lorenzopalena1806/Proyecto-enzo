@@ -10,7 +10,7 @@ interface Branch {
   address: string | null;
 }
 
-export function BranchManager({ branches }: { branches: Branch[] }) {
+export function BranchManager({ branches, planType = 'basic' }: { branches: Branch[], planType?: string }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingBranch, setEditingBranch] = useState<Branch | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,6 +21,10 @@ export function BranchManager({ branches }: { branches: Branch[] }) {
   const [mapsUrl, setMapsUrl] = useState('');
   const [isExtractingMaps, setIsExtractingMaps] = useState(false);
   const [mapExtractMessage, setMapExtractMessage] = useState({ type: '', text: '' });
+
+  const router = useRouter();
+
+  const isBasicAndLimited = planType === 'basic' && branches.length >= 1;
 
   const handleExtractMaps = async () => {
     if (!mapsUrl) {
@@ -47,19 +51,14 @@ export function BranchManager({ branches }: { branches: Branch[] }) {
   };
 
   const handleGetLocation = () => {
-    if (!navigator.geolocation) {
-      alert('Tu navegador no soporta geolocalización');
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition((pos) => {
         setLat(pos.coords.latitude);
         setLng(pos.coords.longitude);
-      },
-      (err) => {
-        alert('Error al obtener la ubicación. Por favor, asegúrate de haber dado los permisos.');
-      }
-    );
+      }, (err) => {
+        alert('No pudimos acceder a tu ubicación. Probá desde un celular o introducí las coordenadas manualmente.');
+      });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -67,20 +66,38 @@ export function BranchManager({ branches }: { branches: Branch[] }) {
     setIsLoading(true);
     setErrorMsg('');
 
-    const formData = new FormData(e.currentTarget);
-    
-    let result;
-    if (editingBranch) {
-      result = await updateBranchAction(editingBranch.id, formData);
-    } else {
-      result = await createBranchAction(formData);
+    if (!lat || !lng) {
+      if (!editingBranch) {
+        setErrorMsg('Por favor obtené las coordenadas antes de guardar.');
+        setIsLoading(false);
+        return;
+      }
     }
 
-    if (result.success) {
-      setIsModalOpen(false);
-      setEditingBranch(null);
+    const formData = new FormData(e.currentTarget);
+    
+    if (editingBranch) {
+      const result = await updateBranchAction(editingBranch.id, formData);
+      if (result.success) {
+        setIsModalOpen(false);
+        setEditingBranch(null);
+        router.refresh();
+      } else {
+        setErrorMsg(result.reason || 'Error desconocido');
+      }
     } else {
-      setErrorMsg(result.reason || 'Error desconocido');
+      if (isBasicAndLimited) {
+        setErrorMsg('El Plan Básico permite máximo 1 sucursal.');
+        setIsLoading(false);
+        return;
+      }
+      const result = await createBranchAction(formData);
+      if (result.success) {
+        setIsModalOpen(false);
+        router.refresh();
+      } else {
+        setErrorMsg(result.reason || 'Error desconocido');
+      }
     }
     setIsLoading(false);
   };
@@ -105,10 +122,18 @@ export function BranchManager({ branches }: { branches: Branch[] }) {
         </div>
         <button 
           onClick={() => {
+            if (isBasicAndLimited) {
+              alert('El Plan Básico permite máximo 1 sucursal. Mejorá tu plan a PRO para agregar más sucursales.');
+              return;
+            }
             setEditingBranch(null);
             setIsModalOpen(true);
           }}
-          className="bg-violet-600 hover:bg-violet-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95"
+          className={`font-bold py-2 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95 ${
+            isBasicAndLimited 
+              ? 'bg-slate-700 text-slate-400 cursor-not-allowed' 
+              : 'bg-violet-600 hover:bg-violet-500 text-white'
+          }`}
         >
           <Plus className="h-5 w-5" />
           Nueva Sucursal
