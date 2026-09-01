@@ -85,13 +85,12 @@ export default async function PayPage({
   // Buscar si el COMERCIO tiene una suscripción activa
   const { data: subscription } = await adminClient
     .from('subscriptions')
-    .select('status, expires_at')
+    .select('status')
     .eq('merchant_id', m)
-    .single();
+    .eq('status', 'active')
+    .limit(1);
 
-  const isMerchantActive = subscription && 
-    (subscription.status === 'active' || subscription.status === 'trialing') && 
-    new Date(subscription.expires_at) > new Date();
+  const isMerchantActive = subscription && subscription.length > 0;
 
   if (!isMerchantActive) {
     return (
