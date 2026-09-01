@@ -66,10 +66,10 @@ export async function POST(request: Request) {
       // Les damos 31 días de vigencia desde ahora
       const endsAt = new Date();
       endsAt.setDate(endsAt.getDate() + 31);
-      updateData.subscription_ends_at = endsAt.toISOString();
-      updateData.is_pro = true; // Automáticamente se hacen PRO
+      updateData.subscription_expires_at = endsAt.toISOString();
+      updateData.is_premium = true; // Automáticamente se hacen PRO (usamos is_premium que ya existía)
     } else if (status === 'cancelled') {
-      updateData.is_pro = false; // Se les corta el acceso si cancelan
+      updateData.is_premium = false; // Se les corta el acceso si cancelan
     }
 
     await adminClient
