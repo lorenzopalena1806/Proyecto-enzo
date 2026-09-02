@@ -67,7 +67,14 @@ export async function POST(request: Request) {
       const endsAt = new Date();
       endsAt.setDate(endsAt.getDate() + 31);
       updateData.subscription_expires_at = endsAt.toISOString();
-      updateData.is_premium = true; // Automáticamente se hacen PRO (usamos is_premium que ya existía)
+      updateData.is_premium = true; 
+      
+      // Determinar si es básico o PRO en base al reason enviado a MP
+      if (subscriptionData.reason && subscriptionData.reason.includes('PRO')) {
+        updateData.plan_type = 'pro';
+      } else {
+        updateData.plan_type = 'basic';
+      }
     } else if (status === 'cancelled') {
       updateData.is_premium = false; // Se les corta el acceso si cancelan
     }

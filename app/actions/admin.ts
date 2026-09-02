@@ -35,15 +35,10 @@ export async function getMerchantsListServer() {
 
     if (profilesError) throw profilesError;
 
-    const { data: subscriptions } = await adminClient
-      .from('subscriptions')
-      .select('merchant_id, status');
-
-    const subsMap = new Map(subscriptions?.map((s: any) => [s.merchant_id, s.status]) || []);
-
     const combined = profiles.map((p: any) => ({
       ...p,
-      subscriptionStatus: (subsMap.get(p.id) as 'active' | 'inactive') || 'none',
+      subscriptionStatus: p.is_active ? 'active' : 'none',
+      plan_name: p.plan_type || 'basic'
     }));
 
     return combined;
@@ -58,34 +53,38 @@ export async function toggleMerchantSubscriptionServer(merchantId: string, curre
     const adminClient = await requireSuperAdmin();
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
 
-    if (currentStatus === 'none') {
-      const { error } = await adminClient.from('subscriptions').insert({
-        merchant_id: merchantId,
-        status: 'active',
-        plan_name: 'basic',
-        started_at: new Date().toISOString(),
-      });
+    if (newStatus === 'active') {
+      const endsAt = new Date();
+      endsAt.setDate(endsAt.getDate() + 31);
+      
+      const { error } = await adminClient
+        .from('profiles')
+        .update({ 
+          is_active: true,
+          plan_type: 'pro', // Por defecto los superadmin habilitan como PRO
+          mp_subscription_status: 'authorized',
+          subscription_expires_at: endsAt.toISOString(),
+          is_premium: true
+        })
+        .eq('id', merchantId);
       if (error) throw error;
     } else {
       const { error } = await adminClient
-        .from('subscriptions')
-        .update({ status: newStatus, updated_at: new Date().toISOString() })
-        .eq('merchant_id', merchantId);
+        .from('profiles')
+        .update({ 
+          is_active: false,
+          mp_subscription_status: 'cancelled',
+          is_premium: false
+        })
+        .eq('id', merchantId);
       if (error) throw error;
     }
-    
-    // Sincronizar el estado de la suscripción con el perfil (pausar o activar el local)
-    const { error: profileError } = await adminClient
-      .from('profiles')
-      .update({ is_active: newStatus === 'active' })
-      .eq('id', merchantId);
-      
-    if (profileError) throw profileError;
 
+    revalidatePath('/admin/merchants');
     return { success: true };
-  } catch (error: any) {
-    console.error('Error toggling subscription:', error.message || error);
-    return { success: false };
+  } catch (error) {
+    console.error('Error toggling merchant subscription:', error);
+    return { success: false, error: 'Error al actualizar suscripción' };
   }
 }
 

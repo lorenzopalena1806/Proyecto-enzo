@@ -108,7 +108,14 @@ export default function MerchantsPage() {
                       <div className="h-8 w-8 rounded-lg bg-violet-900/50 flex items-center justify-center border border-violet-800">
                         <Store className="h-4 w-4 text-violet-400" />
                       </div>
-                      {merchant.business_name || 'Sin nombre'}
+                      <div className="flex flex-col">
+                        <span>{merchant.business_name || 'Sin nombre'}</span>
+                        {merchant.subscriptionStatus === 'active' && (
+                          <span className="text-[10px] text-amber-500 uppercase tracking-wider font-bold mt-0.5">
+                            {merchant.plan_type === 'pro' ? 'Plan PRO' : 'Plan Básico'}
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="px-6 py-4">{merchant.full_name}</td>
                     <td className="px-6 py-4">
