@@ -13,7 +13,7 @@ interface ShareButtonProps {
 export function ShareButton({ 
   title = 'Lazoo - Red de Beneficios', 
   text = '¡Mirá esta red de descuentos! Sumate a Lazoo.', 
-  url = 'https://lazoo.vercel.app',
+  url = 'https://lazoo.com.ar',
   className = ''
 }: ShareButtonProps) {
   const [copied, setCopied] = useState(false);

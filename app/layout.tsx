@@ -26,7 +26,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://lazoo.vercel.app'),
+  metadataBase: new URL('https://lazoo.com.ar'),
   title: {
     default: 'Lazoo — Red de Descuentos para Comercios',
     template: '%s | Lazoo',
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Lazoo — Red de Descuentos B2B y B2C',
     description: 'Transformá tu comercio con el ecosistema de beneficios de Lazoo. Cobros por QR, estadísticas en tiempo real y red B2B.',
-    url: 'https://lazoo.vercel.app',
+    url: 'https://lazoo.com.ar',
     siteName: 'Lazoo',
     images: [
       {

@@ -30,7 +30,7 @@ export default async function EmployeeModePage() {
     .select('id, name')
     .eq('merchant_id', user.id);
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://lazoo.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://lazoo.com.ar';
 
   return (
     <div className="space-y-6 max-w-2xl">

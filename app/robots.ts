@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/dashboard/', '/admin/', '/api/', '/suspended/', '/subscription-required/'],
     },
-    sitemap: 'https://lazoo.vercel.app/sitemap.xml',
+    sitemap: 'https://lazoo.com.ar/sitemap.xml',
   };
 }

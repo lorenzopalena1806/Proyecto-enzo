@@ -3,7 +3,7 @@
 import { createClient, createAdminClient } from '@/lib/supabase-server';
 
 const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://lazoo.vercel.app';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://lazoo.com.ar';
 
 export async function createSubscription(planType: 'basic' | 'pro', userId: string) {
   if (!MP_ACCESS_TOKEN) {

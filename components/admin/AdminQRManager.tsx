@@ -73,7 +73,7 @@ export function AdminQRManager({ merchants }: { merchants: Merchant[] }) {
               <div className="flex items-center justify-between mt-4">
                 <span className="text-sm text-slate-400">Casa Central</span>
                 <button 
-                  onClick={() => handleDownload(`https://lazoo.vercel.app/pay?m=${merchant.id}`, `${merchant.name}_Central`)}
+                  onClick={() => handleDownload(`https://lazoo.com.ar/pay?m=${merchant.id}`, `${merchant.name}_Central`)}
                   className="bg-violet-600 hover:bg-violet-500 text-white p-2 rounded-lg transition-colors flex items-center gap-2 text-xs font-bold"
                 >
                   <Download className="h-4 w-4" /> Descargar QR
@@ -92,7 +92,7 @@ export function AdminQRManager({ merchants }: { merchants: Merchant[] }) {
                         {branch.name}
                       </span>
                       <button 
-                        onClick={() => handleDownload(`https://lazoo.vercel.app/pay?m=${merchant.id}&b=${branch.id}`, `${merchant.name}_${branch.name}`)}
+                        onClick={() => handleDownload(`https://lazoo.com.ar/pay?m=${merchant.id}&b=${branch.id}`, `${merchant.name}_${branch.name}`)}
                         className="bg-slate-800 hover:bg-slate-700 text-slate-300 p-1.5 rounded transition-colors flex items-center justify-center gap-1.5 text-xs w-full"
                       >
                         <Download className="h-3.5 w-3.5" /> Descargar QR Sucursal

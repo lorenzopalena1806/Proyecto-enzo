@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://lazoo.vercel.app';
+  const baseUrl = 'https://lazoo.com.ar';
 
   return [
     {

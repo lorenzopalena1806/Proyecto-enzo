@@ -111,7 +111,7 @@ export default async function MerchantProfilePage({ params }: { params: Promise<
       '@type': 'PostalAddress',
       streetAddress: merchant.address || '',
     },
-    url: `https://lazoo.vercel.app/client/merchant/${merchant.id}`,
+    url: `https://lazoo.com.ar/client/merchant/${merchant.id}`,
     hasMap: merchant.maps_url || '',
   };
 
@@ -189,7 +189,7 @@ export default async function MerchantProfilePage({ params }: { params: Promise<
                 </a>
               )}
               <a 
-                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`¡Mirá los descuentos de ${merchant.business_name} en Lazoo! https://lazoo.vercel.app/client/merchant/${merchant.id}`)}`}
+                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`¡Mirá los descuentos de ${merchant.business_name} en Lazoo! https://lazoo.com.ar/client/merchant/${merchant.id}`)}`}
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-full font-bold text-sm hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/20"
