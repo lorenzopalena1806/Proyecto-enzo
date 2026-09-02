@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { createOffer, updateOffer, toggleOfferStatus, deleteOffer, resetOfferStock } from '@/app/actions/offers';
 import { Plus, Tag, Trash2, Power, PowerOff, Loader2, AlertTriangle, Edit2, CalendarDays } from 'lucide-react';
 import Image from 'next/image';
+import { OffersTour } from './OffersTour';
 
 const DAYS = [
   { value: '1', label: 'L' },
@@ -96,11 +97,37 @@ export function OffersManager({ initialOffers, branches = [] }: OffersManagerPro
   const handleSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+
     const formData = new FormData(e.currentTarget);
-    
-    const res = editingOffer 
-      ? await updateOffer(editingOffer.id, formData)
-      : await createOffer(formData);
+    const data: Record<string, any> = {
+      title: formData.get('title'),
+      description: formData.get('description'),
+      image_url: formData.get('image_url'),
+      target_role: formData.get('target_role'),
+      branch_id: formData.get('branch_id') || null,
+    };
+
+    const originalPrice = formData.get('original_price');
+    const finalPrice = formData.get('final_price');
+    const discountPct = formData.get('discount_pct');
+    const stockLimit = formData.get('stock_limit');
+
+    if (originalPrice) data.original_price = parseFloat(originalPrice as string);
+    if (finalPrice) data.final_price = parseFloat(finalPrice as string);
+    if (discountPct) data.discount_pct = parseFloat(discountPct as string);
+    if (stockLimit) data.stock_limit = parseInt(stockLimit as string);
+
+    const validDays = formData.getAll('valid_days');
+    if (validDays.length > 0) {
+      data.valid_days = validDays;
+    }
+
+    let res;
+    if (editingOffer) {
+      res = await updateOffer(editingOffer.id, data);
+    } else {
+      res = await createOffer(data);
+    }
       
     setLoading(false);
     
@@ -149,6 +176,7 @@ export function OffersManager({ initialOffers, branches = [] }: OffersManagerPro
 
       {isFormOpen && (
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 mb-8">
+          <OffersTour />
           <div className="flex justify-between items-center mb-6 border-b border-slate-800 pb-4">
             <h3 className="text-lg font-bold text-white flex items-center gap-2">
               <Edit2 className="w-5 h-5 text-violet-400" />
@@ -159,7 +187,7 @@ export function OffersManager({ initialOffers, branches = [] }: OffersManagerPro
           <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-8">
             {/* Formulario */}
             <form key={editingOffer ? editingOffer.id : 'new'} onSubmit={handleSubmitForm} className="space-y-4">
-              <div>
+              <div id="tour-offer-title">
                 <label className="block text-sm font-medium text-slate-400 mb-1">Título de la Oferta / Producto</label>
                 <input name="title" value={preview.title} onChange={handleChange} required placeholder="Ej: 2x1 en Remeras / Hamburguesa Completa" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none" />
               </div>
@@ -208,39 +236,43 @@ export function OffersManager({ initialOffers, branches = [] }: OffersManagerPro
 
                 <div className="flex items-center gap-4">
                   <div className="flex-1 h-px bg-slate-800"></div>
-                  <span className="text-xs font-bold text-slate-500 uppercase">Ó</span>
+                  <div className="text-slate-500 text-sm font-medium uppercase tracking-wider">o ingresar %</div>
                   <div className="flex-1 h-px bg-slate-800"></div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-1">Descuento (%)</label>
+                <div className="flex items-center gap-2">
+                  <div className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-emerald-400 font-bold flex items-center justify-center">
+                    <Tag className="w-5 h-5 mr-1" /> -
+                  </div>
                   <input type="number" name="discount_pct" value={preview.discount_pct} onChange={handleChange} min="1" max="100" placeholder="Ej: 20" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none" />
+                  <div className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-slate-400 font-bold">
+                    %
+                  </div>
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-slate-400 mb-1">¿Para quién es?</label>
                 <select name="target_role" value={preview.target_role} onChange={handleChange} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none">
-                  <option value="client">Solo Clientes</option>
-                  <option value="merchant">Solo Comercios (B2B)</option>
-                  <option value="all">Todos</option>
+                  <option value="client">Clientes Finales (B2C)</option>
+                  <option value="merchant">Otros Comercios (B2B Mayorista)</option>
                 </select>
               </div>
 
-              <div>
+              <div id="tour-offer-stock">
                 <label className="block text-sm font-medium text-slate-400 mb-1">Límite de Stock (opcional)</label>
                 <input type="number" name="stock_limit" defaultValue={editingOffer?.stock_limit} min="1" placeholder="Ej: 50" className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none" />
                 <p className="text-xs text-slate-500 mt-1">Si querés que la oferta se agote automáticamente al llegar a un límite, ponelo acá.</p>
               </div>
 
-              <div className="bg-slate-950/50 p-4 rounded-xl border border-slate-800/50">
+              <div id="tour-offer-days" className="bg-slate-950/50 p-4 rounded-xl border border-slate-800/50">
                 <div className="flex items-center gap-2 mb-3">
                   <CalendarDays className="w-4 h-4 text-violet-400" />
-                  <label className="text-sm font-medium text-slate-300">Días Válidos (Opcional)</label>
+                  <h4 className="text-sm font-medium text-slate-300">Días de Validez</h4>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex justify-between gap-1">
                   {DAYS.map(day => (
-                    <label key={day.value} className="flex-1 cursor-pointer">
+                    <label key={day.value} className="cursor-pointer flex-1">
                       <input 
                         type="checkbox" 
                         name="valid_days" 
@@ -248,15 +280,16 @@ export function OffersManager({ initialOffers, branches = [] }: OffersManagerPro
                         defaultChecked={editingOffer && Array.isArray(editingOffer.valid_days) ? editingOffer.valid_days.includes(day.value) : false}
                         className="peer hidden" 
                       />
-                      <div className="w-full py-2 rounded-xl border border-slate-700 bg-slate-900 text-slate-400 text-center text-sm font-bold peer-checked:bg-violet-600 peer-checked:border-violet-500 peer-checked:text-white transition-all shadow-sm">
+                      <div className="w-full aspect-square flex items-center justify-center rounded-lg border border-slate-800 bg-slate-900 text-slate-400 text-xs font-medium peer-checked:bg-violet-600 peer-checked:text-white peer-checked:border-violet-500 transition-all hover:bg-slate-800">
                         {day.label}
                       </div>
                     </label>
                   ))}
                 </div>
+                <p className="text-xs text-slate-500 mt-3 text-center">Si no marcás ninguno, será válida todos los días.</p>
               </div>
 
-              <button type="submit" disabled={loading} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl py-4 font-bold transition-colors flex items-center justify-center gap-2 text-lg shadow-lg shadow-emerald-900/20">
+              <button id="tour-offer-submit" type="submit" disabled={loading} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl py-4 font-bold transition-colors flex items-center justify-center gap-2 text-lg shadow-lg shadow-emerald-900/20 mt-4">
                 {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (editingOffer ? 'Guardar Cambios' : 'Publicar Oferta')}
               </button>
             </form>
