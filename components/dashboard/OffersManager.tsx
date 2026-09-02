@@ -99,34 +99,12 @@ export function OffersManager({ initialOffers, branches = [] }: OffersManagerPro
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
-    const data: Record<string, any> = {
-      title: formData.get('title'),
-      description: formData.get('description'),
-      image_url: formData.get('image_url'),
-      target_role: formData.get('target_role'),
-      branch_id: formData.get('branch_id') || null,
-    };
-
-    const originalPrice = formData.get('original_price');
-    const finalPrice = formData.get('final_price');
-    const discountPct = formData.get('discount_pct');
-    const stockLimit = formData.get('stock_limit');
-
-    if (originalPrice) data.original_price = parseFloat(originalPrice as string);
-    if (finalPrice) data.final_price = parseFloat(finalPrice as string);
-    if (discountPct) data.discount_pct = parseFloat(discountPct as string);
-    if (stockLimit) data.stock_limit = parseInt(stockLimit as string);
-
-    const validDays = formData.getAll('valid_days');
-    if (validDays.length > 0) {
-      data.valid_days = validDays;
-    }
-
+    
     let res;
     if (editingOffer) {
-      res = await updateOffer(editingOffer.id, data);
+      res = await updateOffer(editingOffer.id, formData);
     } else {
-      res = await createOffer(data);
+      res = await createOffer(formData);
     }
       
     setLoading(false);
@@ -159,7 +137,18 @@ export function OffersManager({ initialOffers, branches = [] }: OffersManagerPro
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-white">Tus Ofertas Activas</h2>
+        <div className="flex items-center gap-3">
+          <h2 className="text-xl font-semibold text-white">Tus Ofertas Activas</h2>
+          <button
+            onClick={() => {
+              localStorage.removeItem('lazoo_offers_tour_completed');
+              window.location.reload();
+            }}
+            className="text-xs bg-slate-800/80 hover:bg-slate-700 text-slate-300 py-1.5 px-3 rounded-full transition-colors flex items-center gap-1.5 border border-slate-700/50 hover:border-slate-600"
+          >
+            Repetir Tutorial
+          </button>
+        </div>
         <button
           onClick={() => {
             if (isFormOpen) {
