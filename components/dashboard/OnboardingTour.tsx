@@ -102,7 +102,7 @@ export function OnboardingTour() {
           element: '#tour-pos',
           popover: {
             title: '¿Cómo funciona el cobro? 📲',
-            description: '¡Es súper fácil! Vos tenés un código QR FIJO en tu mostrador. El cliente abre su app Lazoo y escanea ese QR.',
+            description: '¡Es súper fácil! Cuando un cliente quiere pagar, ingresás el monto de la compra en este panel y hacés clic en "Generar QR de Cobro".',
             side: 'right',
             align: 'start'
           }
@@ -111,7 +111,7 @@ export function OnboardingTour() {
           element: '#tour-pos',
           popover: {
             title: 'El proceso de escaneo ⚡',
-            description: 'El cliente escanea el QR fijo, ingresa en su teléfono el monto que consumió y le muestra a tu cajero la pantalla verde de confirmación.',
+            description: 'El sistema genera un QR con el monto exacto ya cargado. El cliente simplemente lo escanea con su celular y la venta se registra automáticamente.',
             side: 'right',
             align: 'start'
           }
