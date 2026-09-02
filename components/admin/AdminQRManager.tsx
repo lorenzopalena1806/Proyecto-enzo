@@ -120,8 +120,8 @@ export function AdminQRManager({ merchants }: { merchants: Merchant[] }) {
               src: '/logo.png',
               x: undefined,
               y: undefined,
-              height: 120,
-              width: 300,
+              height: 150,
+              width: 375,
               excavate: true,
             }}
           />
