@@ -50,7 +50,7 @@ export function AdminQRManager({ merchants }: { merchants: Merchant[] }) {
 
       const img = new Image();
       img.onload = () => {
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = '#0f172a';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0, qrSize, qrSize);
         
@@ -131,12 +131,14 @@ export function AdminQRManager({ merchants }: { merchants: Merchant[] }) {
             size={1000}
             level="H"
             includeMargin={true}
+            bgColor="#0f172a"
+            fgColor="#38bdf8"
             imageSettings={{
               src: '/logo.png',
               x: undefined,
               y: undefined,
-              height: 200,
-              width: 200,
+              height: 120,
+              width: 300,
               excavate: true,
             }}
           />
