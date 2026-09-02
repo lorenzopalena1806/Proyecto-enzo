@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 import React, { useEffect, useState } from 'react';
 import type { Profile } from '@/types';
 import { Store, Loader2, CheckCircle, XCircle, Trash2, Star } from 'lucide-react';
-import { getMerchantsListServer, toggleMerchantSubscriptionServer, deleteMerchantServer, toggleMerchantFeatured } from '@/app/actions/admin';
+import { getMerchantsListServer, setMerchantPlanServer, deleteMerchantServer, toggleMerchantFeatured } from '@/app/actions/admin';
 import { ImpersonateButton } from '@/components/admin/ImpersonateButton';
 
 interface MerchantWithSubscription extends Profile {
@@ -29,10 +29,10 @@ export default function MerchantsPage() {
     setLoading(false);
   };
 
-  const toggleSubscription = async (merchantId: string, currentStatus: string) => {
+  const changePlan = async (merchantId: string, planAction: 'inactive' | 'basic' | 'pro') => {
     setProcessingId(merchantId);
     
-    const result = await toggleMerchantSubscriptionServer(merchantId, currentStatus);
+    const result = await setMerchantPlanServer(merchantId, planAction);
     if (!result.success) {
       alert('Error al actualizar la suscripción. Verifica los logs del servidor.');
     }
@@ -133,23 +133,21 @@ export default function MerchantsPage() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <button
-                          onClick={() => toggleSubscription(merchant.id, merchant.subscriptionStatus)}
-                          disabled={processingId === merchant.id}
-                          className={`inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-all ${
-                            merchant.subscriptionStatus === 'active'
-                              ? 'bg-slate-800 text-slate-300 hover:bg-red-900/50 hover:text-red-400 hover:border-red-800 border border-transparent'
-                              : 'bg-violet-600 text-white hover:bg-violet-500 shadow-lg shadow-violet-900/20'
-                          }`}
-                        >
                           {processingId === merchant.id ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : merchant.subscriptionStatus === 'active' ? (
-                            'Pausar'
+                            <div className="inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium bg-slate-800 text-slate-300">
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            </div>
                           ) : (
-                            'Activar'
+                            <select
+                              value={merchant.subscriptionStatus === 'active' ? (merchant.plan_type || 'basic') : 'inactive'}
+                              onChange={(e) => changePlan(merchant.id, e.target.value as any)}
+                              className="bg-slate-800 text-slate-300 rounded-lg px-3 py-2 text-sm border border-slate-700 focus:outline-none focus:border-violet-500 cursor-pointer"
+                            >
+                              <option value="inactive">⏸️ Pausado</option>
+                              <option value="basic">🔹 Alta Básico</option>
+                              <option value="pro">⭐ Alta PRO</option>
+                            </select>
                           )}
-                        </button>
                         <button
                           onClick={() => toggleFeatured(merchant.id, !merchant.is_featured)}
                           disabled={processingId === merchant.id}

@@ -48,27 +48,11 @@ export async function getMerchantsListServer() {
   }
 }
 
-export async function toggleMerchantSubscriptionServer(merchantId: string, currentStatus: string) {
+export async function setMerchantPlanServer(merchantId: string, planAction: 'inactive' | 'basic' | 'pro') {
   try {
     const adminClient = await requireSuperAdmin();
-    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
 
-    if (newStatus === 'active') {
-      const endsAt = new Date();
-      endsAt.setDate(endsAt.getDate() + 31);
-      
-      const { error } = await adminClient
-        .from('profiles')
-        .update({ 
-          is_active: true,
-          plan_type: 'pro', // Por defecto los superadmin habilitan como PRO
-          mp_subscription_status: 'authorized',
-          subscription_expires_at: endsAt.toISOString(),
-          is_premium: true
-        })
-        .eq('id', merchantId);
-      if (error) throw error;
-    } else {
+    if (planAction === 'inactive') {
       const { error } = await adminClient
         .from('profiles')
         .update({ 
@@ -78,12 +62,27 @@ export async function toggleMerchantSubscriptionServer(merchantId: string, curre
         })
         .eq('id', merchantId);
       if (error) throw error;
+    } else {
+      const endsAt = new Date();
+      endsAt.setDate(endsAt.getDate() + 31);
+      
+      const { error } = await adminClient
+        .from('profiles')
+        .update({ 
+          is_active: true,
+          plan_type: planAction,
+          mp_subscription_status: 'authorized',
+          subscription_expires_at: endsAt.toISOString(),
+          is_premium: planAction === 'pro'
+        })
+        .eq('id', merchantId);
+      if (error) throw error;
     }
 
     revalidatePath('/admin/merchants');
     return { success: true };
   } catch (error) {
-    console.error('Error toggling merchant subscription:', error);
+    console.error('Error changing merchant plan:', error);
     return { success: false, error: 'Error al actualizar suscripción' };
   }
 }
