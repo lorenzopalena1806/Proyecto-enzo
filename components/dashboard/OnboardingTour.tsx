@@ -111,7 +111,7 @@ export function OnboardingTour() {
           element: '#tour-pos',
           popover: {
             title: 'El proceso de escaneo ⚡',
-            description: 'El sistema genera un QR con el monto exacto ya cargado. El cliente simplemente lo escanea con su celular y la venta se registra automáticamente.',
+            description: 'El sistema habilitará automáticamente tu QR impreso con ese monto exacto. El cliente simplemente lo escanea con su celular y la venta se registra sola.',
             side: 'right',
             align: 'start'
           }
