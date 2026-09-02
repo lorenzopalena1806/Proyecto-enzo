@@ -168,6 +168,19 @@ export function Sidebar({ profile, branches = [], activeBranchId = null }: Sideb
   const supabase = createClient();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  useEffect(() => {
+    const handleOpenSidebar = () => setMobileOpen(true);
+    const handleCloseSidebar = () => setMobileOpen(false);
+
+    window.addEventListener('lazoo-open-sidebar', handleOpenSidebar);
+    window.addEventListener('lazoo-close-sidebar', handleCloseSidebar);
+
+    return () => {
+      window.removeEventListener('lazoo-open-sidebar', handleOpenSidebar);
+      window.removeEventListener('lazoo-close-sidebar', handleCloseSidebar);
+    };
+  }, []);
+
   const isActive = (href: string, exact: boolean) =>
     exact ? pathname === href : pathname.startsWith(href);
 
