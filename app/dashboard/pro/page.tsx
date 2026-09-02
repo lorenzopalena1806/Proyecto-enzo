@@ -104,8 +104,8 @@ export default async function SuscripcionesPage() {
             <Feature included text="Todas las funciones del Plan Básico" />
             <Feature included text="Múltiples sucursales ilimitadas" />
             <Feature included text="Gestión de empleados y cajeros" />
-            <Feature included text="Afinidad de rubros (¿Dónde más compran?)" />
-            <Feature included text="Mapa de calor de ventas (Próximamente)" />
+            <Feature included text="Pin VIP destacado en el mapa de clientes" />
+            <Feature included text="Aparición prioritaria en el listado de locales" />
             <Feature included text="Soporte prioritario por WhatsApp" />
           </div>
 
