@@ -28,12 +28,12 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   metadataBase: new URL('https://lazoo.com.ar'),
   title: {
-    default: 'Lazoo — Red de Descuentos para Comercios',
+    default: 'Lazoo — Red de Descuentos en La Calera y Córdoba',
     template: '%s | Lazoo',
   },
   description:
-    'La plataforma SaaS que conecta comercios locales con una red de descuentos inteligente. QR dinámico, escáner de descuentos y marketing personalizado.',
-  keywords: ['descuentos', 'comercios', 'B2B', 'QR', 'SaaS', 'beneficios', 'fidelización'],
+    'Lazoo es la red inteligente de descuentos y beneficios exclusiva para comercios y usuarios en La Calera, Córdoba, Argentina. Incrementá tus ventas con códigos QR y fidelización.',
+  keywords: ['Lazoo', 'descuentos La Calera', 'beneficios Córdoba', 'red B2B', 'fidelización Argentina', 'comercios La Calera', 'QR', 'SaaS'],
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
@@ -41,10 +41,11 @@ export const metadata: Metadata = {
     title: 'Lazoo',
   },
   openGraph: {
-    title: 'Lazoo — Red de Descuentos B2B y B2C',
-    description: 'Transformá tu comercio con el ecosistema de beneficios de Lazoo. Cobros por QR, estadísticas en tiempo real y red B2B.',
+    title: 'Lazoo — Red de Descuentos en La Calera y Córdoba',
+    description: 'Transformá tu comercio con el ecosistema de beneficios de Lazoo. Cobros por QR, estadísticas en tiempo real y red B2B en Argentina.',
     url: 'https://lazoo.com.ar',
     siteName: 'Lazoo',
+    locale: 'es_AR',
     images: [
       {
         url: '/og-image.jpg', // Replace with a nice og:image banner later
