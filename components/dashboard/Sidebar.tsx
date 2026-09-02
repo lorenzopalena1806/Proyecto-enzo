@@ -42,6 +42,7 @@ interface SidebarProps {
 }
 
 const MERCHANT_NAV_ITEMS = [
+  { isHeader: true, label: 'Principal' },
   {
     href: '/dashboard',
     label: 'Inicio',
@@ -57,12 +58,13 @@ const MERCHANT_NAV_ITEMS = [
     id: 'tour-pos',
   },
   {
-    href: '/dashboard/qr',
-    label: 'Comprar / B2B',
-    icon: QrCode,
+    href: '/dashboard/history',
+    label: 'Ventas',
+    icon: History,
     exact: false,
-    id: 'tour-b2b',
+    id: 'tour-history',
   },
+  { isHeader: true, label: 'Negocio' },
   {
     href: '/dashboard/offers',
     label: 'Mis Ofertas',
@@ -71,20 +73,13 @@ const MERCHANT_NAV_ITEMS = [
     id: 'tour-offers',
   },
   {
-    href: '/dashboard/pro',
-    label: 'Planes y Suscripción',
-    icon: Crown,
+    href: '/dashboard/qr',
+    label: 'Comprar / B2B',
+    icon: QrCode,
     exact: false,
-    id: 'tour-pro',
-    badge: 'PRO',
+    id: 'tour-b2b',
   },
-  {
-    href: '/dashboard/history',
-    label: 'Ventas',
-    icon: History,
-    exact: false,
-    id: 'tour-history',
-  },
+  { isHeader: true, label: 'Ajustes' },
   {
     href: '/dashboard/employee',
     label: 'Cajeros',
@@ -106,6 +101,14 @@ const MERCHANT_NAV_ITEMS = [
     icon: Settings,
     exact: false,
     id: 'tour-profile',
+  },
+  {
+    href: '/dashboard/pro',
+    label: 'Planes y Suscripción',
+    icon: Crown,
+    exact: false,
+    id: 'tour-pro',
+    badge: 'PRO',
   },
 ];
 
@@ -224,13 +227,23 @@ export function Sidebar({ profile, branches = [], activeBranchId = null }: Sideb
 
       {/* Navegación */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {(profile.role === 'superadmin' ? ADMIN_NAV_ITEMS : MERCHANT_NAV_ITEMS).map((item) => {
+        {(profile.role === 'superadmin' ? ADMIN_NAV_ITEMS : MERCHANT_NAV_ITEMS).map((item: any, index) => {
+          if (item.isHeader) {
+            return (
+              <div key={`header-${index}`} className="px-4 pt-5 pb-2">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500/80">
+                  {item.label}
+                </span>
+              </div>
+            );
+          }
+
           const active = isActive(item.href, item.exact);
           const Icon = item.icon;
           return (
             <Link
               key={item.href}
-              id={(item as any).id ? `${(item as any).id}${isMobile ? '-mobile' : ''}` : undefined}
+              id={item.id ? `${item.id}${isMobile ? '-mobile' : ''}` : undefined}
               href={item.href}
               onClick={() => setMobileOpen(false)}
               className={`
@@ -246,12 +259,12 @@ export function Sidebar({ profile, branches = [], activeBranchId = null }: Sideb
               {item.href === '/dashboard/history' && profile?.plan_type === 'basic' && (
                 <svg className="w-4 h-4 ml-auto text-amber-500 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
               )}
-              {(item as any).badge && (
+              {item.badge && (
                 <span className="ml-auto bg-violet-600/20 text-violet-300 border border-violet-500/30 text-[9px] px-1.5 py-0.5 rounded-full uppercase tracking-wider font-bold">
-                  {(item as any).badge}
+                  {item.badge}
                 </span>
               )}
-              {active && !(item as any).badge && item.href !== '/dashboard/history' && <ChevronRight className="h-3 w-3 ml-auto" />}
+              {active && !item.badge && item.href !== '/dashboard/history' && <ChevronRight className="h-3 w-3 ml-auto" />}
             </Link>
           );
         })}
