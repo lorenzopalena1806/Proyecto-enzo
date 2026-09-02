@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
@@ -176,9 +176,7 @@ export function Sidebar({ profile, branches = [], activeBranchId = null }: Sideb
     await supabase.auth.signOut();
     router.push('/auth/login');
     router.refresh();
-  };
-
-  const renderSidebarContent = () => (
+  };  const renderSidebarContent = (isMobile: boolean = false) => (
     <div className="flex flex-col h-full">
       {/* Logo */}
       <div className="px-4 py-5 border-b border-slate-800 flex justify-center">
@@ -219,7 +217,7 @@ export function Sidebar({ profile, branches = [], activeBranchId = null }: Sideb
           return (
             <Link
               key={item.href}
-              id={(item as any).id}
+              id={(item as any).id ? `${(item as any).id}${isMobile ? '-mobile' : ''}` : undefined}
               href={item.href}
               onClick={() => setMobileOpen(false)}
               className={`
@@ -254,7 +252,7 @@ export function Sidebar({ profile, branches = [], activeBranchId = null }: Sideb
           rel="noopener noreferrer"
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-emerald-400 hover:bg-emerald-950/50 hover:border-emerald-800 border border-transparent transition-all duration-200"
         >
-          <span className="text-xl">💬</span>
+          <span className="text-xl">✌️</span>
           <div className="flex flex-col text-left leading-tight">
             <span className="font-medium">Soporte</span>
             <span className="text-[10px] text-emerald-600/80">Máx 48hs</span>
@@ -275,7 +273,7 @@ export function Sidebar({ profile, branches = [], activeBranchId = null }: Sideb
     <>
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex flex-col w-60 flex-shrink-0 bg-slate-900 border-r border-slate-800 h-screen sticky top-0">
-        {renderSidebarContent()}
+        {renderSidebarContent(false)}
       </aside>
 
       {/* Mobile Header */}
@@ -299,10 +297,10 @@ export function Sidebar({ profile, branches = [], activeBranchId = null }: Sideb
             onClick={() => setMobileOpen(false)}
           />
           <aside className="relative z-50 w-72 bg-slate-900 border-r border-slate-800 h-full overflow-y-auto shadow-2xl">
-            {renderSidebarContent()}
+            {renderSidebarContent(true)}
           </aside>
         </div>
       )}
     </>
   );
-}
+}

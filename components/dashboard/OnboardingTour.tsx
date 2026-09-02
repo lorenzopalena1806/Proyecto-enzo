@@ -28,7 +28,14 @@ export function OnboardingTour() {
   }, [isMounted]);
 
   const startTour = () => {
-    const tourDriver = driver({
+    // Abrir sidebar en móviles al arrancar el tour
+    window.dispatchEvent(new Event('lazoo-open-sidebar'));
+
+    setTimeout(() => {
+      const isMobile = window.innerWidth < 1024;
+      const getSelector = (s: string) => isMobile && s.startsWith('#tour-') ? `${s}-mobile` : s;
+
+      const tourDriver = driver({
       showProgress: true,
       animate: true,
       allowClose: false,
@@ -42,6 +49,7 @@ export function OnboardingTour() {
         if (!tourDriver.hasNextStep() || confirm("¿Seguro que querés salir del tutorial?")) {
           localStorage.setItem('lazoo_tour_completed', 'true');
           tourDriver.destroy();
+          window.dispatchEvent(new Event('lazoo-close-sidebar'));
         }
       },
       steps: [
@@ -54,7 +62,7 @@ export function OnboardingTour() {
           }
         },
         {
-          element: '#tour-profile',
+          element: getSelector('#tour-profile'),
           popover: {
             title: 'Tu Carta de Presentación 📝',
             description: 'Completá bien el nombre de tu local, logo y link de Google Maps para que la app te recomiende a los clientes.',
@@ -63,7 +71,7 @@ export function OnboardingTour() {
           }
         },
         {
-          element: '#tour-profile',
+          element: getSelector('#tour-profile'),
           popover: {
             title: 'Tus Redes Sociales (PRO) 📱',
             description: 'Acá también podés vincular tu Instagram para que todos los clientes que escaneen tu QR se conviertan automáticamente en nuevos seguidores.',
@@ -72,7 +80,7 @@ export function OnboardingTour() {
           }
         },
         {
-          element: '#tour-branches',
+          element: getSelector('#tour-branches'),
           popover: {
             title: 'Tus Sucursales 🏢',
             description: 'Si tenés más de un local, podés agregar tus otras sucursales acá y centralizar todas las ventas en una misma cuenta (Exclusivo PRO).',
@@ -81,7 +89,7 @@ export function OnboardingTour() {
           }
         },
         {
-          element: '#tour-employee',
+          element: getSelector('#tour-'),
           popover: {
             title: 'Creando a tu Equipo 👥',
             description: 'No hace falta que vos estés en la caja todo el día. Creale un acceso a tus empleados con un PIN de 4 dígitos para que cobren de forma segura por vos.',
@@ -90,7 +98,7 @@ export function OnboardingTour() {
           }
         },
         {
-          element: '#tour-employee',
+          element: getSelector('#tour-'),
           popover: {
             title: 'Modo Privacidad de Cajero 🔒',
             description: 'Tus empleados nunca van a ver este panel ni tu facturación. Ellos tienen un enlace especial (/cajero) donde solo operan de forma limitada.',
@@ -99,7 +107,7 @@ export function OnboardingTour() {
           }
         },
         {
-          element: '#tour-pos',
+          element: getSelector('#tour-pos'),
           popover: {
             title: '¿Cómo funciona el cobro? 📲',
             description: '¡Es súper fácil! Cuando un cliente quiere pagar, ingresás el monto de la compra en este panel y hacés clic en "Generar QR de Cobro".',
@@ -108,7 +116,7 @@ export function OnboardingTour() {
           }
         },
         {
-          element: '#tour-pos',
+          element: getSelector('#tour-pos'),
           popover: {
             title: 'El proceso de escaneo ⚡',
             description: 'El sistema habilitará automáticamente tu QR impreso con ese monto exacto. El cliente simplemente lo escanea con su celular y la venta se registra sola.',
@@ -117,7 +125,7 @@ export function OnboardingTour() {
           }
         },
         {
-          element: '#tour-history',
+          element: getSelector('#tour-history'),
           popover: {
             title: 'Cálculo Inteligente 🧮',
             description: 'Lazoo se encarga de calcular el descuento automáticamente y te registra la venta al instante en este panel.',
@@ -126,7 +134,7 @@ export function OnboardingTour() {
           }
         },
         {
-          element: '#tour-history',
+          element: getSelector('#tour-history'),
           popover: {
             title: 'El Cerebro de tu Local 🧠',
             description: 'Acá vas a ver los gráficos de tu rendimiento. Es fundamental para descubrir qué días vendés más y quiénes son tus mejores clientes (Exclusivo PRO).',
@@ -135,7 +143,7 @@ export function OnboardingTour() {
           }
         },
         {
-          element: '#tour-history',
+          element: getSelector('#tour-history'),
           popover: {
             title: 'Historial Transparente 📊',
             description: 'También podés revisar ticket por ticket a qué hora se hizo cada cobro y con qué medio de pago (efectivo o transferencia).',
@@ -144,7 +152,7 @@ export function OnboardingTour() {
           }
         },
         {
-          element: '#tour-pro',
+          element: getSelector('#tour-pro'),
           popover: {
             title: 'Control Total de tu Plan ⭐',
             description: 'Desde acá manejás tu pago mensual, podés pausar tu cuenta, o pasarte al Plan PRO cuando quieras potenciar tus ventas y desbloquear más funciones.',
@@ -153,7 +161,7 @@ export function OnboardingTour() {
           }
         },
         {
-          element: '#tour-inicio',
+          element: getSelector('#tour-'),
           popover: {
             title: 'Nunca estás solo 💬',
             description: '¿Tenés alguna duda o querés sugerir algo? Usá siempre el botón flotante de Soporte para hablar directo con el equipo de Lazoo. ¡Éxitos!',
@@ -165,6 +173,7 @@ export function OnboardingTour() {
     });
 
     tourDriver.drive();
+    }, 300); // 300ms delay to allow sidebar to render
   };
 
   return null;
