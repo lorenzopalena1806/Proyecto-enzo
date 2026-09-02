@@ -31,7 +31,7 @@ export function OffersTour() {
     const tourDriver = driver({
       showProgress: true,
       animate: true,
-      allowClose: false,
+      allowClose: true,
       overlayColor: 'rgba(2, 6, 23, 0.85)',
       nextBtnText: 'Siguiente →',
       prevBtnText: '← Atrás',

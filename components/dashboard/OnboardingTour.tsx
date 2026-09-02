@@ -38,7 +38,7 @@ export function OnboardingTour() {
       const tourDriver = driver({
       showProgress: true,
       animate: true,
-      allowClose: false,
+      allowClose: true,
       overlayColor: 'rgba(2, 6, 23, 0.85)', // bg-slate-950 con opacidad
       nextBtnText: 'Siguiente ➔',
       prevBtnText: '⬅ Atrás',
