@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
-import { QRCodeSVG } from 'qrcode.react';
+import { QRCodeCanvas } from 'qrcode.react';
 import { Download, Store, MapPin, Sparkles, CheckCircle2 } from 'lucide-react';
 
 interface Branch {
@@ -34,36 +34,19 @@ export function AdminQRManager({ merchants }: { merchants: Merchant[] }) {
     setDownloadingUrl(url);
     setDownloadingName(name);
     
-    // Pequeño delay para que React renderice el SVG
+    // Delay para permitir que el canvas renderice el logo
     setTimeout(() => {
-      const svgElement = qrRef.current?.querySelector('svg');
-      if (!svgElement) return;
+      const canvas = qrRef.current?.querySelector('canvas');
+      if (!canvas) return;
 
-      const svgData = new XMLSerializer().serializeToString(svgElement);
-      const canvas = document.createElement('canvas');
-      const qrSize = 1000;
-
-      canvas.width = qrSize;
-      canvas.height = qrSize;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-
-      const img = new Image();
-      img.onload = () => {
-        ctx.fillStyle = '#0f172a';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0, qrSize, qrSize);
-        
-        const pngFile = canvas.toDataURL('image/png');
-        const downloadLink = document.createElement('a');
-        downloadLink.download = `QR_Lazoo_${name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.png`;
-        downloadLink.href = pngFile;
-        downloadLink.click();
-        
-        setDownloadingUrl('');
-      };
-      img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
-    }, 100);
+      const pngFile = canvas.toDataURL('image/png');
+      const downloadLink = document.createElement('a');
+      downloadLink.download = `QR_Lazoo_${name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.png`;
+      downloadLink.href = pngFile;
+      downloadLink.click();
+      
+      setDownloadingUrl('');
+    }, 800);
   };
 
   return (
@@ -126,7 +109,7 @@ export function AdminQRManager({ merchants }: { merchants: Merchant[] }) {
       {/* Contenedor invisible para renderizar el QR SVG a descargar */}
       {downloadingUrl && (
         <div ref={qrRef} style={{ position: 'absolute', top: '-9999px', left: '-9999px' }}>
-          <QRCodeSVG
+          <QRCodeCanvas
             value={downloadingUrl}
             size={1000}
             level="H"
