@@ -48,25 +48,25 @@ export function OnboardingTour() {
         {
           popover: {
             title: '¡Bienvenido a tu Panel de Lazoo! 🚀',
-            description: 'Vamos a hacer un recorrido rapidísimo de 1 minuto para que sepas dónde está lo más importante para hacer crecer tu comercio.',
-            side: 'bottom',
-            align: 'center'
+            description: 'Este es tu centro de control. Desde acá vas a gobernar todas las promociones y descuentos de tu local.',
+            align: 'center',
+            side: 'bottom'
           }
         },
         {
-          element: '#tour-pos',
+          element: '#tour-profile',
           popover: {
-            title: 'Tu Caja Registradora 💳',
-            description: 'Desde acá tus empleados van a escanear los celulares de los clientes y registrar las ventas para aplicar los beneficios.',
+            title: 'Tu Carta de Presentación 📝',
+            description: 'Completá bien el nombre de tu local, logo y link de Google Maps para que la app te recomiende a los clientes.',
             side: 'right',
             align: 'start'
           }
         },
         {
-          element: '#tour-offers',
+          element: '#tour-profile',
           popover: {
-            title: 'Atraé más clientes 🎁',
-            description: 'El gancho principal. Acá podés crear promos de 2x1 o descuentos que van a aparecer en el mapa de todos los usuarios de la ciudad.',
+            title: 'Tus Redes Sociales (PRO) 📱',
+            description: 'Acá también podés vincular tu Instagram para que todos los clientes que escaneen tu QR se conviertan automáticamente en nuevos seguidores.',
             side: 'right',
             align: 'start'
           }
@@ -74,18 +74,91 @@ export function OnboardingTour() {
         {
           element: '#tour-branches',
           popover: {
-            title: 'Multiplicate en el mapa 🏢',
-            description: 'Función PRO exclusiva: Si tenés franquicias o varios locales, agregalos acá para que tu marca aparezca clonada por toda la ciudad.',
+            title: 'Tus Sucursales 🏢',
+            description: 'Si tenés más de un local, podés agregar tus otras sucursales acá y centralizar todas las ventas en una misma cuenta (Exclusivo PRO).',
             side: 'right',
             align: 'start'
           }
         },
         {
+          element: '#tour-employee',
           popover: {
-            title: '¡Eso es todo! 🎉',
-            description: 'Ya estás listo para empezar a captar más clientes y aumentar tus ventas. ¡Explorá tu panel!',
-            side: 'bottom',
-            align: 'center'
+            title: 'Creando a tu Equipo 👥',
+            description: 'No hace falta que vos estés en la caja todo el día. Creale un acceso a tus empleados con un PIN de 4 dígitos para que cobren de forma segura por vos.',
+            side: 'right',
+            align: 'start'
+          }
+        },
+        {
+          element: '#tour-employee',
+          popover: {
+            title: 'Modo Privacidad de Cajero 🔒',
+            description: 'Tus empleados nunca van a ver este panel ni tu facturación. Ellos tienen un enlace especial (/cajero) donde solo operan de forma limitada.',
+            side: 'right',
+            align: 'start'
+          }
+        },
+        {
+          element: '#tour-pos',
+          popover: {
+            title: '¿Cómo funciona el cobro? 📲',
+            description: '¡Es súper fácil! Vos tenés un código QR FIJO en tu mostrador. El cliente abre su app Lazoo y escanea ese QR.',
+            side: 'right',
+            align: 'start'
+          }
+        },
+        {
+          element: '#tour-pos',
+          popover: {
+            title: 'El proceso de escaneo ⚡',
+            description: 'El cliente escanea el QR fijo, ingresa en su teléfono el monto que consumió y le muestra a tu cajero la pantalla verde de confirmación.',
+            side: 'right',
+            align: 'start'
+          }
+        },
+        {
+          element: '#tour-history',
+          popover: {
+            title: 'Cálculo Inteligente 🧮',
+            description: 'Lazoo se encarga de calcular el descuento automáticamente y te registra la venta al instante en este panel.',
+            side: 'right',
+            align: 'start'
+          }
+        },
+        {
+          element: '#tour-history',
+          popover: {
+            title: 'El Cerebro de tu Local 🧠',
+            description: 'Acá vas a ver los gráficos de tu rendimiento. Es fundamental para descubrir qué días vendés más y quiénes son tus mejores clientes (Exclusivo PRO).',
+            side: 'right',
+            align: 'start'
+          }
+        },
+        {
+          element: '#tour-history',
+          popover: {
+            title: 'Historial Transparente 📊',
+            description: 'También podés revisar ticket por ticket a qué hora se hizo cada cobro y con qué medio de pago (efectivo o transferencia).',
+            side: 'right',
+            align: 'start'
+          }
+        },
+        {
+          element: '#tour-pro',
+          popover: {
+            title: 'Control Total de tu Plan ⭐',
+            description: 'Desde acá manejás tu pago mensual, podés pausar tu cuenta, o pasarte al Plan PRO cuando quieras potenciar tus ventas y desbloquear más funciones.',
+            side: 'right',
+            align: 'start'
+          }
+        },
+        {
+          element: '#tour-inicio',
+          popover: {
+            title: 'Nunca estás solo 💬',
+            description: '¿Tenés alguna duda o querés sugerir algo? Usá siempre el botón flotante de Soporte para hablar directo con el equipo de Lazoo. ¡Éxitos!',
+            side: 'right',
+            align: 'start'
           }
         }
       ]
