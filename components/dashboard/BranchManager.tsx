@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MapPin, Plus, Store, Trash2, X, Loader2, Edit2 } from 'lucide-react';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { createBranchAction, deleteBranchAction, updateBranchAction } from '@/app/actions/branches';
 
 interface Branch {
@@ -143,11 +144,11 @@ export function BranchManager({ branches, planType = 'basic' }: { branches: Bran
 
       <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl mt-6">
         {(!branches || branches.length === 0) ? (
-          <div className="p-12 text-center">
-            <MapPin className="h-12 w-12 text-slate-700 mx-auto mb-4" />
-            <p className="text-slate-400 font-medium">Aún no agregaste ninguna sucursal extra.</p>
-            <p className="text-slate-500 text-sm mt-1">Tu local principal seguirá apareciendo en el mapa.</p>
-          </div>
+          <EmptyState
+            icon={MapPin}
+            title="Aún no tenés sucursales extra"
+            description="Tu local principal (Casa Central) ya funciona perfecto. Agregá sucursales solo si tenés otras ubicaciones físicas."
+          />
         ) : (
           <div className="divide-y divide-slate-800">
             {branches.map(branch => (

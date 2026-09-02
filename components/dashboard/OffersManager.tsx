@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { createOffer, updateOffer, toggleOfferStatus, deleteOffer, resetOfferStock } from '@/app/actions/offers';
 import { Plus, Tag, Trash2, Power, PowerOff, Loader2, AlertTriangle, Edit2, CalendarDays } from 'lucide-react';
+import { EmptyState } from '@/components/ui/EmptyState';
 import Image from 'next/image';
 import { OffersTour } from './OffersTour';
 
@@ -359,10 +360,12 @@ export function OffersManager({ initialOffers, branches = [] }: OffersManagerPro
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {initialOffers.length === 0 && !isFormOpen && (
-          <div className="col-span-full bg-slate-900/50 border border-slate-800 rounded-2xl p-8 text-center">
-            <Tag className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-            <p className="text-slate-400">No tenés ninguna oferta creada.</p>
-            <p className="text-slate-500 text-sm mt-1">Creá una para que los clientes la vean en su vidriera.</p>
+          <div className="col-span-full">
+            <EmptyState
+              icon={Tag}
+              title="Aún no tenés ofertas activas"
+              description="Creá tu primera promoción para atraer clientes y que la vean en la vidriera de Lazoo."
+            />
           </div>
         )}
 

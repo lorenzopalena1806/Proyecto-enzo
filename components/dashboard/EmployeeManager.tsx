@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { createEmployeeServer, deleteEmployeeServer } from '@/app/actions/employee';
 import { Shield, Copy, Check, Trash2, Users, Store, Loader2 } from 'lucide-react';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { useRouter } from 'next/navigation';
 
 export function EmployeeManager({ 
@@ -52,7 +53,11 @@ export function EmployeeManager({
         </h2>
         
         {employees.length === 0 ? (
-          <p className="text-slate-400 text-sm">No tenés ningún cajero configurado.</p>
+          <EmptyState
+            icon={Users}
+            title="Aún no tenés cajeros"
+            description="Creá un perfil para que tus empleados puedan cobrar de forma segura, sin ver tus estadísticas ni ingresos."
+          />
         ) : (
           <div className="grid gap-4">
             {employees.map(emp => {
