@@ -68,6 +68,7 @@ import { Analytics as VercelAnalytics } from "@vercel/analytics/next";
 import NextTopLoader from 'nextjs-toploader';
 import { ScrollToTop } from '@/components/shared/ScrollToTop';
 import { Analytics as CustomAnalytics } from '@/components/shared/Analytics';
+import { Toaster } from 'sonner';
 
 export default function RootLayout({
   children,
@@ -96,6 +97,7 @@ export default function RootLayout({
         <SpeedInsights />
         <CustomAnalytics />
         <VercelAnalytics />
+        <Toaster theme="dark" richColors />
       </body>
     </html>
   );
