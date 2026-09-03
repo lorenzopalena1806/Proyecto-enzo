@@ -45,7 +45,6 @@ export const metadata: Metadata = {
     description: 'Transformá tu comercio con el ecosistema de beneficios de Lazoo. Cobros por QR, estadísticas en tiempo real y red B2B en Argentina.',
     url: 'https://lazoo.com.ar',
     siteName: 'Lazoo',
-    locale: 'es_AR',
     images: [
       {
         url: '/og-image.jpg', // Replace with a nice og:image banner later
