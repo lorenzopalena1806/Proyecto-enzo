@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronLeft, MapPin, Store, Tag, Star, Clock, Phone, Navigation } from 'lucide-react';
 import React from 'react';
+import { ReportMerchantButton } from '@/components/client/ReportMerchantButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -351,6 +352,8 @@ export default async function MerchantProfilePage({ params }: { params: Promise<
             </div>
           )}
         </div>
+
+        <ReportMerchantButton merchantId={merchantId} merchantName={merchant.business_name || merchant.full_name || 'este comercio'} />
       </div>
       <script
         type="application/ld+json"
