@@ -90,23 +90,30 @@ export default function LocationPicker({ initialLat, initialLng, onChange }: Loc
     <div className="space-y-4">
       {/* Search Bar & Location Buttons */}
       <div className="flex flex-col sm:flex-row gap-2">
-        <form onSubmit={handleSearch} className="relative flex-1">
+        <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSearch();
+              }
+            }}
             placeholder="Buscar calle y ciudad (Ej: Cabildo 2000, CABA)"
             className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
           />
           <button 
-            type="submit" 
+            type="button" 
+            onClick={() => handleSearch()}
             disabled={isSearching || !searchQuery.trim()}
             className="absolute right-2 top-1/2 -translate-y-1/2 bg-violet-600 hover:bg-violet-500 text-white rounded-lg px-3 py-1 text-xs font-semibold disabled:opacity-50 transition-colors"
           >
             {isSearching ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Buscar'}
           </button>
-        </form>
+        </div>
       </div>
 
       {searchError && (
