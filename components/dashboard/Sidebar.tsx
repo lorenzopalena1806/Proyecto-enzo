@@ -121,12 +121,6 @@ const ADMIN_NAV_ITEMS = [
     exact: true,
   },
   {
-    href: '/admin/merchants',
-    label: 'Habilitar Comercios',
-    icon: Store,
-    exact: false,
-  },
-  {
     href: '/admin/users',
     label: 'Usuarios Registrados',
     icon: Users,

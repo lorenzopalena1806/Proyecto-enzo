@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { SuspendUserButton } from '@/components/admin/SuspendUserButton';
 import { SubscriptionManager } from '@/components/admin/SubscriptionManager';
 import { MaterialManager } from '@/components/admin/MaterialManager';
+import { ImpersonateButton } from '@/components/admin/ImpersonateButton';
 
 
 export const dynamic = 'force-dynamic';
@@ -81,14 +82,20 @@ export default async function AdminUserDetailsPage({ params }: { params: Promise
               <div className="text-slate-400 flex flex-col md:flex-row md:items-center gap-2 md:gap-4 mt-1 text-sm">
                 <span>{email}</span>
                 <span className="hidden md:inline">•</span>
-                <span className="capitalize">{profile.role}</span>
+                <span className="capitalize">{profile.role === 'merchant' ? 'Comercio' : 'Cliente'}</span>
                 <span className="hidden md:inline">•</span>
                 <span>Registrado: {new Date(profile.created_at).toLocaleDateString('es-AR')}</span>
               </div>
             </div>
           </div>
-          <div>
+          <div className="flex items-center gap-3">
             <SuspendUserButton userId={profile.id} isActive={profile.is_active} role={profile.role} />
+            {profile.role === 'merchant' && (
+              <ImpersonateButton 
+                merchantId={profile.id} 
+                merchantName={profile.business_name || profile.full_name || 'Comercio'} 
+              />
+            )}
           </div>
         </div>
       </div>
