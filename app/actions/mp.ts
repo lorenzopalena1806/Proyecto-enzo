@@ -26,7 +26,7 @@ export async function createSubscription(planType: 'basic' | 'pro', userId: stri
   if (profile && profile.mp_subscription_id) {
     try {
       console.log('Cancelando suscripción previa:', profile.mp_subscription_id);
-      await fetch(`https://api.mercadopago.com/preapproval/${profile.mp_subscription_id}`, {
+      const cancelRes = await fetch(`https://api.mercadopago.com/preapproval/${profile.mp_subscription_id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${MP_ACCESS_TOKEN}`,
@@ -34,9 +34,17 @@ export async function createSubscription(planType: 'basic' | 'pro', userId: stri
         },
         body: JSON.stringify({ status: 'cancelled' })
       });
-      // No frenamos la ejecución si falla la cancelación por las dudas de que el ID ya esté vencido en MP
-    } catch (e) {
-      console.error('Error al intentar cancelar suscripción antigua:', e);
+      
+      const cancelData = await cancelRes.json();
+      
+      if (!cancelRes.ok && cancelData.status !== 404 && cancelData.message !== 'Preapproval not found') {
+        console.error('Error al cancelar suscripción antigua:', cancelData);
+        // Si no se puede cancelar la anterior, no podemos crear una nueva o le cobraremos doble.
+        return { error: `No pudimos cancelar tu plan anterior automáticamente (Error MP: ${cancelData.message}). Contactá a soporte.` };
+      }
+    } catch (e: any) {
+      console.error('Error de red al intentar cancelar suscripción antigua:', e);
+      return { error: 'Error de red al cancelar el plan anterior.' };
     }
   }
   
