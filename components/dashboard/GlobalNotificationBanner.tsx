@@ -46,7 +46,7 @@ export function GlobalNotificationBanner({ isSuperAdmin }: { isSuperAdmin?: bool
             id: 'pending_reports_alert',
             message: (
               <span>
-                Tienes <strong>{count} {count === 1 ? 'denuncia pendiente' : 'denuncias pendientes'}</strong> de revisión. <Link href="/dashboard/reports" className="underline font-bold text-red-200 hover:text-white">Ver denuncias</Link>
+                Tienes <strong>{count} {count === 1 ? 'denuncia pendiente' : 'denuncias pendientes'}</strong> de revisión. <Link href="/admin/reports" className="underline font-bold text-red-200 hover:text-white">Ver denuncias</Link>
               </span>
             ),
             type: 'error',

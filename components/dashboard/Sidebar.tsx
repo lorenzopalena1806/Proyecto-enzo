@@ -139,6 +139,12 @@ const ADMIN_NAV_ITEMS = [
     exact: false,
   },
   {
+    href: '/admin/reports',
+    label: 'Denuncias',
+    icon: AlertOctagon,
+    exact: false,
+  },
+  {
     href: '/admin/qrs',
     label: 'QRs Físicos',
     icon: QrCode,
