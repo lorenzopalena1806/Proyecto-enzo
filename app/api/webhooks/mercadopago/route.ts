@@ -67,7 +67,8 @@ export async function POST(request: Request) {
       const endsAt = new Date();
       endsAt.setDate(endsAt.getDate() + 31);
       updateData.subscription_expires_at = endsAt.toISOString();
-      updateData.is_premium = true; 
+      updateData.is_premium = subscriptionData.reason?.includes('PRO') ? true : false; 
+      updateData.is_active = true; // CRÍTICO: Activar la cuenta para que salgan de la pantalla de bloqueo
       
       // Determinar si es básico o PRO en base al reason enviado a MP
       if (subscriptionData.reason && subscriptionData.reason.includes('PRO')) {
