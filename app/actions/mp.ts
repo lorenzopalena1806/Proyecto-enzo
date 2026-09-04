@@ -11,15 +11,37 @@ export async function createSubscription(planType: 'basic' | 'pro', userId: stri
   }
 
   const supabase = await createClient();
-
   if (!userId) return { error: 'No autorizado. Por favor iniciá sesión nuevamente.' };
 
   const adminClient = createAdminClient();
   
+  // 1. Obtener perfil actual para ver si ya tiene una suscripción
+  const { data: profile } = await adminClient
+    .from('profiles')
+    .select('mp_subscription_id, mp_subscription_status')
+    .eq('id', userId)
+    .single();
+
+  // 2. Si ya tiene una suscripción en MP, la cancelamos primero para no cobrarle doble
+  if (profile && profile.mp_subscription_id) {
+    try {
+      console.log('Cancelando suscripción previa:', profile.mp_subscription_id);
+      await fetch(`https://api.mercadopago.com/preapproval/${profile.mp_subscription_id}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${MP_ACCESS_TOKEN}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status: 'cancelled' })
+      });
+      // No frenamos la ejecución si falla la cancelación por las dudas de que el ID ya esté vencido en MP
+    } catch (e) {
+      console.error('Error al intentar cancelar suscripción antigua:', e);
+    }
+  }
+  
   // Buscamos el email real de la bóveda de autenticación (auth.users)
   const { data: authUser } = await adminClient.auth.admin.getUserById(userId);
-  
-  // Usamos el mail oficial, o un fallback fantasma si por algún motivo no existe
   const userEmail = authUser?.user?.email || `comercio-${userId.substring(0, 8)}@lazoo.com.ar`;
 
   // Obtener precios dinámicos
@@ -51,7 +73,7 @@ export async function createSubscription(planType: 'basic' | 'pro', userId: stri
         },
         back_url: `${SITE_URL}/dashboard`,
         payer_email: userEmail,
-        external_reference: userId // CLAVE: para saber quién pagó en el webhook
+        external_reference: userId
       })
     });
 
@@ -68,7 +90,7 @@ export async function createSubscription(planType: 'basic' | 'pro', userId: stri
       .update({
         plan_type: planType,
         mp_subscription_status: 'pending',
-        mp_subscription_id: data.id // Guardamos el ID de suscripción que devuelve MP
+        mp_subscription_id: data.id // Guardamos el nuevo ID de suscripción
       })
       .eq('id', userId);
 
