@@ -9,15 +9,39 @@ export async function extractCoordinatesFromMapsUrl(url: string) {
       url = 'https://' + url;
     }
 
-    // Usamos fetch en el servidor para seguir las redirecciones automáticamente.
-    const res = await fetch(url, { 
-      redirect: 'follow',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+    // Intento 1: Leer el header Location directamente sin seguir redirecciones
+    let finalUrl = url;
+    try {
+      const resManual = await fetch(url, { redirect: 'manual' });
+      if (resManual.status >= 300 && resManual.status < 400) {
+        const loc = resManual.headers.get('location');
+        if (loc) finalUrl = loc;
       }
-    });
-    
-    const finalUrl = decodeURIComponent(res.url);
+    } catch (e) {
+      // Ignorar error y seguir
+    }
+
+    // Intento 2: Si aún no tenemos coordenadas en la URL, seguimos la redirección completa
+    if (!finalUrl.includes('@') && !finalUrl.includes('%2C')) {
+      const res = await fetch(finalUrl, { 
+        redirect: 'follow',
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'Accept-Language': 'es-AR,es;q=0.9,en-US;q=0.8,en;q=0.7',
+        }
+      });
+      finalUrl = decodeURIComponent(res.url);
+    } else {
+      finalUrl = decodeURIComponent(finalUrl);
+    }
+
+    // Bypass consent page if present
+    if (finalUrl.includes('consent.google.com') && finalUrl.includes('continue=')) {
+      const matchContinue = finalUrl.match(/continue=([^&]+)/);
+      if (matchContinue) {
+        finalUrl = decodeURIComponent(matchContinue[1]);
+      }
+    }
 
     const checkCoords = (lat: number, lng: number) => {
       return !isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;

@@ -56,6 +56,29 @@ export default function LocationPicker({ initialLat, initialLng, onChange }: Loc
   const [isSearching, setIsSearching] = useState(false);
   const [searchError, setSearchError] = useState('');
 
+  const hasAutoLocated = useRef(false);
+
+  useEffect(() => {
+    // Si no hay coordenadas iniciales (ej: creando nueva sucursal), pedir ubicación
+    if (!initialLat || !initialLng) {
+      if (!hasAutoLocated.current && 'geolocation' in navigator) {
+        hasAutoLocated.current = true;
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const newPos = L.latLng(pos.coords.latitude, pos.coords.longitude);
+            setPosition(newPos);
+            // Avisar al padre de la nueva ubicación encontrada por GPS
+            onChange(pos.coords.latitude, pos.coords.longitude);
+          },
+          (err) => {
+            console.log("No se pudo obtener la ubicación GPS automáticamente", err);
+          },
+          { timeout: 5000, enableHighAccuracy: true }
+        );
+      }
+    }
+  }, [initialLat, initialLng]); // Solo dependemos de lat/lng iniciales, NO de onChange
+
   // Search using Nominatim OpenStreetMap API
   const handleSearch = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
