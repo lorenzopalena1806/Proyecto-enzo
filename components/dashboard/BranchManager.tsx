@@ -138,6 +138,7 @@ export function BranchManager({ branches, planType = 'basic' }: { branches: Bran
             setLat(null);
             setLng(null);
             setMapsUrl('');
+            setMapExtractMessage({ type: '', text: '' });
             setBusinessHours('');
             setIsModalOpen(true);
           }}
@@ -195,6 +196,8 @@ export function BranchManager({ branches, planType = 'basic' }: { branches: Bran
                       setEditingBranch(branch);
                       setLat(branch.latitude);
                       setLng(branch.longitude);
+                      setMapsUrl('');
+                      setMapExtractMessage({ type: '', text: '' });
                       const bh = branch.business_hours;
                       setBusinessHours(
                         typeof bh === 'object' && bh !== null 
