@@ -25,7 +25,21 @@ export default async function POSPage() {
   if (!profile || profile.role !== 'merchant') redirect('/dashboard');
   
   const cookieStore = await cookies();
-  const activeBranchId = cookieStore.get('lazoo_active_branch')?.value || null;
+  let activeBranchId = cookieStore.get('lazoo_active_branch')?.value || null;
+
+  if (!activeBranchId) {
+    const { data: firstBranch } = await adminClient
+      .from('merchant_branches')
+      .select('id')
+      .eq('merchant_id', user.id)
+      .eq('is_active', true)
+      .order('created_at', { ascending: true })
+      .limit(1)
+      .single();
+    if (firstBranch) {
+      activeBranchId = firstBranch.id;
+    }
+  }
 
   // Traer las ofertas activas del comercio para el selector
   let offersQuery = adminClient

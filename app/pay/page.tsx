@@ -71,13 +71,29 @@ export default async function PayPage({
     );
   }
 
-  // Si tiene branchId, buscar el nombre de la sucursal para mostrarlo
+  // Si tiene branchId, usarlo, sino buscar la sucursal más antigua del comercio (para QRs viejos impresos)
+  let actualBranchId = branchId;
   let branchName = null;
-  if (branchId) {
+
+  if (!actualBranchId) {
+    const { data: firstBranch } = await adminClient
+      .from('merchant_branches')
+      .select('id, name')
+      .eq('merchant_id', m)
+      .eq('is_active', true)
+      .order('created_at', { ascending: true })
+      .limit(1)
+      .single();
+      
+    if (firstBranch) {
+      actualBranchId = firstBranch.id;
+      branchName = firstBranch.name;
+    }
+  } else {
     const { data: branchData } = await adminClient
       .from('merchant_branches')
       .select('name')
-      .eq('id', branchId)
+      .eq('id', actualBranchId)
       .single();
     if (branchData) branchName = branchData.name;
   }
@@ -115,10 +131,10 @@ export default async function PayPage({
     .order('created_at', { ascending: false })
     .limit(1);
     
-  if (branchId) {
-    pendingQuery = pendingQuery.eq('branch_id', branchId);
+  if (actualBranchId) {
+    pendingQuery = pendingQuery.eq('branch_id', actualBranchId);
   } else {
-    // Si no tiene 'b' en la URL, es el QR global. Solo debería agarrar cobros globales (branch_id nulo)
+    // Si no tiene 'b' en la URL y el comercio NO TIENE sucursales, usamos null
     pendingQuery = pendingQuery.is('branch_id', null);
   }
 
