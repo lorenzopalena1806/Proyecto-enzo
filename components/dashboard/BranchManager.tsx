@@ -96,9 +96,15 @@ export function BranchManager({ branches, planType = 'basic' }: { branches: Bran
       if (result.success) {
         setIsModalOpen(false);
         setEditingBranch(null);
+        setLat(null);
+        setLng(null);
+        setMapsUrl('');
+        setBusinessHours('');
+        setMapExtractMessage({ type: '', text: '' });
         router.refresh();
       } else {
-        setErrorMsg(result.reason || 'Error desconocido');
+        setErrorMsg(result.reason || 'Hubo un error al actualizar la sucursal.');
+        setIsLoading(false);
       }
     } else {
       if (isBasicAndLimited) {
@@ -109,6 +115,12 @@ export function BranchManager({ branches, planType = 'basic' }: { branches: Bran
       const result = await createBranchAction(formData);
       if (result.success) {
         setIsModalOpen(false);
+        setEditingBranch(null);
+        setLat(null);
+        setLng(null);
+        setMapsUrl('');
+        setBusinessHours('');
+        setMapExtractMessage({ type: '', text: '' });
         router.refresh();
       } else {
         setErrorMsg(result.reason || 'Error desconocido');

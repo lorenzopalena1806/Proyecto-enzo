@@ -12,15 +12,9 @@ env.split('\n').forEach(line => {
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function run() {
-  const branch1Id = '42e69e16-fc59-40ef-a376-f4c698285ee2'; // Forgione
-  const branch2Id = '1972c146-5b94-4cc0-abfd-500a1cf79343'; // Estanzuela
-  
-  // Update branch 1 to a dummy coordinate
-  const { error } = await supabase.from('merchant_branches').update({ latitude: -10, longitude: -10 }).eq('id', branch1Id);
-  console.log('Update Branch 1 error:', error);
-  
-  // Fetch both branches
-  const { data: branches } = await supabase.from('merchant_branches').select('id, name, latitude, longitude').in('id', [branch1Id, branch2Id]);
-  console.log('Branches after update:', branches);
+  const branch1Id = '42e69e16-fc59-40ef-a376-f4c698285ee2';
+  const { data, error } = await supabase.from('merchant_branches').update({ maps_url: 'test' }).eq('id', branch1Id).select();
+  console.log('Update result:', data);
+  console.log('Update error:', error);
 }
 run();
