@@ -35,7 +35,14 @@ export function BusinessHoursEditor({ value, onChange }: BusinessHoursEditorProp
   const [hours, setHours] = useState<BusinessHoursData>(defaultHours);
 
   useEffect(() => {
-    if (value && value.startsWith('{')) {
+    if (!value) return;
+    
+    if (typeof value === 'object') {
+      setHours(value as any);
+      return;
+    }
+    
+    if (typeof value === 'string' && value.startsWith('{')) {
       try {
         setHours(JSON.parse(value));
       } catch (e) {

@@ -195,7 +195,12 @@ export function BranchManager({ branches, planType = 'basic' }: { branches: Bran
                       setEditingBranch(branch);
                       setLat(branch.latitude);
                       setLng(branch.longitude);
-                      setBusinessHours(branch.business_hours || '');
+                      const bh = branch.business_hours;
+                      setBusinessHours(
+                        typeof bh === 'object' && bh !== null 
+                          ? JSON.stringify(bh) 
+                          : bh || ''
+                      );
                       setIsModalOpen(true);
                     }}
                     className="p-2 text-slate-500 hover:text-violet-400 hover:bg-violet-400/10 rounded-lg transition-colors active:scale-95"
