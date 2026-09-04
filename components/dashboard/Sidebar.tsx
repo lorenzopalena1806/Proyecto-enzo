@@ -27,6 +27,7 @@ import {
   TrendingUp,
   Crown,
   MapPin,
+  AlertOctagon,
 } from 'lucide-react';
 import type { Profile } from '@/types';
 

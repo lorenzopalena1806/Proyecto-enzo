@@ -140,7 +140,7 @@ export default async function DashboardLayout({
         <div className="lg:hidden h-14 flex-shrink-0" />
         <main className="flex-1 p-4 lg:p-8 max-w-5xl w-full mx-auto">
           <SupportModeBanner />
-          <GlobalNotificationBanner />
+          <GlobalNotificationBanner isSuperAdmin={profile.role === 'superadmin'} />
           {children}
         </main>
       </div>
