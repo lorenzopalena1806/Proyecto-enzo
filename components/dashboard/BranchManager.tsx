@@ -196,7 +196,11 @@ export function BranchManager({ branches, planType = 'basic' }: { branches: Bran
                       setEditingBranch(branch);
                       setLat(branch.latitude);
                       setLng(branch.longitude);
-                      setMapsUrl('');
+                      setMapsUrl(
+                        branch.latitude && branch.longitude 
+                          ? `https://www.google.com/maps/search/?api=1&query=${branch.latitude},${branch.longitude}` 
+                          : ''
+                      );
                       setMapExtractMessage({ type: '', text: '' });
                       const bh = branch.business_hours;
                       setBusinessHours(
