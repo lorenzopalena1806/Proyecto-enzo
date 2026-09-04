@@ -289,6 +289,7 @@ export function BranchManager({ branches, planType = 'basic' }: { branches: Bran
                 <div className="flex gap-2 mb-3">
                   <input
                     type="url"
+                    name="maps_url"
                     value={mapsUrl}
                     onChange={(e) => setMapsUrl(e.target.value)}
                     placeholder="Link de Google Maps..."
@@ -347,7 +348,6 @@ export function BranchManager({ branches, planType = 'basic' }: { branches: Bran
                 <input type="hidden" name="latitude" value={lat || ''} />
                 <input type="hidden" name="longitude" value={lng || ''} />
                 <input type="hidden" name="business_hours" value={businessHours || ''} />
-                <input type="hidden" name="maps_url" value={mapsUrl || ''} />
               </div>
 
               <div>
