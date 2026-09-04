@@ -12,10 +12,7 @@ env.split('\n').forEach(line => {
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function run() {
-  const { data, error } = await supabase
-    .from('profiles')
-    .update({ plan_type: 'pro', is_premium: true, is_active: true, mp_subscription_status: 'authorized' })
-    .eq('id', 'adc3af80-e599-4c74-ad67-11388572d9bd'); // Pepis
-  console.log('Update Error:', error);
+  const { data, error } = await supabase.from('profiles').select('is_premium').limit(1);
+  console.log('is_premium check:', { data, error });
 }
 run();
