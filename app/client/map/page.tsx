@@ -1,4 +1,4 @@
-﻿import { createAdminClient, createClient } from '@/lib/supabase-server';
+import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronLeft, Scan } from 'lucide-react';
@@ -62,7 +62,7 @@ export default async function MapPage() {
       return {
         id: branch.id, // Usamos el ID de la sucursal para que la key de React no choque, pero para el link al perfil usaremos el merchant_id
         merchant_id: branch.merchant_id, // Guardamos referencia a la madre
-        business_name: mother ? \\ (\)\ : branch.name,
+        business_name: mother ? `${mother.business_name} (${branch.name})` : branch.name,
         avatar_url: mother?.avatar_url || null,
         category: mother?.category || 'Sucursal',
         address: branch.address,
