@@ -70,20 +70,14 @@ export function AdminQRManager({ merchants }: { merchants: Merchant[] }) {
                 <Store className="h-5 w-5 text-violet-400" />
                 {merchant.name}
               </h2>
-              <div className="flex items-center justify-between mt-4">
-                <span className="text-sm text-slate-400">Casa Central</span>
-                <button 
-                  onClick={() => handleDownload(`https://lazoo.com.ar/pay?m=${merchant.id}`, `${merchant.name}_Central`)}
-                  className="bg-violet-600 hover:bg-violet-500 text-white p-2 rounded-lg transition-colors flex items-center gap-2 text-xs font-bold"
-                >
-                  <Download className="h-4 w-4" /> Descargar QR
-                </button>
-              </div>
             </div>
 
-            {merchant.branches.length > 0 && (
-              <div className="p-5 bg-slate-950/50 flex-1">
-                <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Sucursales ({merchant.branches.length})</h3>
+            <div className="p-5 bg-slate-950/50 flex-1">
+              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Sucursales ({merchant.branches.length})</h3>
+              
+              {merchant.branches.length === 0 ? (
+                <p className="text-sm text-slate-400 italic">No hay sucursales cargadas. El comercio debe cargar al menos una sucursal para generar sus QRs.</p>
+              ) : (
                 <div className="space-y-3">
                   {merchant.branches.map(branch => (
                     <div key={branch.id} className="flex flex-col gap-2 p-3 rounded-xl bg-slate-900 border border-slate-800">
@@ -93,15 +87,15 @@ export function AdminQRManager({ merchants }: { merchants: Merchant[] }) {
                       </span>
                       <button 
                         onClick={() => handleDownload(`https://lazoo.com.ar/pay?m=${merchant.id}&b=${branch.id}`, `${merchant.name}_${branch.name}`)}
-                        className="bg-slate-800 hover:bg-slate-700 text-slate-300 p-1.5 rounded transition-colors flex items-center justify-center gap-1.5 text-xs w-full"
+                        className="bg-violet-600 hover:bg-violet-500 text-white p-2 rounded-lg transition-colors flex items-center justify-center gap-1.5 text-xs w-full font-bold"
                       >
                         <Download className="h-3.5 w-3.5" /> Descargar QR Sucursal
                       </button>
                     </div>
                   ))}
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         ))}
       </div>
