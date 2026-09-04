@@ -298,6 +298,27 @@ export function BranchManager({ branches, planType = 'basic' }: { branches: Bran
                 
                 <input type="hidden" name="latitude" value={lat || ''} />
                 <input type="hidden" name="longitude" value={lng || ''} />
+                <input type="hidden" name="business_hours" value={businessHours || ''} />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-1">WhatsApp de Contacto (Público)</label>
+                <input 
+                  type="tel" 
+                  name="phone" 
+                  defaultValue={editingBranch?.phone || ''}
+                  placeholder="Ej: +54 9 11 1234-5678"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-violet-500 outline-none" 
+                />
+                <p className="text-xs text-slate-500 mt-1">Este número se mostrará en el perfil público de la sucursal.</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-1">Horarios de Atención</label>
+                <BusinessHoursEditor
+                  value={businessHours}
+                  onChange={(val) => setBusinessHours(val)}
+                />
               </div>
 
               {errorMsg && <p className="text-red-400 text-sm text-center">{errorMsg}</p>}
