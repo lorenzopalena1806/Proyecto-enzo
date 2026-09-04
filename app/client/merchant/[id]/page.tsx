@@ -42,65 +42,63 @@ export default async function MerchantProfilePage({ params }: { params: Promise<
     .eq('merchant_id', merchantId);
   const allBranches = branches || [];
 
-  let hoursData: any = null;
-  let groupedHours: Array<{ label: string, timeStr: string, isOpen: boolean }> = [];
-  
-  if (merchant.business_hours && merchant.business_hours.startsWith('{')) {
-    try {
-      hoursData = JSON.parse(merchant.business_hours);
-      
-      const DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-      const groups = [];
-      let currentGroup: any = null;
+function parseBusinessHours(businessHoursStr: string | null) {
+  if (!businessHoursStr || !businessHoursStr.startsWith('{')) return null;
+  try {
+    const hoursData = JSON.parse(businessHoursStr);
+    const DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+    const groups = [];
+    let currentGroup: any = null;
 
-      for (let i = 0; i < DAYS.length; i++) {
-        const day = DAYS[i];
-        const d = hoursData[day];
-        if (!d) continue;
+    for (let i = 0; i < DAYS.length; i++) {
+      const day = DAYS[i];
+      const d = hoursData[day];
+      if (!d) continue;
 
-        let timeStr = 'Cerrado';
-        if (d.isOpen) {
-          timeStr = `${d.shift1Start} a ${d.shift1End}`;
-          if (d.shift2Start && d.shift2End && d.shift2Start !== d.shift2End) {
-            timeStr += ` y ${d.shift2Start} a ${d.shift2End}`;
-          }
+      let timeStr = 'Cerrado';
+      if (d.isOpen) {
+        timeStr = `${d.shift1Start} a ${d.shift1End}`;
+        if (d.shift2Start && d.shift2End && d.shift2Start !== d.shift2End) {
+          timeStr += ` y ${d.shift2Start} a ${d.shift2End}`;
         }
+      }
 
-        if (!currentGroup) {
-          currentGroup = { startDay: day, endDay: day, timeStr, isOpen: d.isOpen };
+      if (!currentGroup) {
+        currentGroup = { startDay: day, endDay: day, timeStr, isOpen: d.isOpen };
+      } else {
+        if (currentGroup.timeStr === timeStr) {
+          currentGroup.endDay = day;
         } else {
-          if (currentGroup.timeStr === timeStr) {
-            currentGroup.endDay = day;
-          } else {
-            groups.push(currentGroup);
-            currentGroup = { startDay: day, endDay: day, timeStr, isOpen: d.isOpen };
-          }
+          groups.push(currentGroup);
+          currentGroup = { startDay: day, endDay: day, timeStr, isOpen: d.isOpen };
         }
       }
-      if (currentGroup) {
-        groups.push(currentGroup);
-      }
+    }
+    if (currentGroup) {
+      groups.push(currentGroup);
+    }
 
-      groupedHours = groups.map(g => {
-        let dayLabel = g.startDay;
-        if (g.startDay !== g.endDay) {
-          const startIndex = DAYS.indexOf(g.startDay);
-          const endIndex = DAYS.indexOf(g.endDay);
-          if (endIndex - startIndex === 1) {
-            dayLabel = `${g.startDay} y ${g.endDay}`;
-          } else {
-            dayLabel = `${g.startDay} a ${g.endDay}`;
-          }
+    return groups.map(g => {
+      let dayLabel = g.startDay;
+      if (g.startDay !== g.endDay) {
+        const startIndex = DAYS.indexOf(g.startDay);
+        const endIndex = DAYS.indexOf(g.endDay);
+        if (endIndex - startIndex === 1) {
+          dayLabel = `${g.startDay} y ${g.endDay}`;
+        } else {
+          dayLabel = `${g.startDay} a ${g.endDay}`;
         }
-        return {
-          label: dayLabel,
-          timeStr: g.timeStr,
-          isOpen: g.isOpen
-        };
-      });
-
-    } catch (e) {}
+      }
+      return {
+        label: dayLabel,
+        timeStr: g.timeStr,
+        isOpen: g.isOpen
+      };
+    });
+  } catch (e) {
+    return null;
   }
+}
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -205,33 +203,7 @@ export default async function MerchantProfilePage({ params }: { params: Promise<
             <div className="flex items-center gap-1 bg-amber-500/10 text-amber-400 px-3 py-1.5 rounded-full text-xs font-bold border border-amber-500/20">
               <Star className="w-3.5 h-3.5 fill-current" /> 5.0 Excelente
             </div>
-            
-            {hoursData ? (
-              <div className="bg-white/5 text-slate-300 px-4 py-3 rounded-xl text-xs font-medium border border-white/10 w-full sm:w-auto min-w-[250px] mt-2">
-                <div className="flex items-center gap-1.5 mb-2 text-white">
-                  <Clock className="w-4 h-4" /> <span className="font-bold">Horarios de Atención</span>
-                </div>
-                <div className="space-y-1.5">
-                  {groupedHours.map((g, idx) => (
-                    <div key={idx} className="flex justify-between border-b border-white/5 last:border-0 pb-1.5 last:pb-0 gap-4">
-                      <span className="text-slate-400 whitespace-nowrap">{g.label}</span>
-                      <span className={g.isOpen ? "text-slate-200 text-right" : "text-slate-500 italic text-right"}>
-                        {g.timeStr}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : merchant.business_hours ? (
-              <div className="flex items-start gap-1.5 bg-white/5 text-slate-300 px-3 py-2 rounded-xl text-xs font-medium border border-white/10">
-                <Clock className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" /> 
-                <span className="whitespace-pre-wrap leading-relaxed">{merchant.business_hours}</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-1 bg-white/5 text-slate-300 px-3 py-1.5 rounded-full text-xs font-medium border border-white/10">
-                <Clock className="w-3.5 h-3.5" /> Abierto ahora
-              </div>
-            )}
+
           </div>
         </div>
 
@@ -273,10 +245,13 @@ export default async function MerchantProfilePage({ params }: { params: Promise<
                   )}
 
                   {/* Nuevas sucursales con teléfono propio */}
-                  {allBranches.map((branch: any) => (
+                  {allBranches.map((branch: any) => {
+                    const parsedHours = parseBusinessHours(branch.business_hours);
+                    
+                    return (
                     <div key={branch.id} className="glass-panel rounded-2xl p-4 border-l-2 border-l-violet-500">
                       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-                        <div className="space-y-2">
+                        <div className="space-y-2 w-full">
                           <span className="text-white font-bold block text-base">{branch.name}</span>
                           {branch.address && (
                             <span className="text-slate-300 text-sm flex items-start gap-1">
@@ -290,20 +265,38 @@ export default async function MerchantProfilePage({ params }: { params: Promise<
                               {branch.phone}
                             </a>
                           )}
+                          
+                          {parsedHours && parsedHours.length > 0 && (
+                            <div className="mt-3 bg-slate-900/50 rounded-xl p-3 border border-white/5">
+                              <div className="flex items-center gap-1.5 mb-2 text-white">
+                                <Clock className="w-4 h-4 text-slate-400" /> <span className="font-bold text-sm">Horarios</span>
+                              </div>
+                              <div className="space-y-1">
+                                {parsedHours.map((g: any, idx: number) => (
+                                  <div key={idx} className="flex justify-between border-b border-white/5 last:border-0 pb-1 last:pb-0 gap-4">
+                                    <span className="text-slate-400 text-xs">{g.label}</span>
+                                    <span className={g.isOpen ? "text-slate-300 text-xs font-medium text-right" : "text-slate-500 italic text-xs text-right"}>
+                                      {g.timeStr}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                           {(branch.maps_url || (branch.latitude && branch.longitude)) && (
                             <a 
                               href={branch.maps_url || `https://www.google.com/maps/search/?api=1&query=${branch.latitude},${branch.longitude}`} 
                               target="_blank" 
                               rel="noreferrer" 
-                              className="text-violet-400 text-xs font-bold inline-flex items-center gap-1 hover:text-violet-300 bg-violet-500/10 px-4 py-2 rounded-xl whitespace-nowrap self-start sm:self-auto border border-violet-500/20"
+                              className="text-violet-400 text-xs font-bold inline-flex items-center gap-1 hover:text-violet-300 bg-violet-500/10 px-4 py-2 rounded-xl whitespace-nowrap self-start sm:self-auto border border-violet-500/20 mt-1"
                             >
                               Ir <Navigation className="w-4 h-4" />
                             </a>
                           )}
                       </div>
                     </div>
-                  ))}
+                  )})}
                 </>
               )}
             </div>
