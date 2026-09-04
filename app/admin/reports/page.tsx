@@ -102,12 +102,10 @@ export default async function ReportsPage() {
                         <Mail className="w-3.5 h-3.5 text-slate-500" />
                         {merchantAuth?.email || 'Sin correo'}
                       </div>
-                      {report.merchant?.phone && (
-                        <div className="text-slate-300 flex items-center gap-2">
-                          <Phone className="w-3.5 h-3.5 text-slate-500" />
-                          {report.merchant.phone}
-                        </div>
-                      )}
+                      <div className="text-slate-300 flex items-center gap-2">
+                        <Phone className="w-3.5 h-3.5 text-slate-500" />
+                        {report.merchant?.phone || <span className="text-slate-500 italic">Sin teléfono</span>}
+                      </div>
                     </div>
                     
                     {/* INFO CLIENTE */}
@@ -120,14 +118,12 @@ export default async function ReportsPage() {
                       </div>
                       <div className="text-slate-300 flex items-center gap-2">
                         <Mail className="w-3.5 h-3.5 text-slate-500" />
-                        {clientAuth?.email || 'Sin correo'}
+                        {clientAuth?.email || <span className="text-slate-500 italic">Sin correo</span>}
                       </div>
-                      {report.client?.phone && (
-                        <div className="text-slate-300 flex items-center gap-2">
-                          <Phone className="w-3.5 h-3.5 text-slate-500" />
-                          {report.client.phone}
-                        </div>
-                      )}
+                      <div className="text-slate-300 flex items-center gap-2">
+                        <Phone className="w-3.5 h-3.5 text-slate-500" />
+                        {report.client?.phone || <span className="text-slate-500 italic">Sin teléfono</span>}
+                      </div>
                     </div>
                   </div>
 
