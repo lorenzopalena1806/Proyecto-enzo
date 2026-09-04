@@ -192,7 +192,7 @@ export function Sidebar({ profile, branches = [], activeBranchId = null }: Sideb
   }, []);
 
   const isActive = (href: string, exact: boolean) =>
-    exact ? pathname === href : pathname.startsWith(href);
+    exact ? pathname === href : (pathname === href || pathname.startsWith(href + '/'));
 
   const handleLogout = async () => {
     localStorage.removeItem('admin_return');
