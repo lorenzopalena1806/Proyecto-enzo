@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Store, User, Mail, Calendar, ShieldAlert, Search, Filter, TrendingUp, ScanBarcode, ChevronRight } from 'lucide-react';
 import { SuspendUserButton } from '@/components/admin/SuspendUserButton';
+import { MerchantStatusDropdown } from '@/components/admin/MerchantStatusDropdown';
 
 type EnrichedUser = {
   id: string;
@@ -243,7 +244,15 @@ export default function AdminUsersTableClient({ initialUsers }: { initialUsers: 
                     </div>
                   </td>
                   <td className="px-3 py-3 text-right" onClick={(e) => e.stopPropagation()}>
-                    <SuspendUserButton userId={user.id} isActive={user.is_active} role={user.role} />
+                    {user.role === 'merchant' ? (
+                      <MerchantStatusDropdown 
+                        merchantId={user.id} 
+                        currentPlan={(user as any).plan_type || 'basic'} 
+                        isActive={user.is_active} 
+                      />
+                    ) : (
+                      <SuspendUserButton userId={user.id} isActive={user.is_active} role={user.role} />
+                    )}
                   </td>
                   <td className="px-3 py-3 text-right text-slate-500 group-hover:text-blue-400 transition-colors">
                     <ChevronRight className="h-4 w-4 ml-auto" />

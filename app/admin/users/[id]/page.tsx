@@ -7,6 +7,7 @@ import { SuspendUserButton } from '@/components/admin/SuspendUserButton';
 import { SubscriptionManager } from '@/components/admin/SubscriptionManager';
 import { MaterialManager } from '@/components/admin/MaterialManager';
 import { ImpersonateButton } from '@/components/admin/ImpersonateButton';
+import { MerchantStatusDropdown } from '@/components/admin/MerchantStatusDropdown';
 
 
 export const dynamic = 'force-dynamic';
@@ -89,7 +90,16 @@ export default async function AdminUserDetailsPage({ params }: { params: Promise
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <SuspendUserButton userId={profile.id} isActive={profile.is_active} role={profile.role} />
+            {profile.role === 'merchant' ? (
+              <MerchantStatusDropdown 
+                merchantId={profile.id} 
+                currentPlan={profile.plan_type || 'basic'} 
+                isActive={profile.is_active} 
+              />
+            ) : (
+              <SuspendUserButton userId={profile.id} isActive={profile.is_active} role={profile.role} />
+            )}
+            
             {profile.role === 'merchant' && (
               <ImpersonateButton 
                 merchantId={profile.id} 
