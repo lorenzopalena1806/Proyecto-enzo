@@ -22,8 +22,9 @@ export async function extractCoordinatesFromMapsUrl(url: string) {
     }
 
     // Intento 2: Si aún no tenemos coordenadas en la URL, seguimos la redirección completa
+    let res: Response | null = null;
     if (!finalUrl.includes('@') && !finalUrl.includes('%2C')) {
-      const res = await fetch(finalUrl, { 
+      res = await fetch(finalUrl, { 
         redirect: 'follow',
         headers: {
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -72,27 +73,33 @@ export async function extractCoordinatesFromMapsUrl(url: string) {
     }
     
     // Patrón 4: Parámetros ll o q
-    const urlObj = new URL(res.url);
-    const ll = urlObj.searchParams.get('ll') || urlObj.searchParams.get('q');
-    if (ll) {
-      const parts = ll.split(',');
-      if (parts.length >= 2) {
-        const lat = parseFloat(parts[0]);
-        const lng = parseFloat(parts[1]);
-        if (checkCoords(lat, lng)) return { success: true, lat, lng };
+    try {
+      const urlObj = new URL(finalUrl);
+      const ll = urlObj.searchParams.get('ll') || urlObj.searchParams.get('q');
+      if (ll) {
+        const parts = ll.split(',');
+        if (parts.length >= 2) {
+          const lat = parseFloat(parts[0]);
+          const lng = parseFloat(parts[1]);
+          if (checkCoords(lat, lng)) return { success: true, lat, lng };
+        }
       }
+    } catch (e) {
+      // Ignorar error de parsing de URL
     }
 
     // Patrón 5: Buscar dentro del HTML retornado (meta tags o links de google maps static API)
-    const html = await res.text();
-    const htmlMatch = html.match(/center=(-?\d+\.\d+)%2C(-?\d+\.\d+)/i) || 
-                      html.match(/q=(-?\d+\.\d+)%2C(-?\d+\.\d+)/i) ||
-                      html.match(/!1s(-?\d+\.\d+)%2C\+?(-?\d+\.\d+)/i) ||
-                      html.match(/!1s(-?\d+\.\d+),(-?\d+\.\d+)/i);
-    if (htmlMatch) {
-      const lat = parseFloat(htmlMatch[1]);
-      const lng = parseFloat(htmlMatch[2]);
-      if (checkCoords(lat, lng)) return { success: true, lat, lng };
+    if (res) {
+      const html = await res.text();
+      const htmlMatch = html.match(/center=(-?\d+\.\d+)%2C(-?\d+\.\d+)/i) || 
+                        html.match(/q=(-?\d+\.\d+)%2C(-?\d+\.\d+)/i) ||
+                        html.match(/!1s(-?\d+\.\d+)%2C\+?(-?\d+\.\d+)/i) ||
+                        html.match(/!1s(-?\d+\.\d+),(-?\d+\.\d+)/i);
+      if (htmlMatch) {
+        const lat = parseFloat(htmlMatch[1]);
+        const lng = parseFloat(htmlMatch[2]);
+        if (checkCoords(lat, lng)) return { success: true, lat, lng };
+      }
     }
 
     return { success: false, error: 'No se encontraron coordenadas exactas en este enlace.' };
