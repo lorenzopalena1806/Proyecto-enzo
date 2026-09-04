@@ -145,12 +145,40 @@ export async function deleteMerchantServer(merchantId: string) {
 export async function toggleUserActiveStatusServer(userId: string, isActive: boolean) {
   try {
     const adminClient = await requireSuperAdmin();
+    
+    // Primero traemos la información actual del usuario
+    const { data: profile } = await adminClient
+      .from('profiles')
+      .select('role, subscription_expires_at, is_active')
+      .eq('id', userId)
+      .single();
+
+    const updateData: any = { is_active: isActive };
+
+    // Si lo estamos dando de ALTA (isActive = true) y es un COMERCIO
+    // y además estaba inactivo antes o no tenía fecha de vencimiento válida,
+    // le asignamos automáticamente 31 días.
+    if (isActive && profile?.role === 'merchant') {
+      const isCurrentlyExpired = !profile.subscription_expires_at || new Date(profile.subscription_expires_at) < new Date();
+      if (isCurrentlyExpired) {
+        const endsAt = new Date();
+        endsAt.setDate(endsAt.getDate() + 31);
+        updateData.subscription_expires_at = endsAt.toISOString();
+        
+        // Asumimos un plan básico por defecto si es que no tiene
+        updateData.mp_subscription_status = 'authorized';
+      }
+    }
+
     const { error } = await adminClient
       .from('profiles')
-      .update({ is_active: isActive })
+      .update(updateData)
       .eq('id', userId);
     
     if (error) throw error;
+    
+    revalidatePath('/admin/users');
+    revalidatePath(`/admin/users/${userId}`);
     return { success: true };
   } catch (error: any) {
     console.error('Error toggling user active status:', error.message || error);
