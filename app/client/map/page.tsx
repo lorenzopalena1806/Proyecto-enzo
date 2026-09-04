@@ -1,4 +1,4 @@
-import { createAdminClient, createClient } from '@/lib/supabase-server';
+﻿import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronLeft, Scan } from 'lucide-react';
@@ -36,15 +36,15 @@ export default async function MapPage() {
     );
   }
 
+  // Traemos todos los perfiles de los comercios activos para heredar nombre, logo, etc.
   const { data: merchants } = await adminClient
     .from('profiles')
-    .select('id, business_name, avatar_url, category, address, latitude, longitude, is_premium')
+    .select('id, business_name, avatar_url, category, is_premium')
     .eq('role', 'merchant')
     .eq('is_active', true)
-    .not('latitude', 'is', null)
-    .not('longitude', 'is', null)
     .in('id', activeMerchantIds);
 
+  // Traemos unicamente las sucursales (ya que eliminamos los datos de ubicacion del perfil madre)
   const { data: branches } = await adminClient
     .from('merchant_branches')
     .select('id, merchant_id, name, address, latitude, longitude, is_active')
@@ -53,17 +53,16 @@ export default async function MapPage() {
     .not('longitude', 'is', null)
     .in('merchant_id', activeMerchantIds);
 
-  // Unificar sedes centrales y sucursales
-  let allLocations = merchants || [];
+  let allLocations: any[] = [];
   
   if (branches && branches.length > 0 && merchants) {
-    const branchesAsMerchants = branches.map(branch => {
+    allLocations = branches.map(branch => {
       // Buscar la cuenta madre para heredar logo y categoría
       const mother = merchants.find(m => m.id === branch.merchant_id);
       return {
         id: branch.id, // Usamos el ID de la sucursal para que la key de React no choque, pero para el link al perfil usaremos el merchant_id
         merchant_id: branch.merchant_id, // Guardamos referencia a la madre
-        business_name: mother ? `${mother.business_name} (${branch.name})` : branch.name,
+        business_name: mother ? \\ (\)\ : branch.name,
         avatar_url: mother?.avatar_url || null,
         category: mother?.category || 'Sucursal',
         address: branch.address,
@@ -72,17 +71,12 @@ export default async function MapPage() {
         is_premium: mother?.is_premium || false
       };
     });
-    
-    // Convertir profiles a la misma estructura asegurando que tengan merchant_id
-    allLocations = merchants.map(m => ({ ...m, merchant_id: m.id })).concat(branchesAsMerchants as any);
-  } else if (merchants) {
-    allLocations = merchants.map(m => ({ ...m, merchant_id: m.id }));
   }
 
   return (
     <div className="relative w-full h-screen overflow-hidden flex flex-col bg-slate-950">
       
-      {/* ── HEADER CON BOTÓN VOLVER ── */}
+      {/* 🚀🚀 HEADER CON BOTÓN VOLVER 🚀🚀 */}
       <header className="absolute top-0 left-0 right-0 z-[400] p-4 flex items-center justify-between bg-gradient-to-b from-slate-950/80 to-transparent pointer-events-none">
         <Link 
           href="/client/qr" 
@@ -98,12 +92,12 @@ export default async function MapPage() {
         <div className="w-10 h-10"></div> {/* Spacer for centering */}
       </header>
       
-      {/* ── MAPA ── */}
+      {/* 🚀🚀 MAPA 🚀🚀 */}
       <div className="flex-1 w-full h-full">
         <MapWrapper merchants={allLocations} />
       </div>
 
-      {/* ── BOTTOM NAV BAR ── */}
+      {/* 🚀🚀 BOTTOM NAV BAR 🚀🚀 */}
       <div className="absolute bottom-0 left-0 right-0 z-[400] px-4 pb-6 pt-10 bg-gradient-to-t from-slate-950 via-slate-950/90 to-transparent pointer-events-none">
         <div className="max-w-lg mx-auto relative flex justify-center pointer-events-auto">
           <Link href="/client/scanner" className="group relative flex items-center justify-center">
