@@ -1,7 +1,8 @@
-'use server';
+﻿'use server';
 
 import { createClient } from '@/lib/supabase-server';
 import { revalidatePath } from 'next/cache';
+import { extractCoordinatesFromMapsUrl } from './map';
 
 export async function createBranchAction(formData: FormData) {
   const supabase = await createClient();
@@ -14,11 +15,20 @@ export async function createBranchAction(formData: FormData) {
   const phone = formData.get('phone') as string;
   const businessHours = formData.get('business_hours') as string;
   const mapsUrl = formData.get('maps_url') as string;
-  const latStr = formData.get('latitude') as string;
-  const lngStr = formData.get('longitude') as string;
 
-  if (!name || !latStr || !lngStr) {
-    return { success: false, reason: 'El nombre y las coordenadas son obligatorias' };
+  if (!name) {
+    return { success: false, reason: 'El nombre es obligatorio' };
+  }
+
+  let lat = -10;
+  let lng = -10;
+  
+  if (mapsUrl) {
+    const res = await extractCoordinatesFromMapsUrl(mapsUrl);
+    if (res.success && res.lat && res.lng) {
+      lat = res.lat;
+      lng = res.lng;
+    }
   }
 
   const { error } = await supabase.from('merchant_branches').insert({
@@ -28,8 +38,8 @@ export async function createBranchAction(formData: FormData) {
     phone: phone || null,
     business_hours: businessHours || null,
     maps_url: mapsUrl || null,
-    latitude: parseFloat(latStr),
-    longitude: parseFloat(lngStr),
+    latitude: lat,
+    longitude: lng,
   });
 
   if (error) {
@@ -72,8 +82,6 @@ export async function updateBranchAction(branchId: string, formData: FormData) {
   const phone = formData.get('phone') as string;
   const businessHours = formData.get('business_hours') as string;
   const mapsUrl = formData.get('maps_url') as string;
-  const latStr = formData.get('latitude') as string;
-  const lngStr = formData.get('longitude') as string;
 
   if (!name) {
     return { success: false, reason: 'El nombre es obligatorio' };
@@ -86,9 +94,13 @@ export async function updateBranchAction(branchId: string, formData: FormData) {
     business_hours: businessHours || null,
     maps_url: mapsUrl || null
   };
-  if (latStr && lngStr) {
-    payload.latitude = parseFloat(latStr);
-    payload.longitude = parseFloat(lngStr);
+  
+  if (mapsUrl) {
+    const res = await extractCoordinatesFromMapsUrl(mapsUrl);
+    if (res.success && res.lat && res.lng) {
+      payload.latitude = res.lat;
+      payload.longitude = res.lng;
+    }
   }
 
   const { error } = await supabase
