@@ -291,11 +291,16 @@ export default async function MerchantProfilePage({ params }: { params: Promise<
                             </a>
                           )}
                         </div>
-                        {branch.latitude && branch.longitude && (
-                          <a href={`https://www.google.com/maps/search/?api=1&query=${branch.latitude},${branch.longitude}`} target="_blank" rel="noreferrer" className="text-violet-400 text-xs font-bold inline-flex items-center gap-1 hover:text-violet-300 bg-violet-500/10 px-4 py-2 rounded-xl whitespace-nowrap self-start sm:self-auto border border-violet-500/20">
-                            Ir <Navigation className="w-4 h-4" />
-                          </a>
-                        )}
+                          {(branch.maps_url || (branch.latitude && branch.longitude)) && (
+                            <a 
+                              href={branch.maps_url || `https://www.google.com/maps/search/?api=1&query=${branch.latitude},${branch.longitude}`} 
+                              target="_blank" 
+                              rel="noreferrer" 
+                              className="text-violet-400 text-xs font-bold inline-flex items-center gap-1 hover:text-violet-300 bg-violet-500/10 px-4 py-2 rounded-xl whitespace-nowrap self-start sm:self-auto border border-violet-500/20"
+                            >
+                              Ir <Navigation className="w-4 h-4" />
+                            </a>
+                          )}
                       </div>
                     </div>
                   ))}

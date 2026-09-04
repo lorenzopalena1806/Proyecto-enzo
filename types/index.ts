@@ -38,6 +38,7 @@ export interface MerchantBranch {
   address: string | null;
   phone: string | null;
   business_hours: string | null;
+  maps_url: string | null;
   latitude: number;
   longitude: number;
   is_active: boolean;

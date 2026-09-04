@@ -19,6 +19,7 @@ interface Branch {
   address: string | null;
   phone?: string | null;
   business_hours?: string | null;
+  maps_url?: string | null;
   latitude: number;
   longitude: number;
 }
@@ -203,9 +204,9 @@ export function BranchManager({ branches, planType = 'basic' }: { branches: Bran
                       setLat(branch.latitude);
                       setLng(branch.longitude);
                       setMapsUrl(
-                        branch.latitude && branch.longitude 
+                        branch.maps_url || (branch.latitude && branch.longitude 
                           ? `https://www.google.com/maps/search/?api=1&query=${branch.latitude},${branch.longitude}` 
-                          : ''
+                          : '')
                       );
                       setMapExtractMessage({ type: '', text: '' });
                       const bh = branch.business_hours;
@@ -334,6 +335,7 @@ export function BranchManager({ branches, planType = 'basic' }: { branches: Bran
                 <input type="hidden" name="latitude" value={lat || ''} />
                 <input type="hidden" name="longitude" value={lng || ''} />
                 <input type="hidden" name="business_hours" value={businessHours || ''} />
+                <input type="hidden" name="maps_url" value={mapsUrl || ''} />
               </div>
 
               <div>

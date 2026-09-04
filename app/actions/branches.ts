@@ -13,6 +13,7 @@ export async function createBranchAction(formData: FormData) {
   const address = formData.get('address') as string;
   const phone = formData.get('phone') as string;
   const businessHours = formData.get('business_hours') as string;
+  const mapsUrl = formData.get('maps_url') as string;
   const latStr = formData.get('latitude') as string;
   const lngStr = formData.get('longitude') as string;
 
@@ -23,9 +24,10 @@ export async function createBranchAction(formData: FormData) {
   const { error } = await supabase.from('merchant_branches').insert({
     merchant_id: user.id,
     name,
-    address,
+    address: address || null,
     phone: phone || null,
     business_hours: businessHours || null,
+    maps_url: mapsUrl || null,
     latitude: parseFloat(latStr),
     longitude: parseFloat(lngStr),
   });
@@ -69,6 +71,7 @@ export async function updateBranchAction(branchId: string, formData: FormData) {
   const address = formData.get('address') as string;
   const phone = formData.get('phone') as string;
   const businessHours = formData.get('business_hours') as string;
+  const mapsUrl = formData.get('maps_url') as string;
   const latStr = formData.get('latitude') as string;
   const lngStr = formData.get('longitude') as string;
 
@@ -80,7 +83,8 @@ export async function updateBranchAction(branchId: string, formData: FormData) {
     name, 
     address: address || null,
     phone: phone || null,
-    business_hours: businessHours || null
+    business_hours: businessHours || null,
+    maps_url: mapsUrl || null
   };
   if (latStr && lngStr) {
     payload.latitude = parseFloat(latStr);
