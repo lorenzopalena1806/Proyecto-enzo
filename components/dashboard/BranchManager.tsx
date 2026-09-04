@@ -109,11 +109,18 @@ export function BranchManager({ branches, planType = 'basic' }: { branches: Bran
       <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl mt-6">
         {(!branches || branches.length === 0) ? (
           <EmptyState 
-            icon={<MapPin className="h-12 w-12 text-slate-500" />}
+            icon={MapPin}
             title="Aún no tenés sucursales"
             description="Agregá la ubicación de tus locales para que los clientes te encuentren en el mapa y sepan tus horarios."
-            actionLabel="Agregar Sucursal"
-            onAction={() => setIsModalOpen(true)}
+            action={
+              <button 
+                onClick={() => setIsModalOpen(true)}
+                className="bg-violet-600 hover:bg-violet-500 text-white font-bold py-2 px-6 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2"
+              >
+                <Plus className="h-5 w-5" />
+                Agregar Sucursal
+              </button>
+            }
           />
         ) : (
           <div className="divide-y divide-slate-800/50">
