@@ -262,15 +262,6 @@ export function ProfileEditForm({ profile, userEmail, isPro = false }: ProfileEd
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-sm font-medium text-slate-300">Horarios de Atención</label>
-              <BusinessHoursEditor
-                value={formData.business_hours}
-                onChange={(val) => setFormData(prev => ({ ...prev, business_hours: val }))}
-              />
-              <p className="text-xs text-slate-500 mt-2">Este horario aparecerá estructurado en tu perfil para los clientes.</p>
-            </div>
-
-            <div className="space-y-1.5">
               <label className="block text-sm font-medium text-slate-300">Link del Logo (URL de imagen)</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -346,20 +337,21 @@ export function ProfileEditForm({ profile, userEmail, isPro = false }: ProfileEd
           </div>
         )}
 
-        <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-slate-300">Teléfono</label>
-          <div className="relative">
-            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
-            <input
-              name="phone"
-              type="tel"
-              value={formData.phone}
-              onChange={handleProfileChange}
-              placeholder="+54 9 11 1234-5678"
-              className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
-            />
+          <div className="space-y-1.5">
+            <label className="block text-sm font-medium text-slate-300">Teléfono Personal/Administrativo</label>
+            <div className="relative">
+              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+              <input
+                name="phone"
+                type="tel"
+                value={formData.phone}
+                onChange={handleProfileChange}
+                placeholder="+54 9 11 1234-5678"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
+              />
+            </div>
+            <p className="text-xs text-slate-500 mt-1">Este número es privado para Lazoo. El teléfono público se configura en <b>Mis Sucursales</b>.</p>
           </div>
-        </div>
 
         {profile.role === 'merchant' && (
           <div className="space-y-1.5 pt-2 border-t border-white/5 relative">

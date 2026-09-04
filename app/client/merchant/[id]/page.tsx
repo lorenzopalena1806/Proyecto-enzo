@@ -236,65 +236,73 @@ export default async function MerchantProfilePage({ params }: { params: Promise<
         </div>
 
         {/* Detalles Rápidos */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-          <div className="glass-panel p-4 rounded-2xl flex items-start gap-3 sm:col-span-2">
-            <div className="p-2 bg-blue-500/10 rounded-xl text-blue-400 flex-shrink-0">
-              <MapPin className="w-5 h-5" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-xs text-slate-400 font-medium mb-2">Ubicaciones</p>
-              <div className="space-y-3">
-                {/* Sede Central (Perfil) */}
-                {merchant.address && (
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-white/5 pb-3 last:border-0 last:pb-0">
-                    <div>
-                      <span className="text-white text-sm font-bold block">Sede Central</span>
-                      <span className="text-slate-300 text-sm line-clamp-2">{merchant.address}</span>
+        <div className="mt-8">
+            <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <MapPin className="w-5 h-5 text-blue-400" />
+              Ubicaciones y Contacto
+            </h2>
+            <div className="space-y-4">
+              {allBranches.length === 0 && !merchant.address ? (
+                <div className="glass-panel rounded-3xl p-6 text-center">
+                  <p className="text-slate-400 text-sm">No hay información de ubicación disponible.</p>
+                </div>
+              ) : (
+                <>
+                  {/* Si el perfil tiene dirección antigua (Legacy), mostrarla como Local Principal temporalmente */}
+                  {merchant.address && allBranches.length === 0 && (
+                    <div className="glass-panel rounded-2xl p-4 border-l-2 border-l-blue-500">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div className="space-y-2">
+                          <span className="text-white font-bold block text-base">Local Principal</span>
+                          <span className="text-slate-300 text-sm block">{merchant.address}</span>
+                          
+                          {merchant.phone && (
+                            <div className="flex items-center gap-2 text-sm text-emerald-400 font-medium">
+                              <Phone className="w-4 h-4" />
+                              {merchant.phone}
+                            </div>
+                          )}
+                        </div>
+                        {merchant.latitude && merchant.longitude && (
+                          <a href={`https://www.google.com/maps/search/?api=1&query=${merchant.latitude},${merchant.longitude}`} target="_blank" rel="noreferrer" className="text-blue-400 text-xs font-bold inline-flex items-center gap-1 hover:text-blue-300 bg-blue-500/10 px-4 py-2 rounded-xl whitespace-nowrap self-start sm:self-auto border border-blue-500/20">
+                            Ver en mapa <Navigation className="w-4 h-4" />
+                          </a>
+                        )}
+                      </div>
                     </div>
-                    {merchant.maps_url ? (
-                      <a href={merchant.maps_url} target="_blank" rel="noreferrer" className="text-blue-400 text-xs font-bold inline-flex items-center gap-1 hover:text-blue-300 bg-blue-500/10 px-3 py-1.5 rounded-lg whitespace-nowrap self-start sm:self-auto">
-                        Ver en mapa <Navigation className="w-3 h-3" />
-                      </a>
-                    ) : (
-                      (merchant.latitude && merchant.longitude) && (
-                        <a href={`https://www.google.com/maps/search/?api=1&query=${merchant.latitude},${merchant.longitude}`} target="_blank" rel="noreferrer" className="text-blue-400 text-xs font-bold inline-flex items-center gap-1 hover:text-blue-300 bg-blue-500/10 px-3 py-1.5 rounded-lg whitespace-nowrap self-start sm:self-auto">
-                          Ver en mapa <Navigation className="w-3 h-3" />
-                        </a>
-                      )
-                    )}
-                  </div>
-                )}
-                
-                {/* Sucursales */}
-                {allBranches.map((branch: any) => (
-                  <div key={branch.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-white/5 pb-3 last:border-0 last:pb-0">
-                    <div>
-                      <span className="text-white text-sm font-bold block">{branch.name}</span>
-                      <span className="text-slate-300 text-sm line-clamp-2">{branch.address || 'Sin dirección específica'}</span>
+                  )}
+
+                  {/* Nuevas sucursales con teléfono propio */}
+                  {allBranches.map((branch: any) => (
+                    <div key={branch.id} className="glass-panel rounded-2xl p-4 border-l-2 border-l-violet-500">
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                        <div className="space-y-2">
+                          <span className="text-white font-bold block text-base">{branch.name}</span>
+                          {branch.address && (
+                            <span className="text-slate-300 text-sm flex items-start gap-1">
+                              <MapPin className="w-4 h-4 mt-0.5 text-slate-500 shrink-0" />
+                              {branch.address}
+                            </span>
+                          )}
+                          {branch.phone && (
+                            <a href={`https://wa.me/${branch.phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm text-emerald-400 font-medium bg-emerald-500/10 px-3 py-1.5 rounded-lg hover:bg-emerald-500/20 transition-colors">
+                              <Phone className="w-4 h-4" />
+                              {branch.phone}
+                            </a>
+                          )}
+                        </div>
+                        {branch.latitude && branch.longitude && (
+                          <a href={`https://www.google.com/maps/search/?api=1&query=${branch.latitude},${branch.longitude}`} target="_blank" rel="noreferrer" className="text-violet-400 text-xs font-bold inline-flex items-center gap-1 hover:text-violet-300 bg-violet-500/10 px-4 py-2 rounded-xl whitespace-nowrap self-start sm:self-auto border border-violet-500/20">
+                            Ir <Navigation className="w-4 h-4" />
+                          </a>
+                        )}
+                      </div>
                     </div>
-                    {branch.latitude && branch.longitude && (
-                      <a href={`https://www.google.com/maps/search/?api=1&query=${branch.latitude},${branch.longitude}`} target="_blank" rel="noreferrer" className="text-blue-400 text-xs font-bold inline-flex items-center gap-1 hover:text-blue-300 bg-blue-500/10 px-3 py-1.5 rounded-lg whitespace-nowrap self-start sm:self-auto">
-                        Ver en mapa <Navigation className="w-3 h-3" />
-                      </a>
-                    )}
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </>
+              )}
             </div>
           </div>
-
-          {merchant.phone && (
-            <div className="glass-panel p-4 rounded-2xl flex items-start gap-3">
-              <div className="p-2 bg-emerald-500/10 rounded-xl text-emerald-400 flex-shrink-0">
-                <Phone className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-xs text-slate-400 font-medium mb-0.5">Contacto</p>
-                <p className="text-white text-sm font-medium">{merchant.phone}</p>
-              </div>
-            </div>
-          )}
-        </div>
 
         {/* Promociones */}
         <div>

@@ -5,11 +5,16 @@ import { useRouter } from 'next/navigation';
 import { MapPin, Plus, Store, Trash2, X, Loader2, Edit2 } from 'lucide-react';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { createBranchAction, deleteBranchAction, updateBranchAction } from '@/app/actions/branches';
+import { BusinessHoursEditor } from './BusinessHoursEditor';
 
 interface Branch {
   id: string;
   name: string;
   address: string | null;
+  phone?: string | null;
+  business_hours?: string | null;
+  latitude: number;
+  longitude: number;
 }
 
 export function BranchManager({ branches, planType = 'basic' }: { branches: Branch[], planType?: string }) {
@@ -21,6 +26,7 @@ export function BranchManager({ branches, planType = 'basic' }: { branches: Bran
   const [lat, setLat] = useState<number | null>(null);
   const [lng, setLng] = useState<number | null>(null);
   const [mapsUrl, setMapsUrl] = useState('');
+  const [businessHours, setBusinessHours] = useState('');
   const [isExtractingMaps, setIsExtractingMaps] = useState(false);
   const [mapExtractMessage, setMapExtractMessage] = useState({ type: '', text: '' });
 
@@ -129,6 +135,10 @@ export function BranchManager({ branches, planType = 'basic' }: { branches: Bran
               return;
             }
             setEditingBranch(null);
+            setLat(null);
+            setLng(null);
+            setMapsUrl('');
+            setBusinessHours('');
             setIsModalOpen(true);
           }}
           className={`font-bold py-2 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95 ${
@@ -169,6 +179,9 @@ export function BranchManager({ branches, planType = 'basic' }: { branches: Bran
                   <button 
                     onClick={() => {
                       setEditingBranch(branch);
+                      setLat(branch.latitude);
+                      setLng(branch.longitude);
+                      setBusinessHours(branch.business_hours || '');
                       setIsModalOpen(true);
                     }}
                     className="p-2 text-slate-500 hover:text-violet-400 hover:bg-violet-400/10 rounded-lg transition-colors active:scale-95"

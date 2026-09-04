@@ -11,6 +11,8 @@ export async function createBranchAction(formData: FormData) {
 
   const name = formData.get('name') as string;
   const address = formData.get('address') as string;
+  const phone = formData.get('phone') as string;
+  const businessHours = formData.get('business_hours') as string;
   const latStr = formData.get('latitude') as string;
   const lngStr = formData.get('longitude') as string;
 
@@ -22,6 +24,8 @@ export async function createBranchAction(formData: FormData) {
     merchant_id: user.id,
     name,
     address,
+    phone: phone || null,
+    business_hours: businessHours || null,
     latitude: parseFloat(latStr),
     longitude: parseFloat(lngStr),
   });
@@ -54,6 +58,7 @@ export async function deleteBranchAction(branchId: string) {
   revalidatePath('/client/map');
   return { success: true };
 }
+
 export async function updateBranchAction(branchId: string, formData: FormData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -62,6 +67,8 @@ export async function updateBranchAction(branchId: string, formData: FormData) {
 
   const name = formData.get('name') as string;
   const address = formData.get('address') as string;
+  const phone = formData.get('phone') as string;
+  const businessHours = formData.get('business_hours') as string;
   const latStr = formData.get('latitude') as string;
   const lngStr = formData.get('longitude') as string;
 
@@ -69,7 +76,12 @@ export async function updateBranchAction(branchId: string, formData: FormData) {
     return { success: false, reason: 'El nombre es obligatorio' };
   }
 
-  const payload: any = { name, address };
+  const payload: any = { 
+    name, 
+    address: address || null,
+    phone: phone || null,
+    business_hours: businessHours || null
+  };
   if (latStr && lngStr) {
     payload.latitude = parseFloat(latStr);
     payload.longitude = parseFloat(lngStr);
