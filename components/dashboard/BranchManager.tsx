@@ -163,18 +163,32 @@ export function BranchManager({ branches, planType = 'basic' }: { branches: Bran
           <div className="divide-y divide-slate-800">
             {branches.map(branch => (
               <div key={branch.id} className="p-6 flex items-center justify-between hover:bg-slate-800/50 transition-colors">
-                <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center">
-                    <Store className="h-6 w-6 text-violet-400" />
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center shrink-0">
+                      <Store className="h-6 w-6 text-violet-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-bold">{branch.name}</h3>
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1">
+                        <p className="text-slate-400 text-sm flex items-center gap-1">
+                          <MapPin className="h-3 w-3" />
+                          {branch.address || 'Ubicación anclada'}
+                        </p>
+                        {branch.phone && (
+                          <p className="text-emerald-400 text-sm flex items-center gap-1">
+                            <span className="w-3 h-3 flex items-center justify-center">📞</span>
+                            {branch.phone}
+                          </p>
+                        )}
+                        {branch.business_hours && (
+                          <p className="text-blue-400 text-sm flex items-center gap-1">
+                            <span className="w-3 h-3 flex items-center justify-center">🕒</span>
+                            Horarios config.
+                          </p>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-white font-bold">{branch.name}</h3>
-                    <p className="text-slate-400 text-sm flex items-center gap-1 mt-0.5">
-                      <MapPin className="h-3 w-3" />
-                      {branch.address || 'Ubicación anclada'}
-                    </p>
-                  </div>
-                </div>
                 <div className="flex gap-2">
                   <button 
                     onClick={() => {
