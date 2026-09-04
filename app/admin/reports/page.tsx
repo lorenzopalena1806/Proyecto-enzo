@@ -1,6 +1,6 @@
 import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
-import { AlertOctagon, CheckCircle, Clock, Trash2, Store, User } from 'lucide-react';
+import { AlertOctagon, CheckCircle, Clock, Trash2, Store, User, Phone, Mail } from 'lucide-react';
 import { ReportStatusSelect } from './ReportStatusSelect';
 
 export const metadata = {
@@ -29,10 +29,14 @@ export default async function ReportsPage() {
     .from('reports')
     .select(`
       *,
-      client:profiles!client_id(full_name, business_name),
-      merchant:profiles!merchant_id(full_name, business_name)
+      client:profiles!client_id(full_name, business_name, phone),
+      merchant:profiles!merchant_id(full_name, business_name, phone)
     `)
     .order('created_at', { ascending: false });
+
+  // Fetch emails from Auth
+  const { data: authData } = await adminClient.auth.admin.listUsers();
+  const authUsers = authData?.users || [];
 
   const getReasonLabel = (reason: string) => {
     switch (reason) {
@@ -63,7 +67,11 @@ export default async function ReportsPage() {
           </div>
         ) : (
           <div className="divide-y divide-slate-800">
-            {reports.map((report: any) => (
+            {reports.map((report: any) => {
+              const clientAuth = authUsers.find(u => u.id === report.client_id);
+              const merchantAuth = authUsers.find(u => u.id === report.merchant_id);
+
+              return (
               <div key={report.id} className="p-5 flex flex-col md:flex-row md:items-start justify-between gap-4">
                 <div className="space-y-3 flex-1">
                   
@@ -81,20 +89,52 @@ export default async function ReportsPage() {
                   </div>
 
                   {/* Detalles */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                    <div className="flex flex-col gap-1">
-                      <span className="text-slate-500 flex items-center gap-1"><Store className="w-3 h-3"/> Comercio Denunciado</span>
-                      <span className="font-medium text-white">{report.merchant?.business_name || report.merchant?.full_name || 'Desconocido'}</span>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mt-4">
+                    {/* INFO COMERCIO */}
+                    <div className="flex flex-col gap-2 bg-slate-800/30 p-3 rounded-xl border border-slate-700/50">
+                      <div className="flex items-center gap-1 text-slate-400 font-semibold mb-1">
+                        <Store className="w-4 h-4"/> Comercio Denunciado
+                      </div>
+                      <div className="font-medium text-white text-base">
+                        {report.merchant?.business_name || report.merchant?.full_name || 'Desconocido'}
+                      </div>
+                      <div className="text-slate-300 flex items-center gap-2">
+                        <Mail className="w-3.5 h-3.5 text-slate-500" />
+                        {merchantAuth?.email || 'Sin correo'}
+                      </div>
+                      {report.merchant?.phone && (
+                        <div className="text-slate-300 flex items-center gap-2">
+                          <Phone className="w-3.5 h-3.5 text-slate-500" />
+                          {report.merchant.phone}
+                        </div>
+                      )}
                     </div>
-                    <div className="flex flex-col gap-1">
-                      <span className="text-slate-500 flex items-center gap-1"><User className="w-3 h-3"/> Denunciante</span>
-                      <span className="font-medium text-slate-300">{report.client?.business_name || report.client?.full_name || 'Desconocido'}</span>
+                    
+                    {/* INFO CLIENTE */}
+                    <div className="flex flex-col gap-2 bg-slate-800/30 p-3 rounded-xl border border-slate-700/50">
+                      <div className="flex items-center gap-1 text-slate-400 font-semibold mb-1">
+                        <User className="w-4 h-4"/> Cliente Denunciante
+                      </div>
+                      <div className="font-medium text-white text-base">
+                        {report.client?.full_name || report.client?.business_name || 'Desconocido'}
+                      </div>
+                      <div className="text-slate-300 flex items-center gap-2">
+                        <Mail className="w-3.5 h-3.5 text-slate-500" />
+                        {clientAuth?.email || 'Sin correo'}
+                      </div>
+                      {report.client?.phone && (
+                        <div className="text-slate-300 flex items-center gap-2">
+                          <Phone className="w-3.5 h-3.5 text-slate-500" />
+                          {report.client.phone}
+                        </div>
+                      )}
                     </div>
                   </div>
 
                   {/* Texto de detalles */}
                   {report.details && (
-                    <div className="bg-slate-950 p-3 rounded-xl border border-slate-800/50">
+                    <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 mt-2 relative">
+                      <div className="absolute top-0 left-0 w-1 h-full bg-red-500/50 rounded-l-xl"></div>
                       <p className="text-sm text-slate-300 italic">"{report.details}"</p>
                     </div>
                   )}
@@ -106,7 +146,7 @@ export default async function ReportsPage() {
                   <ReportStatusSelect reportId={report.id} initialStatus={report.status} />
                 </div>
               </div>
-            ))}
+            )})}
           </div>
         )}
       </div>
