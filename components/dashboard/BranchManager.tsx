@@ -2,10 +2,16 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { MapPin, Plus, Store, Trash2, X, Loader2, Edit2 } from 'lucide-react';
+import { MapPin, Plus, Store, Trash2, X, Loader2, Edit2, Navigation } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { createBranchAction, deleteBranchAction, updateBranchAction } from '@/app/actions/branches';
 import { BusinessHoursEditor } from './BusinessHoursEditor';
+
+const LocationPicker = dynamic(() => import('./LocationPicker'), {
+  ssr: false,
+  loading: () => <div className="h-64 w-full bg-slate-800 rounded-xl animate-pulse flex items-center justify-center text-slate-500">Cargando mapa...</div>
+});
 
 interface Branch {
   id: string;
@@ -302,8 +308,25 @@ export function BranchManager({ branches, planType = 'basic' }: { branches: Bran
                   className="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 py-3 rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2 border border-slate-700 mt-3"
                 >
                   <MapPin className="h-4 w-4" />
-                  {lat && lng ? '✅ Coordenadas Obtenidas' : 'Obtener mi ubicación actual'}
+                  {lat && lng ? '📍 Coordenadas Obtenidas' : 'Obtener mi ubicación actual'}
                 </button>
+
+                <div className="mt-4 border border-slate-800 rounded-xl overflow-hidden h-[250px] relative">
+                  <LocationPicker 
+                    initialLat={lat} 
+                    initialLng={lng} 
+                    onChange={(l, ln) => {
+                      setLat(l);
+                      setLng(ln);
+                    }} 
+                  />
+                  {!lat && !lng && (
+                    <div className="absolute inset-0 bg-slate-950/60 flex items-center justify-center pointer-events-none z-[400]">
+                      <p className="text-slate-300 text-sm font-medium">Buscá o hacé clic en el mapa</p>
+                    </div>
+                  )}
+                </div>
+
                 {lat && lng && (
                   <p className="text-xs text-emerald-400 mt-2 text-center">Lat: {lat.toFixed(4)}, Lng: {lng.toFixed(4)}</p>
                 )}
