@@ -80,10 +80,12 @@ export async function setMerchantPlanServer(merchantId: string, planAction: 'ina
     }
 
     revalidatePath('/admin/merchants');
+    revalidatePath('/admin/users');
+    revalidatePath(`/admin/users/${merchantId}`);
     return { success: true };
-  } catch (error) {
-    console.error('Error changing merchant plan:', error);
-    return { success: false, error: 'Error al actualizar suscripción' };
+  } catch (error: any) {
+    console.error('Error changing merchant plan:', error.message || error);
+    return { success: false, error: 'Error al actualizar suscripción: ' + (error.message || 'Desconocido') };
   }
 }
 
