@@ -4,7 +4,6 @@ import { createClient, createAdminClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import { Package } from 'lucide-react';
 import { ProfileEditForm } from '@/components/dashboard/ProfileEditForm';
-import { MaterialRequestButton } from '@/components/dashboard/MaterialRequestButton';
 import { PushManager } from '@/components/dashboard/PushManager';
 
 export default async function ProfilePage() {
@@ -35,16 +34,6 @@ export default async function ProfilePage() {
       {profile.role === 'merchant' && (
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg mb-8">
           <h2 className="text-white font-bold text-lg mb-2 flex items-center gap-2">
-            <Package className="w-5 h-5 text-amber-400" />
-            Material Físico (QR)
-          </h2>
-          <p className="text-sm text-slate-400 mb-6">
-            Para que los clientes puedan escanear tus ofertas, necesitás el cartel acrílico oficial de Lazoo en tu mostrador.
-          </p>
-          <MaterialRequestButton merchantId={user.id} status={profile.material_status || 'none'} />
-        </div>
-      )}
-
       <ProfileEditForm profile={profile} userEmail={user.email || ''} isPro={isPro} />
     </div>
   );

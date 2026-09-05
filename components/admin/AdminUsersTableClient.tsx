@@ -16,7 +16,6 @@ type EnrichedUser = {
   created_at: string;
   is_active: boolean;
   subscription_expires_at?: string;
-  material_status?: string;
   total_sales: number;
   total_scans: number;
 };
@@ -224,15 +223,6 @@ export default function AdminUsersTableClient({ initialUsers }: { initialUsers: 
                           <span className="inline-flex items-center gap-1 text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-slate-500/10 text-slate-400 border border-slate-500/20 whitespace-nowrap">Sin Pago</span>
                         )}
                         
-                        {/* Material Físico status */}
-                        {user.material_status === 'delivered' ? (
-                          <span className="inline-flex items-center gap-1 text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mt-0.5 whitespace-nowrap">QR OK</span>
-                        ) : user.material_status === 'requested' ? (
-                          <span className="inline-flex items-center gap-1 text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 mt-0.5 whitespace-nowrap">QR Pedido</span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-slate-500/10 text-slate-400 border border-slate-500/20 mt-0.5 whitespace-nowrap">Sin QR</span>
-                        )}
-                      </div>
                     ) : (
                       <span className="text-slate-500 text-[10px] italic">-</span>
                     )}

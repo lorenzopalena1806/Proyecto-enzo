@@ -5,7 +5,6 @@ import { Store, User, ArrowLeft, CheckCircle2, XCircle, Tag, Calendar, MapPin, S
 import Link from 'next/link';
 import { SuspendUserButton } from '@/components/admin/SuspendUserButton';
 import { SubscriptionManager } from '@/components/admin/SubscriptionManager';
-import { MaterialManager } from '@/components/admin/MaterialManager';
 import { ImpersonateButton } from '@/components/admin/ImpersonateButton';
 import { MerchantStatusDropdown } from '@/components/admin/MerchantStatusDropdown';
 import { DeleteUserButton } from '@/components/admin/DeleteUserButton';
@@ -187,7 +186,6 @@ export default async function AdminUserDetailsPage({ params }: { params: Promise
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <SubscriptionManager userId={profile.id} expiresAt={profile.subscription_expires_at} />
-            <MaterialManager userId={profile.id} currentStatus={profile.material_status} />
 
           </div>
 

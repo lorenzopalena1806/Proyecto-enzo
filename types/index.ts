@@ -23,7 +23,6 @@ export interface Profile {
   plan_type?: 'basic' | 'pro' | null;
   mp_subscription_status?: string | null;
   instagram?: string | null;
-  material_status?: 'none' | 'requested' | 'delivered';
   has_seen_tutorial?: boolean;
   is_premium?: boolean;
   is_active: boolean;

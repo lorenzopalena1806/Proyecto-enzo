@@ -3,7 +3,6 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { QrCode, ScanLine, ImageIcon, TrendingUp, ArrowRight, AlertTriangle, Star, ShieldCheck, Briefcase, Printer, Heart, Package, CheckCircle2 } from 'lucide-react';
 import { MerchantChart } from '@/components/dashboard/MerchantChart';
-import { MaterialRequestButton } from '@/components/dashboard/MaterialRequestButton';
 import { RestartTourButton } from '@/components/dashboard/RestartTourButton';
 
 import { cookies } from 'next/headers';
