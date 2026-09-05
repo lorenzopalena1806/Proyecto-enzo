@@ -228,105 +228,6 @@ export function EmployeeChargeGenerator({ merchantId, activeOffers = [] }: Emplo
   return (
     <div className="w-full max-w-lg mx-auto space-y-6 mt-4">
       
-      {/* ── ESTADO DEL CÓDIGO (Header Visual) ─────────────────────────────────────── */}
-      <div className="bg-blue-900/10 border border-blue-500/20 rounded-3xl p-6 flex flex-col items-center relative overflow-hidden">
-        {activeCharge && (
-          <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-blue-500/20 to-transparent pointer-events-none" />
-        )}
-
-        <div className="relative z-10 flex flex-col items-center w-full">
-          <div className={`relative mb-4 transition-all duration-500 ${activeCharge ? 'float-anim' : ''}`}>
-             <div className="h-14 w-14 bg-gradient-to-br from-blue-500 via-indigo-600 to-violet-700 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-900/50 border border-white/10 relative z-10">
-               <Store className="h-7 w-7 text-white" />
-             </div>
-             {activeCharge && (
-               <div className="absolute -inset-2 bg-blue-500/30 blur-xl rounded-full z-0 glow-pulse" />
-             )}
-          </div>
-          
-          <h2 className="text-lg font-black text-white text-center tracking-tight">QR Estático del Local</h2>
-          
-          {activeCharge ? (
-             <div className="flex items-center gap-1.5 mt-1 mb-2">
-              <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
-              <p className="text-emerald-400 text-xs font-bold uppercase tracking-widest">Código Habilitado</p>
-            </div>
-          ) : (
-             <div className="flex items-center gap-1.5 mt-1 mb-2">
-               <p className="text-slate-500 text-xs font-semibold uppercase tracking-widest">Esperando monto...</p>
-             </div>
-          )}
-
-          {activeCharge && (
-            <div className="w-full flex flex-col items-center mt-2">
-              <div className="mb-4 flex items-center gap-2.5 bg-blue-900/40 border border-blue-500/30 px-4 py-2 rounded-full shadow-inner">
-                <span className="w-2.5 h-2.5 rounded-full bg-blue-400 animate-pulse shadow-[0_0_10px_rgba(96,165,250,0.8)]" />
-                <span className="text-blue-200 text-sm font-bold tracking-wide">
-                  Vence en {formatTime(secondsLeft)}
-                </span>
-              </div>
-
-              <div className="w-full bg-black/20 border border-white/10 rounded-2xl p-4 space-y-3">
-                {activeCharge.offerTitle && (
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-slate-400 flex items-center gap-1.5"><Tag className="w-4 h-4" /> Oferta</span>
-                    <span className="text-indigo-300 font-semibold bg-indigo-500/10 px-2 py-0.5 rounded-md border border-indigo-500/20">{activeCharge.offerTitle}</span>
-                  </div>
-                )}
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-slate-400 flex items-center gap-1.5">
-                    {activeCharge.paymentMethod === 'cash' ? <Banknote className="w-4 h-4" /> : <ArrowLeftRight className="w-4 h-4" />}
-                    Método
-                  </span>
-                  <span className="text-white font-medium">{activeCharge.paymentMethod === 'cash' ? 'Efectivo' : 'Transferencia'}</span>
-                </div>
-                <div className="pt-3 border-t border-white/5 flex justify-between items-baseline mt-1">
-                  <span className="text-slate-300 font-medium">Monto Original</span>
-                  <span className="text-2xl font-black text-white tracking-tight">{formatARS(activeCharge.amount)}</span>
-                </div>
-              </div>
-
-              {/* Formulario de Código Manual */}
-              <form onSubmit={handleManualCodeSubmit} className="w-full mt-4 bg-slate-900/80 border border-slate-700 rounded-2xl p-4 shadow-lg">
-                <label className="block text-xs font-medium text-slate-400 mb-2 flex items-center gap-1.5">
-                  <Keyboard className="w-3.5 h-3.5" />
-                  ¿El cliente no puede escanear?
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    placeholder="Código (Ej: D8A1F2)"
-                    value={manualCode}
-                    onChange={(e) => setManualCode(e.target.value.toUpperCase())}
-                    maxLength={6}
-                    className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono uppercase focus:border-blue-500 focus:outline-none"
-                    disabled={manualCodeLoading}
-                  />
-                  <button
-                    type="submit"
-                    disabled={manualCodeLoading || manualCode.length < 6}
-                    className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-4 py-2 rounded-xl font-medium transition-colors"
-                  >
-                    {manualCodeLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Cobrar'}
-                  </button>
-                </div>
-                {manualCodeError && (
-                  <p className="text-red-400 text-xs mt-2">{manualCodeError}</p>
-                )}
-              </form>
-
-              <button
-                onClick={handleCancelCharge}
-                className="mt-6 flex items-center gap-2 text-sm text-red-400/80 hover:text-red-400 hover:bg-red-500/10 px-4 py-2 rounded-full transition-colors font-medium"
-              >
-                <X className="w-4 h-4" />
-                Cancelar
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-
       {/* ── FORMULARIO: PREPARAR COBRO ───────────────────────── */}
       {!activeCharge && (
         <div className="bg-slate-800/40 border border-slate-700/50 rounded-3xl p-6 space-y-5">
@@ -426,7 +327,108 @@ export function EmployeeChargeGenerator({ merchantId, activeOffers = [] }: Emplo
               <><QrCode className="w-6 h-6" /> Habilitar Código</>
             )}
           </button>
+        
+
+      {/* ── ESTADO DEL CÓDIGO (Header Visual) ─────────────────────────────────────── */}
+      <div className="bg-blue-900/10 border border-blue-500/20 rounded-3xl p-6 flex flex-col items-center relative overflow-hidden">
+        {activeCharge && (
+          <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-blue-500/20 to-transparent pointer-events-none" />
+        )}
+
+        <div className="relative z-10 flex flex-col items-center w-full">
+          <div className={`relative mb-4 transition-all duration-500 ${activeCharge ? 'float-anim' : ''}`}>
+             <div className="h-14 w-14 bg-gradient-to-br from-blue-500 via-indigo-600 to-violet-700 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-900/50 border border-white/10 relative z-10">
+               <Store className="h-7 w-7 text-white" />
+             </div>
+             {activeCharge && (
+               <div className="absolute -inset-2 bg-blue-500/30 blur-xl rounded-full z-0 glow-pulse" />
+             )}
+          </div>
+          
+          <h2 className="text-lg font-black text-white text-center tracking-tight">QR Estático del Local</h2>
+          
+          {activeCharge ? (
+             <div className="flex items-center gap-1.5 mt-1 mb-2">
+              <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
+              <p className="text-emerald-400 text-xs font-bold uppercase tracking-widest">Código Habilitado</p>
+            </div>
+          ) : (
+             <div className="flex items-center gap-1.5 mt-1 mb-2">
+               <p className="text-slate-500 text-xs font-semibold uppercase tracking-widest">Esperando monto...</p>
+             </div>
+          )}
+
+          {activeCharge && (
+            <div className="w-full flex flex-col items-center mt-2">
+              <div className="mb-4 flex items-center gap-2.5 bg-blue-900/40 border border-blue-500/30 px-4 py-2 rounded-full shadow-inner">
+                <span className="w-2.5 h-2.5 rounded-full bg-blue-400 animate-pulse shadow-[0_0_10px_rgba(96,165,250,0.8)]" />
+                <span className="text-blue-200 text-sm font-bold tracking-wide">
+                  Vence en {formatTime(secondsLeft)}
+                </span>
+              </div>
+
+              <div className="w-full bg-black/20 border border-white/10 rounded-2xl p-4 space-y-3">
+                {activeCharge.offerTitle && (
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-slate-400 flex items-center gap-1.5"><Tag className="w-4 h-4" /> Oferta</span>
+                    <span className="text-indigo-300 font-semibold bg-indigo-500/10 px-2 py-0.5 rounded-md border border-indigo-500/20">{activeCharge.offerTitle}</span>
+                  </div>
+                )}
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-slate-400 flex items-center gap-1.5">
+                    {activeCharge.paymentMethod === 'cash' ? <Banknote className="w-4 h-4" /> : <ArrowLeftRight className="w-4 h-4" />}
+                    Método
+                  </span>
+                  <span className="text-white font-medium">{activeCharge.paymentMethod === 'cash' ? 'Efectivo' : 'Transferencia'}</span>
+                </div>
+                <div className="pt-3 border-t border-white/5 flex justify-between items-baseline mt-1">
+                  <span className="text-slate-300 font-medium">Monto Original</span>
+                  <span className="text-2xl font-black text-white tracking-tight">{formatARS(activeCharge.amount)}</span>
+                </div>
+              </div>
+
+              {/* Formulario de Código Manual */}
+              <form onSubmit={handleManualCodeSubmit} className="w-full mt-4 bg-slate-900/80 border border-slate-700 rounded-2xl p-4 shadow-lg">
+                <label className="block text-xs font-medium text-slate-400 mb-2 flex items-center gap-1.5">
+                  <Keyboard className="w-3.5 h-3.5" />
+                  ¿El cliente no puede escanear?
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Código (Ej: D8A1F2)"
+                    value={manualCode}
+                    onChange={(e) => setManualCode(e.target.value.toUpperCase())}
+                    maxLength={6}
+                    className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono uppercase focus:border-blue-500 focus:outline-none"
+                    disabled={manualCodeLoading}
+                  />
+                  <button
+                    type="submit"
+                    disabled={manualCodeLoading || manualCode.length < 6}
+                    className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-4 py-2 rounded-xl font-medium transition-colors"
+                  >
+                    {manualCodeLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Cobrar'}
+                  </button>
+                </div>
+                {manualCodeError && (
+                  <p className="text-red-400 text-xs mt-2">{manualCodeError}</p>
+                )}
+              </form>
+
+              <button
+                onClick={handleCancelCharge}
+                className="mt-6 flex items-center gap-2 text-sm text-red-400/80 hover:text-red-400 hover:bg-red-500/10 px-4 py-2 rounded-full transition-colors font-medium"
+              >
+                <X className="w-4 h-4" />
+                Cancelar
+              </button>
+            </div>
+          )}
         </div>
+      </div>
+
+      </div>
       )}
 
     </div>
