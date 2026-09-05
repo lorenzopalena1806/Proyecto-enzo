@@ -47,7 +47,7 @@ export function OnboardingTour() {
       popoverClass: 'driver-theme-lazoo',
       onHighlightStarted: (element) => {
         if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          element.scrollIntoView({ behavior: 'auto', block: 'center' });
         }
       },
       onDestroyStarted: () => {
