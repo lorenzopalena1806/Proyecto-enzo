@@ -4,6 +4,8 @@ import { Users, Store, TrendingUp, DollarSign, Activity, AlertCircle, ArrowUpRig
 import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
 
 export default async function AdminDashboard() {
   const adminClient = createAdminClient();
@@ -89,7 +91,7 @@ export default async function AdminDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden">
              <div className="absolute top-0 right-0 p-4 opacity-10"><Store className="h-16 w-16" /></div>
-             <p className="text-sm font-semibold text-slate-400 mb-1">Total Comercios</p>
+             <p className="text-sm font-semibold text-slate-400 mb-1">Comercios (Activos e Inactivos)</p>
              <p className="text-3xl font-black text-white">{merchants.length}</p>
           </div>
           <div className="bg-gradient-to-br from-indigo-900/50 to-slate-900 border border-indigo-500/20 rounded-2xl p-5 shadow-lg relative overflow-hidden">
