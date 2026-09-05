@@ -64,8 +64,8 @@ export function OnboardingTour() {
         {
           element: getSelector('#tour-profile'),
           popover: {
-            title: 'Tu Perfil Comercial 📝',
-            description: 'Completá los datos de tu local, teléfono y ubicación. Si sos PRO, ¡también podés vincular tu Instagram para ganar seguidores con cada venta!',
+            title: 'Tu Perfil y Marca 📝',
+            description: 'Configurá el nombre, rubro y logo de tu negocio. Si tenés el Plan PRO, ¡también podés vincular tu Instagram para sumar seguidores!',
             side: 'right',
             align: 'start'
           }
@@ -73,8 +73,8 @@ export function OnboardingTour() {
         {
           element: getSelector('#tour-branches'),
           popover: {
-            title: 'Tus Sucursales 🏢',
-            description: '¿Tenés más de un local? Con el Plan PRO podés agregar todas tus sucursales acá y centralizar el control en una misma cuenta.',
+            title: 'Tus Locales / Sucursales 🏢',
+            description: 'Acá cargás la dirección, horarios, mapa y WhatsApp de tu local para que los clientes te visiten. Si sos PRO, podés agregar múltiples sucursales.',
             side: 'right',
             align: 'start'
           }
