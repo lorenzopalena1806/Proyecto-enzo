@@ -367,18 +367,7 @@ export function ChargeGenerator({ merchantId, activeOffers = [] }: ChargeGenerat
             )}
           </div>
 
-          <div className="bg-white p-4 rounded-2xl shadow-xl shadow-violet-900/20">
-            <QRCodeSVG value={qrUrl} size={250} level="M" />
-          </div>
-
-          <div className="flex items-center gap-2 text-violet-400">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            <span className="text-sm font-medium">Esperando confirmación del cliente...</span>
-          </div>
-
-          <div className="w-full h-px bg-slate-700 my-2"></div>
-
-          <div className="w-full space-y-3">
+          <div className="w-full space-y-3 mt-2">
             <p className="text-sm text-slate-400 text-center flex justify-center items-center gap-2">
               <Keyboard className="h-4 w-4" />
               ¿El cliente no puede escanear? Ingresá su código:
@@ -401,6 +390,21 @@ export function ChargeGenerator({ merchantId, activeOffers = [] }: ChargeGenerat
               </button>
             </div>
             {errorMessage && <p className="text-red-400 text-xs text-center">{errorMessage}</p>}
+          </div>
+
+          <div className="w-full flex items-center gap-4 my-2">
+            <div className="h-px bg-slate-700 flex-1"></div>
+            <span className="text-xs text-slate-500 uppercase tracking-widest font-semibold">O también</span>
+            <div className="h-px bg-slate-700 flex-1"></div>
+          </div>
+
+          <div className="bg-white p-4 rounded-2xl shadow-xl shadow-violet-900/20">
+            <QRCodeSVG value={qrUrl} size={250} level="M" />
+          </div>
+
+          <div className="flex items-center gap-2 text-violet-400">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span className="text-sm font-medium">Esperando confirmación del cliente...</span>
           </div>
 
           <button
