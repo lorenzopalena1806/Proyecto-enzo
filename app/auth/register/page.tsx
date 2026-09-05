@@ -33,6 +33,11 @@ export default function RegisterPage() {
     e.preventDefault();
     setError('');
 
+    if (formData.role === 'merchant' && !formData.phone.trim()) {
+      setError('El teléfono personal es obligatorio para comerciantes.');
+      return;
+    }
+
     if (!acceptTerms) {
       setError('Debés aceptar los términos y condiciones para crear tu cuenta.');
       return;
