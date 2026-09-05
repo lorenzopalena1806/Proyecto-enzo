@@ -157,7 +157,7 @@ export function OnboardingTour() {
           }
         },
         {
-          element: getSelector('#tour-inicio'),
+          element: getSelector('#tour-support'),
           popover: {
             title: 'Nunca estás solo 💬',
             description: '¿Tenés alguna duda o querés sugerir algo? Usá siempre el botón flotante de Soporte para hablar directo con el equipo de Lazoo. ¡Éxitos!',

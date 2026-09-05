@@ -268,6 +268,7 @@ export function Sidebar({ profile, branches = [], activeBranchId = null }: Sideb
       {/* Logout */}
       <div className="px-3 pb-4 border-t border-slate-800 pt-4 space-y-2">
         <a
+          id={isMobile ? 'tour-support-mobile' : 'tour-support'}
           href="https://wa.me/5493512388658"
           target="_blank"
           rel="noopener noreferrer"
