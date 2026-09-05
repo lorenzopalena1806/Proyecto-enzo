@@ -38,6 +38,11 @@ export function OffersTour() {
       doneBtnText: 'Listo!',
       progressText: '{{current}} de {{total}}',
       popoverClass: 'driver-theme-lazoo',
+      onHighlightStarted: (element) => {
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      },
       onDestroyStarted: () => {
         if (!tourDriver.hasNextStep() || confirm('Seguro que querés salir del tutorial de ofertas?')) {
           localStorage.setItem('lazoo_offers_tour_completed', 'true');

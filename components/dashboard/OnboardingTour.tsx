@@ -45,6 +45,11 @@ export function OnboardingTour() {
       doneBtnText: '¡Listo!',
       progressText: '{{current}} de {{total}}',
       popoverClass: 'driver-theme-lazoo',
+      onHighlightStarted: (element) => {
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      },
       onDestroyStarted: () => {
         if (!tourDriver.hasNextStep() || confirm("¿Seguro que querés salir del tutorial?")) {
           localStorage.setItem('lazoo_tour_completed', 'true');
