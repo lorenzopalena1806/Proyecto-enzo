@@ -31,9 +31,6 @@ export default async function ProfilePage() {
 
       <PushManager />
 
-      {profile.role === 'merchant' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg mb-8">
-          <h2 className="text-white font-bold text-lg mb-2 flex items-center gap-2">
       <ProfileEditForm profile={profile} userEmail={user.email || ''} isPro={isPro} />
     </div>
   );

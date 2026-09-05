@@ -222,7 +222,7 @@ export default function AdminUsersTableClient({ initialUsers }: { initialUsers: 
                         ) : (
                           <span className="inline-flex items-center gap-1 text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-slate-500/10 text-slate-400 border border-slate-500/20 whitespace-nowrap">Sin Pago</span>
                         )}
-                        
+                      </div>
                     ) : (
                       <span className="text-slate-500 text-[10px] italic">-</span>
                     )}
