@@ -20,7 +20,6 @@ import {
   Tag,
   History,
   Megaphone,
-  Calculator,
   Filter,
   Printer,
   Wallet,
@@ -150,12 +149,7 @@ const ADMIN_NAV_ITEMS = [
     icon: Wallet,
     exact: false,
   },
-  {
-    href: '/admin/simulator',
-    label: 'Simulador de Ingresos',
-    icon: Calculator,
-    exact: false,
-  },
+
   {
     href: '/admin/settings',
     label: 'Configuración',
