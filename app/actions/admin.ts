@@ -118,28 +118,31 @@ export async function createMarketingAssetServer(data: { merchant_id: string, ti
   }
 }
 
-export async function deleteMerchantServer(merchantId: string) {
+export async function deleteUserServer(userId: string) {
   try {
     const adminClient = await requireSuperAdmin();
     
     // 1. Eliminar dependencias para evitar errores de Foreign Key (si no tienen ON DELETE CASCADE)
-    await adminClient.from('subscriptions').delete().eq('merchant_id', merchantId);
-    await adminClient.from('merchant_offers').delete().eq('merchant_id', merchantId);
-    await adminClient.from('marketing_assets').delete().eq('merchant_id', merchantId);
-    await adminClient.from('qr_codes').delete().eq('user_id', merchantId);
-    await adminClient.from('discount_transactions').delete().eq('scanner_id', merchantId);
+    await adminClient.from('merchant_offers').delete().eq('merchant_id', userId);
+    await adminClient.from('marketing_assets').delete().eq('merchant_id', userId);
+    await adminClient.from('qr_codes').delete().eq('user_id', userId);
+    await adminClient.from('discount_transactions').delete().eq('scanner_id', userId);
+    await adminClient.from('discount_transactions').delete().eq('scanned_user_id', userId);
+    await adminClient.from('favorites').delete().eq('user_id', userId);
+    await adminClient.from('favorites').delete().eq('merchant_id', userId);
+    await adminClient.from('merchant_branches').delete().eq('merchant_id', userId);
     
     // 2. Eliminar el perfil público
-    await adminClient.from('profiles').delete().eq('id', merchantId);
+    await adminClient.from('profiles').delete().eq('id', userId);
     
-    // 3. Supabase admin method to delete a user de auth.users
-    const { error } = await adminClient.auth.admin.deleteUser(merchantId);
+    // 3. Supabase admin method to delete user de auth.users
+    const { error } = await adminClient.auth.admin.deleteUser(userId);
     
     if (error) throw error;
     
     return { success: true };
   } catch (error: any) {
-    console.error('Error deleting merchant:', error.message || error);
+    console.error('Error deleting user:', error.message || error);
     return { success: false, error: error.message || 'Error desconocido' };
   }
 }

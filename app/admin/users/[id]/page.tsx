@@ -8,6 +8,7 @@ import { SubscriptionManager } from '@/components/admin/SubscriptionManager';
 import { MaterialManager } from '@/components/admin/MaterialManager';
 import { ImpersonateButton } from '@/components/admin/ImpersonateButton';
 import { MerchantStatusDropdown } from '@/components/admin/MerchantStatusDropdown';
+import { DeleteUserButton } from '@/components/admin/DeleteUserButton';
 
 
 export const dynamic = 'force-dynamic';
@@ -106,6 +107,11 @@ export default async function AdminUserDetailsPage({ params }: { params: Promise
                 merchantName={profile.business_name || profile.full_name || 'Comercio'} 
               />
             )}
+            
+            <DeleteUserButton 
+              userId={profile.id} 
+              userName={profile.business_name || profile.full_name || 'Usuario'} 
+            />
           </div>
         </div>
       </div>
