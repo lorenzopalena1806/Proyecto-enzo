@@ -248,26 +248,34 @@ export default function RegisterPage() {
             )}
 
             {/* Email */}
-            <InputField
-              id="reg-email"
-              name="email"
-              label="Email"
-              type="email"
-              placeholder="tu@email.com"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
+            <div className="space-y-1">
+              <InputField
+                id="reg-email"
+                name="email"
+                label="Email"
+                type="email"
+                placeholder="tu@email.com"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+              {formData.role === 'merchant' && (
+                <p className="text-[12px] text-amber-400 font-medium px-1 pt-1 leading-tight">
+                  * Debe ser el mismo correo que usás en MercadoPago para poder procesar tus cobros.
+                </p>
+              )}
+            </div>
 
             {/* Teléfono */}
             <InputField
               id="phone"
               name="phone"
-              label="Teléfono (opcional)"
+              label={formData.role === 'merchant' ? 'Teléfono personal del dueño' : 'Teléfono (opcional)'}
               type="tel"
               placeholder="+54 9 11 1234 5678"
               value={formData.phone}
               onChange={handleChange}
+              required={formData.role === 'merchant'}
             />
 
             {/* Contraseña */}
