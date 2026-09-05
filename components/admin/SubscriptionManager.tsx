@@ -46,23 +46,23 @@ export function SubscriptionManager({ userId, expiresAt }: SubscriptionManagerPr
         Gestor de Suscripción (Cobro a Locales)
       </h2>
       
-      <div className="flex flex-col sm:flex-row items-end gap-4">
-        <div className="w-full sm:w-auto">
-          <label className="block text-sm font-medium text-slate-300 mb-2">Fecha de Vencimiento</label>
+      <div className="flex flex-col gap-2 mb-4">
+        <label className="block text-sm font-medium text-slate-300">Fecha de Vencimiento</label>
+        <div className="flex items-center gap-3">
           <input
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
             className="w-full sm:w-[200px] bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-violet-500"
           />
+          <button
+            onClick={handleSave}
+            disabled={loading}
+            className="px-5 py-2.5 bg-violet-600 hover:bg-violet-700 text-white font-medium rounded-xl transition-colors disabled:opacity-50 flex items-center justify-center whitespace-nowrap"
+          >
+            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Guardar Fecha'}
+          </button>
         </div>
-        <button
-          onClick={handleSave}
-          disabled={loading}
-          className="w-full sm:w-auto px-6 py-2.5 bg-violet-600 hover:bg-violet-700 text-white font-medium rounded-xl transition-colors disabled:opacity-50 flex items-center justify-center min-w-[120px]"
-        >
-          {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Guardar Fecha'}
-        </button>
       </div>
 
       {success && (

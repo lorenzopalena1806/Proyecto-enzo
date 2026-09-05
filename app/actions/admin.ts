@@ -79,7 +79,7 @@ export async function setMerchantPlanServer(merchantId: string, planAction: 'ina
       if (error) throw error;
     }
 
-    revalidatePath('/admin/merchants');
+    
     revalidatePath('/admin/users');
     revalidatePath(`/admin/users/${merchantId}`);
     return { success: true };
@@ -200,7 +200,7 @@ export async function toggleMerchantFeatured(merchantId: string, isFeatured: boo
       .eq('id', merchantId);
 
     if (error) throw error;
-    revalidatePath('/admin/merchants');
+    
     return { success: true };
   } catch (error: any) {
     return { success: false, error: error.message };

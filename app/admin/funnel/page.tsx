@@ -102,7 +102,7 @@ export default async function FunnelPage() {
                       <p className="text-white font-medium text-sm">{m.full_name || 'Sin Nombre'}</p>
                       <p className="text-slate-500 text-xs">Falta completar datos del local</p>
                     </div>
-                    <Link href={`/admin/merchants?highlight=${m.id}`} className="text-xs text-blue-400 hover:text-blue-300">
+                    <Link href={`/admin/users/${m.id}`} className="text-xs text-blue-400 hover:text-blue-300">
                       Ver detalle
                     </Link>
                   </li>
@@ -132,7 +132,7 @@ export default async function FunnelPage() {
                       <p className="text-white font-medium text-sm">{m.business_name || m.full_name}</p>
                       <p className="text-slate-500 text-xs">Aprobado, pero sin promociones activas</p>
                     </div>
-                    <Link href={`/admin/merchants?highlight=${m.id}`} className="text-xs text-blue-400 hover:text-blue-300">
+                    <Link href={`/admin/users/${m.id}`} className="text-xs text-blue-400 hover:text-blue-300">
                       Contactar
                     </Link>
                   </li>
