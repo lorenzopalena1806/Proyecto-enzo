@@ -20,9 +20,9 @@ export default async function AdminDashboard() {
   const merchants = allProfiles.filter(p => p.role === 'merchant');
   const clientsCount = allProfiles.filter(p => p.role === 'client').length;
   
-  const planBaseCount = merchants.filter(p => p.is_active && p.plan_type === 'basic').length;
   const planProCount = merchants.filter(p => p.is_active && p.plan_type === 'pro').length;
-  const inactiveCount = merchants.filter(p => !p.is_active).length;
+  const planBaseCount = merchants.filter(p => p.is_active).length - planProCount;
+  const inactiveCount = merchants.length - (planBaseCount + planProCount);
 
   // 2. Fetch transactions
   const { data: transactions } = await adminClient
