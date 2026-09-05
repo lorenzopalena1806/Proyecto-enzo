@@ -43,42 +43,6 @@ export default async function SuscripcionesPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-        {/* PLAN BÁSICO */}
-        <div className="glass-panel rounded-3xl p-8 relative border-slate-800 flex flex-col h-full">
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
-              <Zap className="w-6 h-6 text-blue-400" /> Plan Básico
-            </h2>
-            <p className="text-slate-400 text-sm">Ideal para comercios que recién empiezan en la red.</p>
-          </div>
-          
-          <div className="mb-8">
-            <div className="flex items-end gap-1">
-              <span className="text-5xl font-black text-white">{formatPrice(basicPrice)}</span>
-              <span className="text-slate-400 mb-1">/mes</span>
-            </div>
-            <p className="text-xs text-slate-500 mt-2">* Alta inicial por única vez: $80.000 (Incluye 1er mes y Kit Físico)</p>
-          </div>
-
-          <div className="space-y-4 flex-grow mb-8">
-            <Feature included text="Panel de control para tu comercio" />
-            <Feature included text="Cobros mediante código QR interactivo" />
-            <Feature included text="Estadísticas básicas de ventas" />
-            <Feature included text="Gestión de 1 sucursal" />
-            <Feature included text="Kit de Bienvenida físico (Stickers, Carteles)" />
-            <Feature included={false} text="Reportes avanzados de clientela" />
-            <Feature included={false} text="Gestión de cajeros y empleados" />
-          </div>
-
-          {profile.plan_type === 'basic' && profile.mp_subscription_status === 'authorized' ? (
-            <div className="w-full py-4 rounded-xl font-bold text-center bg-blue-500/20 text-blue-400 border border-blue-500/30">
-              Plan Actual Activo
-            </div>
-          ) : (
-            <ProSubscriptionButtons type="basic" userId={user.id} />
-          )}
-        </div>
-
         {/* PLAN PRO */}
         <div className="glass-panel rounded-3xl p-8 relative border-amber-500/30 shadow-[0_0_50px_-12px_rgba(245,158,11,0.15)] flex flex-col h-full overflow-hidden">
           <div className="absolute top-0 right-0 bg-amber-500 text-slate-900 text-xs font-black px-4 py-1.5 rounded-bl-xl uppercase tracking-wider">
@@ -117,7 +81,43 @@ export default async function SuscripcionesPage() {
             <ProSubscriptionButtons type="pro" userId={user.id} />
           )}
         </div>
-      </div>
+        {/* PLAN BÁSICO */}
+        <div className="glass-panel rounded-3xl p-8 relative border-slate-800 flex flex-col h-full">
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
+              <Zap className="w-6 h-6 text-blue-400" /> Plan Básico
+            </h2>
+            <p className="text-slate-400 text-sm">Ideal para comercios que recién empiezan en la red.</p>
+          </div>
+          
+          <div className="mb-8">
+            <div className="flex items-end gap-1">
+              <span className="text-5xl font-black text-white">{formatPrice(basicPrice)}</span>
+              <span className="text-slate-400 mb-1">/mes</span>
+            </div>
+            <p className="text-xs text-slate-500 mt-2">* Alta inicial por única vez: $80.000 (Incluye 1er mes y Kit Físico)</p>
+          </div>
+
+          <div className="space-y-4 flex-grow mb-8">
+            <Feature included text="Panel de control para tu comercio" />
+            <Feature included text="Cobros mediante código QR interactivo" />
+            <Feature included text="Estadísticas básicas de ventas" />
+            <Feature included text="Gestión de 1 sucursal" />
+            <Feature included text="Kit de Bienvenida físico (Stickers, Carteles)" />
+            <Feature included={false} text="Reportes avanzados de clientela" />
+            <Feature included={false} text="Gestión de cajeros y empleados" />
+          </div>
+
+          {profile.plan_type === 'basic' && profile.mp_subscription_status === 'authorized' ? (
+            <div className="w-full py-4 rounded-xl font-bold text-center bg-blue-500/20 text-blue-400 border border-blue-500/30">
+              Plan Actual Activo
+            </div>
+          ) : (
+            <ProSubscriptionButtons type="basic" userId={user.id} />
+          )}
+        </div>
+
+              </div>
     </div>
   );
 }
