@@ -64,17 +64,8 @@ export function OnboardingTour() {
         {
           element: getSelector('#tour-profile'),
           popover: {
-            title: 'Tu Carta de Presentación 📝',
-            description: 'Completá bien el nombre de tu local, logo y link de Google Maps para que la app te recomiende a los clientes.',
-            side: 'right',
-            align: 'start'
-          }
-        },
-        {
-          element: getSelector('#tour-profile'),
-          popover: {
-            title: 'Tus Redes Sociales (PRO) 📱',
-            description: 'Acá también podés vincular tu Instagram para que todos los clientes que escaneen tu QR se conviertan automáticamente en nuevos seguidores.',
+            title: 'Tu Perfil Comercial 📝',
+            description: 'Completá los datos de tu local, teléfono y ubicación. Si sos PRO, ¡también podés vincular tu Instagram para ganar seguidores con cada venta!',
             side: 'right',
             align: 'start'
           }
@@ -83,7 +74,7 @@ export function OnboardingTour() {
           element: getSelector('#tour-branches'),
           popover: {
             title: 'Tus Sucursales 🏢',
-            description: 'Si tenés más de un local, podés agregar tus otras sucursales acá y centralizar todas las ventas en una misma cuenta (Exclusivo PRO).',
+            description: '¿Tenés más de un local? Con el Plan PRO podés agregar todas tus sucursales acá y centralizar el control en una misma cuenta.',
             side: 'right',
             align: 'start'
           }
