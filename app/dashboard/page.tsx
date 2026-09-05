@@ -57,7 +57,6 @@ export default async function DashboardPage() {
 
   const today = new Date();
   const dayOfWeek = today.getDay();
-  const isDiscountDay = dayOfWeek >= 1 && dayOfWeek <= 4;
 
   let averageRating = 0;
   let totalRatings = 0;
@@ -82,22 +81,6 @@ export default async function DashboardPage() {
           </p>
         </div>
         <RestartTourButton />
-      </div>
-
-      {/* Alerta de día */}
-      <div className={`
-        flex items-center gap-3 rounded-xl p-4 border mb-4
-        ${isDiscountDay
-          ? 'bg-emerald-950/40 border-emerald-800 text-emerald-300'
-          : 'bg-amber-950/40 border-amber-800 text-amber-300'
-        }
-      `}>
-        <AlertTriangle className={`h-5 w-5 flex-shrink-0 ${isDiscountDay ? 'text-emerald-400' : 'text-amber-400'}`} />
-        <p className="text-sm font-medium">
-          {isDiscountDay
-            ? '✅ Hoy los descuentos están ACTIVOS. ¡Podés escanear QRs!'
-            : '⚠️ Hoy los descuentos están INACTIVOS (solo Lunes a Jueves).'}
-        </p>
       </div>
 
       {/* Alerta de Suscripción */}
