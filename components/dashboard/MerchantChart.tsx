@@ -23,8 +23,7 @@ export function MerchantChart({ data }: { data: any[] }) {
             contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', borderRadius: '0.5rem', color: '#f8fafc' }}
           />
           <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
-          <Bar dataKey="nuevos" name="Nuevos Clientes" stackId="a" fill="#3b82f6" radius={[0, 0, 4, 4]} />
-          <Bar dataKey="recurrentes" name="Clientes Frecuentes" stackId="a" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="clientes" name="Clientes" fill="#3b82f6" radius={[4, 4, 4, 4]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

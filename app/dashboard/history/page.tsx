@@ -71,23 +71,9 @@ export default async function MerchantHistoryPage() {
       return txDate.getDate() === d.getDate() && txDate.getMonth() === d.getMonth();
     });
     
-    const userScans = new Set();
-    let nuevos = 0;
-    let recurrentes = 0;
-    
-    txsForDay.forEach((tx: any) => {
-      if (userScans.has(tx.scanned_user_id)) {
-        recurrentes++;
-      } else {
-        nuevos++;
-        userScans.add(tx.scanned_user_id);
-      }
-    });
-    
     chartData.push({
       day: formatDay(d),
-      nuevos,
-      recurrentes
+      clientes: txsForDay.length
     });
   }
 
