@@ -11,6 +11,13 @@ import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
+export const metadata = {
+  alternates: {
+    canonical: 'https://lazoo.com.ar',
+  },
+};
+
+
 export default async function Home() {
   const supabase = await createClient();
   const adminClient = createAdminClient();

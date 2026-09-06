@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/dashboard/', '/admin/', '/api/', '/suspended/', '/subscription-required/'],
+      disallow: ['/dashboard/', '/admin/', '/api/', '/suspended/', '/subscription-required/', '/auth/'],
     },
     sitemap: 'https://lazoo.com.ar/sitemap.xml',
   };
