@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { DiscoverSection } from '@/components/client/DiscoverSection';
 
 export const metadata = {
-  title: 'Comprar (B2B) | Lazoo',
+  title: 'Comprar | Lazoo',
 };
 
 export default async function QRPage() {
@@ -99,7 +99,7 @@ export default async function QRPage() {
         <div className="absolute bottom-0 left-0 w-[50%] h-[50%] rounded-full bg-fuchsia-600/10 blur-[100px]" />
       </div>
 
-      <div className="b2b-bg relative z-10 flex-1 p-6 space-y-8 w-full">
+      <div className="b2b-bg relative z-10 flex-1 p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 w-full">
         
         {/* Welcome Section */}
         <section className="space-y-4 text-center">
@@ -114,7 +114,7 @@ export default async function QRPage() {
               Red B2B de Lazoo
             </div>
           )}
-          <h1 className="text-3xl font-black text-white tracking-tight">Comprar como Local</h1>
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">Comprar como Local</h1>
           <p className="text-slate-400 text-sm max-w-sm mx-auto leading-relaxed">
             Escaneá el QR del comercio al que estás visitando y accedé a descuentos exclusivos entre colegas.
           </p>

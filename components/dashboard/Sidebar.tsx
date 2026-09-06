@@ -74,7 +74,7 @@ const MERCHANT_NAV_ITEMS = [
   },
   {
     href: '/dashboard/qr',
-    label: 'Comprar / B2B',
+    label: 'Comprar',
     icon: QrCode,
     exact: false,
     id: 'tour-b2b',
