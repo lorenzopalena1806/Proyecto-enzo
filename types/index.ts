@@ -14,6 +14,7 @@ export interface Profile {
   business_name: string | null; // Solo para merchants
   phone: string | null;
   avatar_url: string | null;
+  banner_url: string | null; // Banner para el perfil del comercio
   maps_url: string | null;
   latitude: number | null;
   longitude: number | null;
