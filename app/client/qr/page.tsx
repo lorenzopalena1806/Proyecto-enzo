@@ -8,6 +8,7 @@ import { User, Sparkles, Clock, Scan, ClipboardList } from 'lucide-react';
 import Link from 'next/link';
 import { DiscoverSection } from '@/components/client/DiscoverSection';
 import { ShareButton } from '@/components/shared/ShareButton';
+import { ClientBottomNav } from '@/components/client/ClientBottomNav';
 import { OnboardingTutorial } from '@/components/client/OnboardingTutorial';
 
 export default async function ClientQRPage() {
@@ -217,137 +218,11 @@ export default async function ClientQRPage() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col p-4 space-y-8 max-w-lg mx-auto w-full pt-8 pb-24 relative z-10">
         
-        {/* Sección: Bienvenida */}
-        <section className="space-y-4">
-          <div className="text-center space-y-1 mb-2">
-            {totalSaved > 0 ? (
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-widest mb-2">
-                <Sparkles className="w-3.5 h-3.5" />
-                Ahorraste ${totalSaved.toLocaleString('es-AR')}
-              </div>
-            ) : (
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-semibold uppercase tracking-widest mb-2">
-                <Sparkles className="w-3.5 h-3.5" />
-                Club de Beneficios
-              </div>
-            )}
-            <h1 className="text-2xl font-black text-white tracking-tight">Hola, {profile?.full_name || 'Cliente'}</h1>
-            <p className="text-slate-400 text-sm max-w-sm mx-auto">
-              Descubrí los mejores locales y ofertas cerca tuyo.
-            </p>
-          </div>
-        </section>
-
-
-        <DiscoverSection 
-          merchants={merchants || []} 
-          offers={activeOffers} 
-          initialFavorites={initialFavorites} 
-        />
-
-        {/* Sección: Mis Descuentos Usados */}
-        <section id="historial" className="space-y-4 pt-6 border-t border-white/10 mb-8">
-          <div className="flex items-center gap-2 mb-2">
-            <Clock className="w-5 h-5 text-emerald-400" />
-            <div>
-              <h2 className="text-xl font-bold text-white tracking-tight font-montserrat">Mis Descuentos Usados</h2>
-              <p className="text-xs text-slate-400 font-medium">Historial de tus últimas compras.</p>
-            </div>
-          </div>
-
-          {(!displayHistory || displayHistory.length === 0) ? (
-            <div className="glass-panel rounded-3xl p-8 text-center border-dashed border-white/20">
-              <p className="text-slate-400 font-medium">Todavía no usaste ningún descuento.</p>
-              <p className="text-slate-500 text-sm mt-1">Visitá un comercio adherido para empezar a ahorrar.</p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {displayHistory.map((tx: any) => {
-                const scanner = tx.scanner as { business_name?: string; full_name?: string } | null;
-                const offer = tx.offer as { title?: string } | null;
-                const merchantName = scanner?.business_name || scanner?.full_name || 'Comercio';
-                const saved = (tx.original_amount || 0) - (tx.final_amount || 0);
-
-                return (
-                  <div key={tx.id} className="glass-panel rounded-2xl p-4 flex items-center justify-between gap-3 hover:bg-white/5 transition-colors">
-                    <div className="min-w-0">
-                      <p className="text-white font-bold text-sm truncate tracking-tight">{merchantName}</p>
-                      <p className="text-blue-300/80 font-medium text-xs truncate mt-0.5">{offer?.title || 'Descuento general'}</p>
-                      <p className="text-slate-500 text-[11px] mt-1 font-medium">
-                        {new Date(tx.applied_at).toLocaleString('es-AR', {
-                          day: '2-digit',
-                          month: 'short',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                          timeZone: 'America/Argentina/Buenos_Aires',
-                        })}
-                      </p>
-                    </div>
-                    <div className="text-right flex-shrink-0">
-                      <div className="inline-flex items-center px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-bold text-sm mb-1">
-                        -{tx.discount_pct}%
-                      </div>
-                      {saved > 0 && (
-                        <p className="text-[11px] font-bold text-emerald-400/80 uppercase tracking-wide">
-                          Ahorro ${saved.toLocaleString('es-AR')}
-                        </p>
-                      )}
-                      {tx.final_amount && (
-                        <p className="text-xs font-semibold text-slate-300 mt-0.5">
-                          ${tx.final_amount.toLocaleString('es-AR')}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </section>
+        
 
       </main>
 
-      {/* Floating Bottom Navigation Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 px-6 pb-6 pt-4 bg-gradient-to-t from-slate-950 via-slate-950/95 to-transparent pointer-events-none">
-        <div className="max-w-lg mx-auto relative flex justify-between items-end pointer-events-auto bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-[2rem] px-6 py-3 shadow-2xl">
-          
-          {/* Left: Historial */}
-          <a 
-            href="#historial"
-            className="flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white transition-colors pb-1"
-          >
-            <div className="relative">
-              <ClipboardList className="h-6 w-6" />
-              <div className="absolute -top-1 -right-1 bg-emerald-500 rounded-full w-3.5 h-3.5 flex items-center justify-center text-[8px] font-bold text-white">
-                %
-              </div>
-            </div>
-            <span className="text-[10px] font-semibold text-center leading-tight">Descuentos<br/>Escaneados</span>
-          </a>
-
-          {/* Center: QR (Floating) */}
-          <div className="relative -top-6">
-            <Link href="/client/scanner" className="group relative flex items-center justify-center">
-              {/* Anillo exterior animado */}
-              <div className="absolute inset-0 bg-blue-500/30 rounded-full blur-xl group-hover:blur-2xl group-hover:bg-blue-500/40 transition-all duration-300 animate-pulse" />
-              
-              {/* Botón principal */}
-              <div className="relative flex flex-col items-center justify-center w-[72px] h-[72px] bg-gradient-to-b from-slate-800 to-slate-900 rounded-full border-4 border-slate-950 shadow-[0_0_20px_rgba(59,130,246,0.3)] group-hover:scale-105 transition-transform duration-300">
-                <Scan className="w-8 h-8 text-blue-400 mb-0.5" />
-              </div>
-            </Link>
-            <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-slate-300 whitespace-nowrap">Escanear QR</span>
-          </div>
-
-          {/* Right: Perfil */}
-          <Link href="/client/profile" className="flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white transition-colors pb-1">
-            <User className="h-6 w-6" />
-            <span className="text-[10px] font-semibold text-center leading-tight mt-1">Perfil<br/>&nbsp;</span>
-          </Link>
-          
-        </div>
-      </div>
-
+      <ClientBottomNav />
     </div>
   );
 }
