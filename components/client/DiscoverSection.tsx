@@ -92,7 +92,7 @@ export function DiscoverSection({
     <div className="space-y-6 overflow-hidden">
       
       {/* ── SEARCH BAR & MAP BUTTON ── */}
-      <div className="flex gap-3">
+      <div id="tour-client-search" className="flex gap-3 relative z-[1]">
         <div className="relative flex-1">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
           <input

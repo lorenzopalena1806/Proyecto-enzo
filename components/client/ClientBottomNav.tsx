@@ -12,7 +12,7 @@ export function ClientBottomNav() {
       <div className="max-w-md mx-auto relative flex justify-between items-end pointer-events-auto bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-[2rem] px-8 py-3 shadow-2xl">
         
         {/* Left: Historial */}
-        <Link 
+        <Link id="tour-client-history" 
           href="/client/history"
           className={`flex flex-col items-center justify-center gap-1 transition-colors pb-1 ${pathname === '/client/history' ? 'text-white' : 'text-slate-400 hover:text-white'}`}
         >
@@ -26,7 +26,7 @@ export function ClientBottomNav() {
         </Link>
 
         {/* Center: QR Scanner (Floating) */}
-        <div className="relative -top-6">
+        <div id="tour-client-scan" className="relative -top-6">
           <Link href="/client/scanner" className="group relative flex items-center justify-center">
             {/* Anillo exterior animado */}
             <div className="absolute inset-0 bg-blue-500/30 rounded-full blur-xl group-hover:blur-2xl group-hover:bg-blue-500/40 transition-all duration-300 animate-pulse" />

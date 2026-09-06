@@ -200,7 +200,7 @@ export default async function ClientQRPage() {
           <img src="/logo.png" alt="Lazoo" className="h-7 w-auto object-contain" />
         </div>
         <div className="flex items-center gap-2 text-slate-300 font-medium">
-          <ShareButton className="text-xs text-blue-400 border border-blue-500/20 bg-blue-500/10 hover:bg-blue-500/20 px-3 py-1.5 rounded-lg font-semibold" />
+          <div id="tour-client-share"><ShareButton className="text-xs text-blue-400 border border-blue-500/20 bg-blue-500/10 hover:bg-blue-500/20 px-3 py-1.5 rounded-lg font-semibold" /></div>
           <a
             href="https://wa.me/5493512388658"
             target="_blank"
