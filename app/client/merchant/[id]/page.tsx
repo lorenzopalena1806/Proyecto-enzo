@@ -1,4 +1,4 @@
-import { createAdminClient } from '@/lib/supabase-server';
+import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -12,6 +12,7 @@ export default async function MerchantProfilePage({ params }: { params: Promise<
   const resolvedParams = await params;
   const merchantId = resolvedParams.id;
   const supabase = createAdminClient();
+  const authClient = await createClient();
 
   // Obtener datos del comercio
   const { data: merchant, error: merchantError } = await supabase
@@ -26,7 +27,7 @@ export default async function MerchantProfilePage({ params }: { params: Promise<
   }
 
   // Identify visitor role
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await authClient.auth.getUser();
   let visitorRole = 'client';
   if (user) {
     const { data: vp } = await supabase.from('profiles').select('role').eq('id', user.id).single();
