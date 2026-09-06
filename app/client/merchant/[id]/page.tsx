@@ -25,13 +25,26 @@ export default async function MerchantProfilePage({ params }: { params: Promise<
     notFound();
   }
 
+  // Identify visitor role
+  const { data: { user } } = await supabase.auth.getUser();
+  let visitorRole = 'client';
+  if (user) {
+    const { data: vp } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+    if (vp) visitorRole = vp.role;
+  }
+
   // Obtener ofertas activas
-  const { data: offers } = await supabase
+  let offersQuery = supabase
     .from('merchant_offers')
     .select('*')
     .eq('merchant_id', merchantId)
-    .eq('is_active', true)
-    .order('created_at', { ascending: false });
+    .eq('is_active', true);
+
+  if (visitorRole === 'client') {
+    offersQuery = offersQuery.in('target_role', ['client', 'all']);
+  }
+
+  const { data: offers } = await offersQuery.order('created_at', { ascending: false });
 
   const activeOffers = offers || [];
 
@@ -321,9 +334,27 @@ function parseBusinessHours(businessHoursStr: string | null) {
 
                 return (
                   <div key={offer.id} className="glass-panel rounded-3xl p-5 flex flex-col relative overflow-hidden group hover:border-blue-500/30 transition-all shadow-lg">
-                    <div className="absolute top-0 right-0 bg-gradient-to-l from-blue-600 to-indigo-600 text-white font-bold px-4 py-1.5 rounded-bl-2xl text-sm z-10 shadow-md">
+                    <div className="absolute top-0 right-0 bg-gradient-to-l from-blue-600 to-indigo-600 text-white font-bold px-4 py-1.5 rounded-bl-2xl text-sm z-20 shadow-md">
                       -{offer.discount_pct}% OFF
                     </div>
+
+                    {/* Badge de Target Role */}
+                    <div className="absolute top-0 left-0 z-20">
+                      {offer.target_role === 'merchant' ? (
+                        <div className="bg-amber-500 text-black font-bold px-3 py-1 rounded-br-xl text-[10px] uppercase tracking-wider shadow-sm">
+                          Exclusivo Locales
+                        </div>
+                      ) : offer.target_role === 'client' ? (
+                        <div className="bg-blue-500 text-white font-bold px-3 py-1 rounded-br-xl text-[10px] uppercase tracking-wider shadow-sm">
+                          Solo Clientes
+                        </div>
+                      ) : (
+                        <div className="bg-white/20 backdrop-blur-md border border-white/10 text-white font-bold px-3 py-1 rounded-br-xl text-[10px] uppercase tracking-wider shadow-sm">
+                          Público
+                        </div>
+                      )}
+                    </div>
+
                     {offer.image_url && (
                       <div className="absolute inset-0 z-0 opacity-20 group-hover:opacity-30 transition-opacity">
                         <Image src={offer.image_url} alt={offer.title} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />

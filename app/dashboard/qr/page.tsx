@@ -3,9 +3,9 @@ export const dynamic = 'force-dynamic';
 import React from 'react';
 import { createClient, createAdminClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
-import { Store, Scan, Tag, Banknote, MapPin, Sparkles, Clock, ClipboardList } from 'lucide-react';
+import { Store, Scan, Sparkles, ClipboardList } from 'lucide-react';
 import Link from 'next/link';
-import { B2BOffersSection } from '@/components/dashboard/B2BOffersSection';
+import { DiscoverSection } from '@/components/client/DiscoverSection';
 
 export const metadata = {
   title: 'Comprar (B2B) | Lazoo',
@@ -29,17 +29,16 @@ export default async function QRPage() {
   // Fetch active merchants for B2B
   const { data: merchants } = await adminClient
     .from('profiles')
-    .select('id, business_name, full_name, category, avatar_url, maps_url')
+    .select('id, business_name, full_name, category, avatar_url, maps_url, address, latitude, longitude')
     .eq('role', 'merchant')
     .eq('is_active', true);
 
-  // Ofertas disponibles para comercios
-  const { data: merchantOffers } = await adminClient
+  // Ofertas disponibles para comercios (vamos a traer TODAS las ofertas activas, para que el badge de DiscoverSection sea preciso)
+  const { data: allActiveOffers } = await adminClient
     .from('merchant_offers')
     .select('*')
     .eq('is_active', true)
-    .neq('merchant_id', user.id)
-    .order('discount_pct', { ascending: false });
+    .neq('merchant_id', user.id);
 
   // Historial del comercio como COMPRADOR
   const { data: buyerHistory } = await adminClient
@@ -59,6 +58,13 @@ export default async function QRPage() {
     }
     return acc;
   }, 0);
+
+  // 4. Fetch Favorites for current user
+  const { data: favoritesData } = await adminClient
+    .from('favorites')
+    .select('merchant_id')
+    .eq('client_id', user.id);
+  const initialFavorites = favoritesData?.map((f: any) => f.merchant_id) || [];
 
   return (
     <div className="relative min-h-[calc(100vh-2rem)] flex flex-col font-sans">
@@ -123,9 +129,9 @@ export default async function QRPage() {
           </Link>
         </div>
 
-        {/* B2B Offers Component */}
+        {/* B2B Discover Component (Replacing B2BOffersSection) */}
         <div className="border-t border-white/10 pt-8">
-          <B2BOffersSection merchants={merchants || []} offers={merchantOffers || []} />
+          <DiscoverSection merchants={merchants || []} offers={allActiveOffers || []} initialFavorites={initialFavorites} />
         </div>
 
         {/* Historial de Compras B2B */}
