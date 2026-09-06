@@ -136,9 +136,9 @@ export default async function DashboardLayout({
       `}</style>
       <Sidebar profile={profile} branches={branches} activeBranchId={activeBranchId} />
       {/* Spacer para mobile header */}
-      <div className="flex-1 flex flex-col lg:overflow-auto relative z-10">
+      <div className="flex-1 flex flex-col overflow-x-hidden lg:overflow-auto relative z-10 w-full min-w-0">
         <div className="lg:hidden h-14 flex-shrink-0" />
-        <main className="flex-1 p-4 lg:p-8 max-w-5xl w-full mx-auto">
+        <main className="flex-1 p-4 lg:p-8 max-w-5xl w-full mx-auto overflow-x-hidden">
           <SupportModeBanner />
           <GlobalNotificationBanner isSuperAdmin={profile.role === 'superadmin'} />
           {children}

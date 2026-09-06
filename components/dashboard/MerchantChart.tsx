@@ -13,8 +13,8 @@ export function MerchantChart({ data }: { data: any[] }) {
   }
 
   return (
-    <div className="h-64 w-full">
-      <ResponsiveContainer width="100%" height="100%">
+    <div className="h-64 w-full overflow-hidden min-w-0 max-w-full">
+      <ResponsiveContainer width="99%" height="100%">
         <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
           <XAxis dataKey="day" stroke="#475569" fontSize={12} tickLine={false} axisLine={false} />
           <YAxis stroke="#475569" fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} />
