@@ -1,3 +1,4 @@
+import { ClientBottomNav } from '@/components/client/ClientBottomNav';
 export const dynamic = 'force-dynamic';
 
 import React from 'react';
@@ -8,7 +9,6 @@ import { User, Sparkles, Clock, Scan, ClipboardList } from 'lucide-react';
 import Link from 'next/link';
 import { DiscoverSection } from '@/components/client/DiscoverSection';
 import { ShareButton } from '@/components/shared/ShareButton';
-import { ClientBottomNav } from '@/components/client/ClientBottomNav';
 import { OnboardingTutorial } from '@/components/client/OnboardingTutorial';
 
 export default async function ClientQRPage() {
@@ -218,10 +218,40 @@ export default async function ClientQRPage() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col p-4 space-y-8 max-w-lg mx-auto w-full pt-8 pb-24 relative z-10">
         
+        {/* Sección: Bienvenida */}
+        <section className="space-y-4">
+          <div className="text-center space-y-1 mb-2">
+            {totalSaved > 0 ? (
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-widest mb-2">
+                <Sparkles className="w-3.5 h-3.5" />
+                Ahorraste ${totalSaved.toLocaleString('es-AR')}
+              </div>
+            ) : (
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-semibold uppercase tracking-widest mb-2">
+                <Sparkles className="w-3.5 h-3.5" />
+                Club de Beneficios
+              </div>
+            )}
+            <h1 className="text-2xl font-black text-white tracking-tight">Hola, {profile?.full_name || 'Cliente'}</h1>
+            <p className="text-slate-400 text-sm max-w-sm mx-auto">
+              Descubrí los mejores locales y ofertas cerca tuyo.
+            </p>
+          </div>
+        </section>
+
+
+        <DiscoverSection 
+          merchants={merchants || []} 
+          offers={activeOffers} 
+          initialFavorites={initialFavorites} 
+        />
+
+        {/* Sección: Mis Descuentos Usados */}
         
 
       </main>
 
+      {/* Floating Bottom Navigation Bar */}
       <ClientBottomNav />
     </div>
   );
