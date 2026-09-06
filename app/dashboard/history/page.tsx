@@ -25,7 +25,7 @@ export default async function MerchantHistoryPage() {
     .single();
 
   if (profile?.role !== 'merchant') redirect('/dashboard');
-  if (profile?.plan_type === 'basic') redirect('/dashboard/pro');
+  const isBasic = profile?.plan_type === 'basic';
 
   const cookieStore = await cookies();
   const activeBranchId = cookieStore.get('lazoo_active_branch')?.value || null;
@@ -88,7 +88,25 @@ export default async function MerchantHistoryPage() {
         <p className="text-slate-400 mt-1">Métricas, sugerencias de negocio y el registro completo de tus ventas.</p>
       </div>
 
-      <LazooInsights merchantId={user.id} />
+      {isBasic ? (
+        <div className="bg-gradient-to-r from-amber-500/10 to-amber-700/10 border border-amber-500/20 rounded-2xl p-6 relative overflow-hidden shadow-[0_0_40px_rgba(245,158,11,0.05)]">
+          <div className="absolute top-0 right-0 p-4 opacity-10 rotate-12">
+            <svg className="w-32 h-32 text-amber-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <div className="relative z-10 space-y-3">
+            <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-amber-500/20 text-amber-400 text-[10px] font-black uppercase tracking-wider">
+              Exclusivo PRO
+            </div>
+            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">Reportes Avanzados</h2>
+            <p className="text-slate-300 text-sm max-w-md leading-relaxed">Pasate a PRO para acceder a <strong>Lazoo Insights</strong>: análisis inteligente de tu clientela, horarios pico, sugerencias de ofertas automáticas y un resumen de las métricas clave para potenciar tus ventas.</p>
+            <div className="pt-2">
+              <a href="/dashboard/pro" className="inline-block bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-900 font-bold px-6 py-3 rounded-xl transition-all shadow-lg active:scale-95">Conocer Beneficios PRO</a>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <LazooInsights merchantId={user.id} />
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

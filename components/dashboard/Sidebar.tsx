@@ -259,7 +259,7 @@ export function Sidebar({ profile, branches = [], activeBranchId = null }: Sideb
                   {item.badge}
                 </span>
               )}
-              {active && !item.badge && item.href !== '/dashboard/history' && <ChevronRight className="h-3 w-3 ml-auto" />}
+              {active && !item.badge && <ChevronRight className="h-3 w-3 ml-auto" />}
             </Link>
           );
         })}
