@@ -89,7 +89,7 @@ export function DiscoverSection({
   }, [merchants, searchQuery, selectedCategory, favorites]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-hidden">
       
       {/* ── SEARCH BAR & MAP BUTTON ── */}
       <div className="flex gap-3">
@@ -112,49 +112,49 @@ export function DiscoverSection({
       </div>
 
       {/* ── DYNAMIC CATEGORY PILLS (Strip) ── */}
-      <div className="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent -mx-4 px-4 py-4 border-y border-amber-500/10">
-        <div className="flex overflow-x-auto gap-4 scrollbar-hide snap-x">
+      <div className="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent py-3 sm:py-4 border-y border-amber-500/10 -mx-1 px-1 overflow-hidden">
+        <div className="flex overflow-x-auto gap-2 sm:gap-4 scrollbar-hide snap-x">
           <button
             onClick={() => setSelectedCategory(null)}
-            className={`flex-shrink-0 flex flex-col items-center justify-center w-[84px] h-[84px] rounded-2xl border transition-all snap-start shadow-md ${
+            className={`flex-shrink-0 flex flex-col items-center justify-center w-[68px] h-[68px] sm:w-[84px] sm:h-[84px] rounded-2xl border transition-all snap-start shadow-md ${
               selectedCategory === null 
                 ? 'bg-amber-500/20 border-amber-500/50 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.2)]' 
                 : 'bg-black/20 border-white/5 text-slate-400 hover:bg-white/5'
             }`}
           >
-            <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center mb-1">
-              <Store className="w-5 h-5" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white/5 flex items-center justify-center mb-1">
+              <Store className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
-            <span className="text-[10px] font-bold">Todos</span>
+            <span className="text-[9px] sm:text-[10px] font-bold">Todos</span>
           </button>
           
           <button
             onClick={() => setSelectedCategory('Favoritos')}
-            className={`flex-shrink-0 flex flex-col items-center justify-center w-[84px] h-[84px] rounded-2xl border transition-all snap-start shadow-md ${
+            className={`flex-shrink-0 flex flex-col items-center justify-center w-[68px] h-[68px] sm:w-[84px] sm:h-[84px] rounded-2xl border transition-all snap-start shadow-md ${
               selectedCategory === 'Favoritos'
                 ? 'bg-red-500/20 border-red-500/50 text-red-300 shadow-[0_0_15px_rgba(239,68,68,0.2)]' 
                 : 'bg-black/20 border-white/5 text-slate-400 hover:bg-white/5'
             }`}
           >
-            <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center mb-1">
-              <Heart className={`w-5 h-5 ${selectedCategory === 'Favoritos' ? 'fill-red-400 text-red-400' : ''}`} />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white/5 flex items-center justify-center mb-1">
+              <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${selectedCategory === 'Favoritos' ? 'fill-red-400 text-red-400' : ''}`} />
             </div>
-            <span className="text-[10px] font-bold">Favoritos</span>
+            <span className="text-[9px] sm:text-[10px] font-bold">Favoritos</span>
           </button>
           {availableCategories.map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`flex-shrink-0 flex flex-col items-center justify-center w-[84px] h-[84px] rounded-2xl border transition-all snap-start shadow-md ${
+              className={`flex-shrink-0 flex flex-col items-center justify-center w-[68px] h-[68px] sm:w-[84px] sm:h-[84px] rounded-2xl border transition-all snap-start shadow-md ${
                 selectedCategory === cat 
                   ? 'bg-amber-500/20 border-amber-500/50 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.2)]' 
                   : 'bg-black/20 border-white/5 text-slate-400 hover:bg-white/5'
               }`}
             >
-              <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center mb-1">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white/5 flex items-center justify-center mb-1">
                 {getCategoryIcon(cat)}
               </div>
-              <span className="text-[10px] font-bold truncate w-full px-1 text-center">{cat}</span>
+              <span className="text-[9px] sm:text-[10px] font-bold truncate w-full px-1 text-center">{cat}</span>
             </button>
           ))}
         </div>
@@ -177,20 +177,20 @@ export function DiscoverSection({
               const hasOffer = offers.some(o => o.merchant_id === merchant.id);
               
               return (
-                <Link key={merchant.id} href={`/client/merchant/${merchant.id}`} className="bg-white/5 border border-white/10 rounded-[1.5rem] p-2 pr-4 flex items-center gap-4 hover:border-blue-500/30 transition-all shadow-lg group relative overflow-hidden">
+                <Link key={merchant.id} href={`/client/merchant/${merchant.id}`} className="bg-white/5 border border-white/10 rounded-2xl sm:rounded-[1.5rem] p-2 pr-3 sm:pr-4 flex items-center gap-3 sm:gap-4 hover:border-blue-500/30 transition-all shadow-lg group relative overflow-hidden">
                   {/* Foto izquierda */}
-                  <div className="w-24 h-24 rounded-xl bg-black/40 flex-shrink-0 flex items-center justify-center overflow-hidden relative shadow-inner">
+                  <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-xl bg-black/40 flex-shrink-0 flex items-center justify-center overflow-hidden relative shadow-inner">
                     {merchant.avatar_url ? (
-                      <Image src={merchant.avatar_url} alt={merchant.business_name || 'Logo'} fill sizes="96px" className="object-cover" />
+                      <Image src={merchant.avatar_url} alt={merchant.business_name || 'Logo'} fill sizes="(max-width: 640px) 64px, 96px" className="object-cover" />
                     ) : (
-                      <Store className="w-8 h-8 text-slate-500" />
+                      <Store className="w-6 h-6 sm:w-8 sm:h-8 text-slate-500" />
                     )}
                   </div>
                   
                   {/* Contenido derecha */}
-                  <div className="min-w-0 flex-1 py-1 relative">
+                  <div className="min-w-0 flex-1 py-0.5 sm:py-1 relative">
                     <div className="flex justify-between items-start">
-                      <h3 className="font-bold text-white text-[15px] truncate leading-tight mb-1 pr-6">{merchant.business_name || 'Comercio Adherido'}</h3>
+                      <h3 className="font-bold text-white text-[13px] sm:text-[15px] truncate leading-tight mb-0.5 sm:mb-1 pr-6">{merchant.business_name || 'Comercio Adherido'}</h3>
                       <button
                         onClick={async (e) => {
                           e.preventDefault();
@@ -205,18 +205,18 @@ export function DiscoverSection({
                         }}
                         className="absolute right-0 top-0 p-1 -mt-1 -mr-1"
                       >
-                        <Heart className={`w-5 h-5 ${favorites.has(merchant.id) ? 'fill-red-500 text-red-500' : 'text-slate-400'}`} />
+                        <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${favorites.has(merchant.id) ? 'fill-red-500 text-red-500' : 'text-slate-400'}`} />
                       </button>
                     </div>
                     
-                    {/* Estrellas y distancia falsa */}
-                    <div className="flex items-center gap-0.5 mb-1.5">
+                    {/* Estrellas y distancia */}
+                    <div className="flex items-center gap-0.5 mb-1">
                       <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
                       <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
                       <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
                       <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
                       <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                      <div className="flex items-center gap-1 text-slate-400 text-[10px] ml-2 truncate max-w-[100px]">
+                      <div className="flex items-center gap-1 text-slate-400 text-[10px] ml-1.5 truncate max-w-[80px] sm:max-w-[100px]">
                         <MapPin className="w-3 h-3 flex-shrink-0" />
                         <span className="truncate">
                           {userLocation && merchant.latitude && merchant.longitude
@@ -226,16 +226,16 @@ export function DiscoverSection({
                       </div>
                     </div>
 
-                    <p className="text-[11px] text-slate-400 truncate mb-2">
+                    <p className="text-[10px] sm:text-[11px] text-slate-400 truncate mb-1.5 sm:mb-2">
                       {merchant.category || 'Rubro General'} • <span className="text-emerald-400/80">Abierto ahora</span>
                     </p>
 
                     {hasOffer ? (
-                      <div className="inline-flex items-center px-2 py-0.5 rounded bg-amber-500/10 text-amber-400/90 text-[10px] font-bold border border-amber-500/20 shadow-sm">
+                      <div className="inline-flex items-center px-2 py-0.5 rounded bg-amber-500/10 text-amber-400/90 text-[9px] sm:text-[10px] font-bold border border-amber-500/20 shadow-sm">
                         Descuento Disponible
                       </div>
                     ) : (
-                      <div className="inline-flex items-center px-2 py-0.5 rounded bg-slate-500/10 text-slate-400 text-[10px] font-bold border border-slate-500/20 shadow-sm">
+                      <div className="inline-flex items-center px-2 py-0.5 rounded bg-slate-500/10 text-slate-400 text-[9px] sm:text-[10px] font-bold border border-slate-500/20 shadow-sm">
                         Visitanos
                       </div>
                     )}
