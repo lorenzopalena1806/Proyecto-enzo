@@ -126,7 +126,7 @@ export default async function MerchantHistoryPage() {
         )}
 
         <div className={`space-y-6 ${isBasic ? 'opacity-20 pointer-events-none blur-sm' : ''}`}>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
               <Receipt className="h-5 w-5 text-violet-400" />
               <p className="text-2xl font-bold text-white">{totalTx}</p>
