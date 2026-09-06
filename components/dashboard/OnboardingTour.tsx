@@ -48,6 +48,11 @@ export function OnboardingTour() {
       onHighlightStarted: (element) => {
         if (element) {
           element.scrollIntoView({ behavior: 'auto', block: 'center' });
+          setTimeout(() => {
+            if (tourDriver) {
+              tourDriver.refresh();
+            }
+          }, 10);
         }
       },
       onDestroyStarted: () => {
