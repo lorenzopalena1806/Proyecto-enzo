@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { InstallAppButton } from '@/components/client/InstallAppButton';
 import { CopyCodeButton } from '@/components/client/CopyCodeButton';
+import { RestartTutorialButton } from '@/components/client/RestartTutorialButton';
 
 export default async function ClientProfilePage() {
   const supabase = await createClient();
@@ -48,6 +49,9 @@ export default async function ClientProfilePage() {
           
           <div className="mb-4">
             <InstallAppButton />
+            <div className="mt-3">
+              <RestartTutorialButton userId={user.id} redirectUrl="/client/qr" text="Ver Tutorial de la App" />
+            </div>
           </div>
 
           {/* Código de Cliente (Solo texto) */}

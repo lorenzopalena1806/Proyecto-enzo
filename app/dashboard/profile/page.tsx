@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { Package } from 'lucide-react';
 import { ProfileEditForm } from '@/components/dashboard/ProfileEditForm';
 import { PushManager } from '@/components/dashboard/PushManager';
+import { RestartTutorialButton } from '@/components/client/RestartTutorialButton';
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -32,6 +33,11 @@ export default async function ProfilePage() {
       <PushManager />
 
       <ProfileEditForm profile={profile} userEmail={user.email || ''} isPro={isPro} />
+      <div className="glass-panel p-6 rounded-2xl border border-white/5 space-y-4">
+        <h2 className="text-lg font-semibold text-white">Tutorial Interactivo</h2>
+        <p className="text-sm text-slate-400">Si querés volver a ver la guía paso a paso de cómo usar tu panel, podés reiniciarla acá.</p>
+        <RestartTutorialButton userId={user.id} redirectUrl="/dashboard" text="Volver a ver el Tutorial" />
+      </div>
     </div>
   );
 }
