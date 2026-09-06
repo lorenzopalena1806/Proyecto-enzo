@@ -156,11 +156,10 @@ export default async function MerchantHistoryPage() {
             </h2>
             <MerchantChart data={chartData} />
           </div>
+                  {/* Lista interactiva */}
+          <HistoryTableClient txList={txList} />
         </div>
       </div>
-
-      {/* Lista interactiva */}
-      <HistoryTableClient txList={txList} />
     </div>
   );
 }
