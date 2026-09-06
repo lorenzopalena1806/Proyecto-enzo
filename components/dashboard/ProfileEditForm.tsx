@@ -265,6 +265,20 @@ export function ProfileEditForm({ profile, userEmail, isPro = false }: ProfileEd
                 />
               </div>
               <p className="mt-1 text-xs text-slate-400">Si no ponés nada, tu logo se usará como portada.</p>
+
+              {Boolean((formData as any).banner_url) && (
+                <div className="mt-2 p-2.5 bg-slate-950/80 rounded-xl border border-slate-800 space-y-1.5">
+                  <div className="w-full h-24 rounded-lg bg-slate-900 overflow-hidden relative border border-slate-700">
+                    <img 
+                      src={(formData as any).banner_url} 
+                      alt="Vista previa portada" 
+                      className="w-full h-full object-cover" 
+                      onError={(e) => { (e.currentTarget as HTMLElement).style.display = 'none'; }} 
+                    />
+                  </div>
+                  <p className="text-[11px] text-emerald-400 font-medium">✓ Vista previa de tu portada (perfil público)</p>
+                </div>
+              )}
             </div>
 
 

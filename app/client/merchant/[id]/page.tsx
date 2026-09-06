@@ -142,16 +142,17 @@ function parseBusinessHours(businessHoursStr: string | null) {
 
       {/* Hero Header */}
       <div className="relative h-64 sm:h-72 w-full bg-slate-900 overflow-hidden">
-        {merchant.avatar_url ? (
+        {(merchant.banner_url || merchant.avatar_url) ? (
           <>
             <Image 
-              src={merchant.avatar_url} 
+              src={merchant.banner_url || merchant.avatar_url} 
               alt={merchant.business_name || 'Portada'} 
               fill 
-              className="object-cover opacity-60" 
+              className={`object-cover ${merchant.banner_url ? 'opacity-90' : 'opacity-50 blur-[2px]'}`}
               priority
+              unoptimized
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-slate-900/20"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-slate-900/20"></div>
           </>
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-violet-600/30 to-blue-600/30"></div>
@@ -169,7 +170,7 @@ function parseBusinessHours(businessHoursStr: string | null) {
         <div className="absolute bottom-0 left-0 right-0 p-6 z-10 flex flex-col items-center sm:items-start text-center sm:text-left transform translate-y-8">
           <div className="w-24 h-24 rounded-2xl bg-slate-900 border-4 border-slate-950 shadow-xl overflow-hidden relative flex items-center justify-center">
             {merchant.avatar_url ? (
-              <Image src={merchant.avatar_url} alt="Logo" fill className="object-cover" />
+              <Image src={merchant.avatar_url} alt="Logo" fill className="object-cover" unoptimized />
             ) : (
               <Store className="w-10 h-10 text-slate-500" />
             )}
