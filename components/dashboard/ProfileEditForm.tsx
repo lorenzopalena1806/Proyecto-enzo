@@ -298,7 +298,7 @@ export function ProfileEditForm({ profile, userEmail, isPro = false }: ProfileEd
                 className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
               />
             </div>
-            <p className="text-xs text-slate-500 mt-1">Este número es privado para Lazoo. El teléfono público se configura en <b>Mis Sucursales</b>.</p>
+            <p className="text-xs text-slate-500 mt-1">Este número es privado para Lazoo.</p>
           </div>
 
         {profile.role === 'merchant' && (
