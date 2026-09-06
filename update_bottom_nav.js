@@ -1,4 +1,7 @@
-'use client';
+const fs = require('fs');
+let code = fs.readFileSync('components/client/ClientBottomNav.tsx', 'utf8');
+
+const navCode = `'use client';
 import React from 'react';
 import Link from 'next/link';
 import { ClipboardList, Scan, User } from 'lucide-react';
@@ -14,7 +17,7 @@ export function ClientBottomNav() {
         {/* Left: Historial */}
         <Link 
           href="/client/history"
-          className={`flex flex-col items-center justify-center gap-1 transition-colors pb-1 ${pathname === '/client/history' ? 'text-white' : 'text-slate-400 hover:text-white'}`}
+          className={\`flex flex-col items-center justify-center gap-1 transition-colors pb-1 \${pathname === '/client/history' ? 'text-white' : 'text-slate-400 hover:text-white'}\`}
         >
           <div className="relative">
             <ClipboardList className="h-6 w-6" />
@@ -42,7 +45,7 @@ export function ClientBottomNav() {
         {/* Right: Perfil */}
         <Link 
           href="/client/profile" 
-          className={`flex flex-col items-center justify-center gap-1 transition-colors pb-1 ${pathname === '/client/profile' ? 'text-white' : 'text-slate-400 hover:text-white'}`}
+          className={\`flex flex-col items-center justify-center gap-1 transition-colors pb-1 \${pathname === '/client/profile' ? 'text-white' : 'text-slate-400 hover:text-white'}\`}
         >
           <User className="h-6 w-6" />
           <span className="text-[10px] font-semibold text-center leading-tight mt-1">Mi<br/>Perfil</span>
@@ -51,4 +54,7 @@ export function ClientBottomNav() {
       </div>
     </div>
   );
-}
+}`;
+
+fs.writeFileSync('components/client/ClientBottomNav.tsx', navCode);
+console.log('Updated ClientBottomNav to have only 3 buttons');
