@@ -21,7 +21,7 @@ export function EmployeeManager({
   const [isCreating, setIsCreating] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const isBasicAndLimited = planType === 'basic' && employees.length >= 1;
+  const isBasicAndLimited = planType === 'basic' && employees.length >= 0;
 
   const copyLink = (id: string) => {
     navigator.clipboard.writeText(`${baseUrl}/cajero/${id}`);
@@ -32,7 +32,7 @@ export function EmployeeManager({
   const handleCreate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isBasicAndLimited) {
-      alert('El Plan Básico permite máximo 1 empleado. Mejorá tu plan a PRO para agregar más.');
+      alert('El Plan Básico no permite crear cajeros. Mejorá tu plan a PRO para gestionar empleados.');
       return;
     }
     setIsCreating(true);
@@ -105,7 +105,7 @@ export function EmployeeManager({
             <Shield className="w-12 h-12 text-amber-500 mb-4" />
             <h3 className="text-xl font-bold text-white mb-2">Límite Alcanzado</h3>
             <p className="text-slate-300 text-sm max-w-sm mb-4">
-              Tu Plan Básico te permite configurar 1 cajero. Mejorá tu plan a PRO para agregar sucursales y cajeros ilimitados.
+              El Plan Básico no incluye gestión de cajeros. Mejorá tu plan a PRO para agregar sucursales y cajeros ilimitados.
             </p>
             <button 
               onClick={() => router.push('/dashboard/pro')}

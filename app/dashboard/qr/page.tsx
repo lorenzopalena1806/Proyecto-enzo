@@ -27,11 +27,20 @@ export default async function QRPage() {
   if (!profile) redirect('/auth/login');
 
   // Fetch active merchants for B2B
-  const { data: merchants } = await adminClient
+  const { data: merchantsData } = await adminClient
     .from('profiles')
-    .select('id, business_name, full_name, category, avatar_url, maps_url, address, latitude, longitude')
+    .select('id, business_name, full_name, category, avatar_url, maps_url, address, latitude, longitude, plan_type, is_featured, created_at')
     .eq('role', 'merchant')
     .eq('is_active', true);
+
+  // Sort: PRO first, then featured, then created_at
+  const merchants = (merchantsData || []).sort((a, b) => {
+    if (a.plan_type === 'pro' && b.plan_type !== 'pro') return -1;
+    if (a.plan_type !== 'pro' && b.plan_type === 'pro') return 1;
+    if (a.is_featured && !b.is_featured) return -1;
+    if (!a.is_featured && b.is_featured) return 1;
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  });
 
   // Ofertas disponibles para comercios
   const { data: allActiveOffers } = await adminClient
