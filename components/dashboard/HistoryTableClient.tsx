@@ -66,11 +66,11 @@ export function HistoryTableClient({ txList }: { txList: any[] }) {
   }, [txList, searchTerm, roleFilter, statusFilter, sortBy]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-full max-w-full overflow-hidden">
       {/* Controles de busqueda y filtros */}
-      <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex flex-col md:flex-row gap-4 w-full max-w-full">
         {/* Buscador */}
-        <div className="relative flex-1">
+        <div className="relative flex-1 min-w-0">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <input
             type="text"
@@ -82,7 +82,7 @@ export function HistoryTableClient({ txList }: { txList: any[] }) {
         </div>
 
         {/* Filtros */}
-        <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 hide-scrollbar">
+        <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 hide-scrollbar max-w-full min-w-0 w-full md:w-auto">
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
@@ -152,7 +152,7 @@ export function HistoryTableClient({ txList }: { txList: any[] }) {
                     </div>
                     
                     <div className="flex justify-between items-center bg-slate-950/50 p-2.5 rounded-xl border border-slate-800">
-                      <span className="text-sm text-slate-300 truncate mr-2">{offer?.title || 'Descuento general'}</span>
+                      <span className="text-sm text-slate-300 truncate mr-2 flex-1 min-w-0">{offer?.title || 'Descuento general'}</span>
                       <span className="text-xs font-bold text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded">Ahorro: {fmt(saved)}</span>
                     </div>
                     
