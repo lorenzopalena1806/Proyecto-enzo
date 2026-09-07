@@ -19,30 +19,22 @@ export default async function MapPage() {
 
   const adminClient = createAdminClient();
 
-  // Obtener comercios activos con coordenadas
-  // Necesitamos que tengan suscripción activa
-  const { data: activeSubscriptions } = await adminClient
-    .from('subscriptions')
-    .select('merchant_id')
-    .eq('status', 'active');
-
-  const activeMerchantIds = activeSubscriptions?.map(s => s.merchant_id) || [];
-
-  if (activeMerchantIds.length === 0) {
-    return (
-      <div className="p-6 text-center text-slate-400">
-        No hay comercios con suscripciones activas en este momento.
-      </div>
-    );
-  }
-
   // Traemos todos los perfiles de los comercios activos para heredar nombre, logo, etc.
   const { data: merchants } = await adminClient
     .from('profiles')
     .select('id, business_name, avatar_url, category, plan_type')
     .eq('role', 'merchant')
-    .eq('is_active', true)
-    .in('id', activeMerchantIds);
+    .eq('is_active', true);
+
+  const activeMerchantIds = merchants?.map(m => m.id) || [];
+
+  if (activeMerchantIds.length === 0) {
+    return (
+      <div className="p-6 text-center text-slate-400">
+        No hay comercios activos en este momento.
+      </div>
+    );
+  }
 
   // Traemos unicamente las sucursales (ya que eliminamos los datos de ubicacion del perfil madre)
   const { data: branches } = await adminClient

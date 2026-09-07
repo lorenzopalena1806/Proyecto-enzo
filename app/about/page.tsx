@@ -3,9 +3,10 @@ import { ArrowLeft, Users, Zap, Shield, Heart } from 'lucide-react';
 
 export const metadata = {
   title: 'Sobre Nosotros | Lazoo',
-  description: 'Conoce la historia detrás de Lazoo,
-  alternates: { canonical: 'https://lazoo.com.ar/about' }, nuestra misión y el equipo que trabaja para revolucionar los beneficios.',
+  description: 'Conoce la historia detrás de Lazoo, nuestra misión y el equipo que trabaja para revolucionar los beneficios.',
+  alternates: { canonical: 'https://lazoo.com.ar/about' },
 };
+
 
 export default function AboutPage() {
   return (

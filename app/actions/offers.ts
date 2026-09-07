@@ -39,10 +39,6 @@ export async function createOffer(formData: FormData) {
   const image_url = image_url_raw && image_url_raw.startsWith('http') ? image_url_raw : null;
   const image_display_mode = (formData.get('image_display_mode') as string) || 'background';
   const image_position = (formData.get('image_position') as string) || 'object-center';
-  const image_display_mode = (formData.get('image_display_mode') as string) || 'background';
-  const image_position = (formData.get('image_position') as string) || 'object-center';
-  const image_display_mode = (formData.get('image_display_mode') as string) || 'background';
-  const image_position = (formData.get('image_position') as string) || 'object-center';
 
   let branch_id = formData.get('branch_id') as string | null;
   if (branch_id === '') {
