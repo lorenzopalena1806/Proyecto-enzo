@@ -37,6 +37,8 @@ export function OffersManager({ initialOffers, branches = [] }: OffersManagerPro
     title: '',
     description: '',
     image_url: '',
+    image_display_mode: 'background',
+    image_position: 'object-center',
     original_price: '',
     final_price: '',
     discount_pct: '',
@@ -52,6 +54,8 @@ export function OffersManager({ initialOffers, branches = [] }: OffersManagerPro
         title: offer.title || '',
         description: offer.description || '',
         image_url: offer.image_url || '',
+        image_display_mode: offer.image_display_mode || 'background',
+        image_position: offer.image_position || 'object-center',
         original_price: offer.original_price || '',
         final_price: offer.final_price || '',
         discount_pct: offer.discount_pct || '',
@@ -64,6 +68,8 @@ export function OffersManager({ initialOffers, branches = [] }: OffersManagerPro
         title: '',
         description: '',
         image_url: '',
+        image_display_mode: 'background',
+        image_position: 'object-center',
         original_price: '',
         final_price: '',
         discount_pct: '',
@@ -210,6 +216,30 @@ export function OffersManager({ initialOffers, branches = [] }: OffersManagerPro
                 <p className="text-xs text-slate-500 mt-1">Pegá el link de una imagen que ya esté en internet.</p>
               </div>
 
+              {preview.image_url && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-400 mb-1">Estilo de la Foto</label>
+                    <select name="image_display_mode" value={preview.image_display_mode} onChange={handleChange} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none appearance-none">
+                      <option value="background">De Fondo (Completa)</option>
+                      <option value="contain">Destacada (Nítida)</option>
+                    </select>
+                  </div>
+                  {preview.image_display_mode === 'background' && (
+                    <div>
+                      <label className="block text-sm font-medium text-slate-400 mb-1">Enfoque de la Foto</label>
+                      <select name="image_position" value={preview.image_position} onChange={handleChange} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none appearance-none">
+                        <option value="object-center">Centro</option>
+                        <option value="object-top">Arriba</option>
+                        <option value="object-bottom">Abajo</option>
+                        <option value="object-left">Izquierda</option>
+                        <option value="object-right">Derecha</option>
+                      </select>
+                    </div>
+                  )}
+                </div>
+              )}
+
               <div className="bg-slate-950/50 p-4 rounded-xl border border-slate-800/50 space-y-4">
                 <h4 className="text-sm font-medium text-violet-400">Precios y Descuento</h4>
                 
@@ -315,18 +345,23 @@ export function OffersManager({ initialOffers, branches = [] }: OffersManagerPro
                     )}
                   </div>
 
-                  {preview.image_url ? (
+                  {preview.image_url && preview.image_display_mode !== 'contain' ? (
                     <div className="absolute inset-0 z-0 opacity-30">
-                      <img src={preview.image_url} alt="Preview" className="w-full h-full object-cover" />
+                      <img src={preview.image_url} alt="Preview" className={`w-full h-full object-cover ${preview.image_position || 'object-center'}`} />
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
                     </div>
-                  ) : (
+                  ) : !preview.image_url ? (
                     <div className="absolute inset-0 z-0 opacity-10 bg-violet-500/20">
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent"></div>
                     </div>
-                  )}
+                  ) : null}
                   
                   <div className="relative z-10 flex flex-col h-full min-h-[160px] pt-8">
+                    {preview.image_url && preview.image_display_mode === 'contain' && (
+                      <div className="w-full h-40 mb-3 bg-black/50 rounded-xl overflow-hidden flex items-center justify-center p-2 border border-white/10">
+                        <img src={preview.image_url} alt="Preview" className="w-full h-full object-contain drop-shadow-md" />
+                      </div>
+                    )}
                     <h3 className="font-bold text-lg text-white mb-2 pr-8 leading-tight">
                       {preview.title || 'Título de tu oferta'}
                     </h3>
