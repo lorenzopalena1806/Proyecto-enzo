@@ -8,6 +8,16 @@ import type { PaymentMethod, Profile } from '@/types';
 import { sendPushNotification } from './push';
 
 export async function processPaymentByShortCodeServer(merchantId: string, amount: number, method: PaymentMethod, shortCode: string, offerId?: string, branchId?: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user || user.id !== merchantId) {
+    return { success: false, reason: 'No autorizado. Sesión inválida.' };
+  }
+  return await internalProcessPaymentByShortCode(merchantId, amount, method, shortCode, offerId, branchId);
+}
+
+export async function internalProcessPaymentByShortCode(merchantId: string, amount: number, method: PaymentMethod, shortCode: string, offerId?: string, branchId?: string) {
+
   const ip = (await headers()).get('x-forwarded-for') ?? 'unknown';
   const rl = checkRateLimit(ip, 5, 30000);
   if (!rl.success) {
@@ -36,6 +46,12 @@ export async function processPaymentByShortCodeServer(merchantId: string, amount
 }
 
 export async function confirmScannedPaymentServer(merchantId: string, amount: number, method: PaymentMethod, offerId?: string, branchId?: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user || user.id !== merchantId) {
+    return { success: false, reason: 'No autorizado. Sesión inválida.' };
+  }
+
   const ip = (await headers()).get('x-forwarded-for') ?? 'unknown';
   const rl = checkRateLimit(ip, 5, 30000);
   if (!rl.success) {

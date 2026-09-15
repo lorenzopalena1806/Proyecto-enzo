@@ -1,3 +1,7 @@
+const fs = require('fs');
+let code = fs.readFileSync('app/api/log/route.ts', 'utf8');
+
+const replacement = `
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase-server';
 
@@ -30,8 +34,8 @@ export async function POST(req: Request) {
     }
     
     console.error('🔥 [LAZOO SUPERADMIN ALERT] APP ERROR REPORT 🔥');
-    console.error(`URL: ${errorData.url}`);
-    console.error(`Message: ${errorData.message}`);
+    console.error(\`URL: \${errorData.url}\`);
+    console.error(\`Message: \${errorData.message}\`);
     
     // Insert into Supabase app_errors table
     const adminClient = createAdminClient();
@@ -46,3 +50,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: false }, { status: 500 });
   }
 }
+`;
+
+fs.writeFileSync('app/api/log/route.ts', replacement.trim() + '\n');
+console.log('Fixed log route');

@@ -201,8 +201,8 @@ export async function employeeCompletePendingChargeWithCode(employeeId: string, 
   if (!qrRecords || qrRecords.length === 0) return { success: false, error: 'Código de cliente no encontrado.' };
   if (!qrRecords[0].is_active) return { success: false, error: 'Código desactivado.' };
 
-  const { processPaymentByShortCodeServer } = await import('./charge');
-  const paymentRes = await processPaymentByShortCodeServer(emp.merchant_id, charge.amount, charge.payment_method as any, shortCode, charge.offer_id || undefined);
+  const { internalProcessPaymentByShortCode } = await import('./charge');
+  const paymentRes = await internalProcessPaymentByShortCode(emp.merchant_id, charge.amount, charge.payment_method as any, shortCode, charge.offer_id || undefined);
 
   if (!paymentRes.success) return { success: false, error: paymentRes.reason || 'Error al procesar el pago.' };
 
