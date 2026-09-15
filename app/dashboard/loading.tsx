@@ -1,31 +1,13 @@
-export default function DashboardLoading() {
-  return (
-    <div className="space-y-6 animate-pulse p-4">
-      <div className="h-10 bg-slate-800/50 rounded-lg w-1/3"></div>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {[...Array(4)].map((_, i) => (
-          <div key={i} className="glass-panel p-6 rounded-2xl border-white/5 h-32 flex flex-col justify-between">
-            <div className="h-4 bg-slate-800 rounded w-1/2"></div>
-            <div className="h-8 bg-slate-700 rounded w-3/4"></div>
-          </div>
-        ))}
-      </div>
+import { Loader2 } from 'lucide-react';
 
-      <div className="glass-panel rounded-2xl border-white/5 p-6 h-64 mt-6">
-        <div className="h-6 bg-slate-800 rounded w-1/4 mb-6"></div>
-        <div className="space-y-4">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="flex gap-4 items-center">
-              <div className="h-12 w-12 rounded-full bg-slate-800"></div>
-              <div className="flex-1 space-y-2">
-                <div className="h-4 bg-slate-700 rounded w-1/3"></div>
-                <div className="h-3 bg-slate-800 rounded w-1/4"></div>
-              </div>
-            </div>
-          ))}
-        </div>
+export default function Loading() {
+  return (
+    <div className="min-h-screen bg-[#060D1A] flex flex-col items-center justify-center text-slate-400 space-y-4">
+      <div className="relative">
+        <div className="absolute inset-0 bg-violet-500/20 rounded-full blur-xl animate-pulse"></div>
+        <Loader2 className="w-12 h-12 text-violet-500 animate-spin relative z-10" />
       </div>
+      <p className="font-medium animate-pulse">Cargando tu panel de comercio...</p>
     </div>
   );
 }

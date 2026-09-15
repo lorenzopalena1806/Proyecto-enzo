@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation';
 import { LogoutButton } from '@/components/dashboard/LogoutButton';
 import { User, Sparkles, Clock, Scan, ClipboardList } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { DiscoverSection } from '@/components/client/DiscoverSection';
 import { ShareButton } from '@/components/shared/ShareButton';
 import { OnboardingTutorial } from '@/components/client/OnboardingTutorial';
@@ -142,51 +143,7 @@ export default async function ClientQRPage() {
   return (
     <div className="min-h-screen app-bg flex flex-col font-sans">
       <OnboardingTutorial userId={user.id} hasSeen={profile?.has_seen_tutorial || false} />
-      <style>{`
-        .app-bg {
-          background: radial-gradient(ellipse at top, #0f1f4a 0%, #060d1f 50%, #000510 100%);
-        }
-        .glass-panel {
-          background: rgba(255,255,255,0.03);
-          backdrop-filter: blur(24px);
-          -webkit-backdrop-filter: blur(24px);
-          border: 1px solid rgba(255,255,255,0.08);
-          box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
-        }
-        .glass-card-blue {
-          background: rgba(59, 130, 246, 0.05);
-          backdrop-filter: blur(24px);
-          -webkit-backdrop-filter: blur(24px);
-          border: 1px solid rgba(59,130,246,0.15);
-          box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06), 0 0 40px rgba(59,130,246,0.05);
-        }
-        .btn-primary {
-          background: linear-gradient(135deg, #2563eb, #4f46e5);
-          box-shadow: 0 0 20px rgba(37,99,235,0.3), 0 4px 10px rgba(0,0,0,0.2);
-          border: 1px solid rgba(255,255,255,0.1);
-          color: white;
-          transition: all 0.2s ease;
-        }
-        .btn-primary:hover {
-          background: linear-gradient(135deg, #3b82f6, #6366f1);
-          box-shadow: 0 0 30px rgba(59,130,246,0.4), 0 4px 15px rgba(0,0,0,0.3);
-          transform: translateY(-1px);
-        }
-        .scan-btn {
-          background: linear-gradient(135deg, #8b5cf6, #d946ef);
-          box-shadow: 0 0 30px rgba(217,70,239,0.3), 0 4px 15px rgba(0,0,0,0.2);
-          border: 1px solid rgba(255,255,255,0.2);
-        }
-        .scan-btn:hover {
-          box-shadow: 0 0 40px rgba(217,70,239,0.4), 0 4px 15px rgba(0,0,0,0.3);
-          transform: translateY(-2px);
-        }
-        @keyframes pulse-glow {
-          0%, 100% { opacity: 0.4; }
-          50% { opacity: 0.8; }
-        }
-        .glow-pulse { animation: pulse-glow 2s ease-in-out infinite; }
-      `}</style>
+      
       
       {/* Background ambient orbs */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
