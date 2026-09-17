@@ -24,9 +24,8 @@ export default async function SubscriptionRequiredPage() {
         </div>
 
         <div className="pt-4 border-t border-slate-800">
-          <h3 className="text-lg font-bold text-white mb-4">Elegí tu Plan para Renovar</h3>
+          <h3 className="text-lg font-bold text-white mb-4">Reactivar Suscripción</h3>
           <div className="grid grid-cols-1 gap-4">
-            <ProSubscriptionButtons type="basic" userId={user.id} />
             <ProSubscriptionButtons type="pro" userId={user.id} />
           </div>
         </div>

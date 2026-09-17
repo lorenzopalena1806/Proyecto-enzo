@@ -306,7 +306,7 @@ export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {
             
             <label className="block text-sm font-medium text-slate-300">
               <span className="flex items-center gap-2">
-                Instagram <span className="bg-amber-500/20 text-amber-400 text-[10px] px-1.5 py-0.5 rounded uppercase font-bold tracking-wider">Plan Pro</span>
+                Instagram 
               </span>
             </label>
             <div className="relative">

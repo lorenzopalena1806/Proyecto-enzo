@@ -75,7 +75,7 @@ export function OnboardingTour() {
           element: getSelector('#tour-profile'),
           popover: {
             title: 'Tu Perfil y Marca 📝',
-            description: 'Configurá el nombre, rubro y logo de tu negocio. Si tenés el Plan PRO, ¡también podés vincular tu Instagram para sumar seguidores!',
+            description: 'Configurá el nombre, rubro y logo de tu negocio.',
             side: 'right',
             align: 'center'
           }
@@ -84,7 +84,7 @@ export function OnboardingTour() {
           element: getSelector('#tour-branches'),
           popover: {
             title: 'Tus Locales / Sucursales 🏢',
-            description: 'Acá cargás la dirección, horarios, mapa y WhatsApp de tu local para que los clientes te visiten. Si sos PRO, podés agregar múltiples sucursales.',
+            description: 'Acá cargás la dirección, horarios, mapa y WhatsApp de tu local para que los clientes te visiten.',
             side: 'right',
             align: 'center'
           }
@@ -138,7 +138,7 @@ export function OnboardingTour() {
           element: getSelector('#tour-history'),
           popover: {
             title: 'El Cerebro de tu Local 📈',
-            description: 'Acá vas a ver los gráficos de tu rendimiento. Es fundamental para descubrir qué días vendés más y quiénes son tus mejores clientes (Exclusivo PRO).',
+            description: 'Acá vas a ver los gráficos de tu rendimiento. Es fundamental para descubrir qué días vendés más y quiénes son tus mejores clientes.',
             side: 'right',
             align: 'center'
           }
@@ -152,15 +152,7 @@ export function OnboardingTour() {
             align: 'center'
           }
         },
-        {
-          element: getSelector('#tour-pro'),
-          popover: {
-            title: 'Control Total de tu Plan 👑',
-            description: 'Desde acá manejás tu pago mensual, podés pausar tu cuenta, o pasarte al Plan PRO cuando quieras potenciar tus ventas y desbloquear más funciones.',
-            side: 'right',
-            align: 'center'
-          }
-        },
+        
         {
           element: getSelector('#tour-support'),
           popover: {

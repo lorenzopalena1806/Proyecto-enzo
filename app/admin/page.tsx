@@ -101,7 +101,7 @@ export default async function AdminDashboard() {
           </div>
           <div className="bg-gradient-to-br from-fuchsia-900/50 to-slate-900 border border-fuchsia-500/20 rounded-2xl p-5 shadow-lg relative overflow-hidden">
              <div className="absolute top-0 right-0 p-4 opacity-10"><TrendingUp className="h-16 w-16" /></div>
-             <p className="text-sm font-semibold text-fuchsia-300 mb-1">Plan PRO</p>
+             <p className="text-sm font-semibold text-fuchsia-300 mb-1">Activos</p>
              <p className="text-3xl font-black text-fuchsia-100">{planProCount}</p>
           </div>
           <div className="bg-gradient-to-br from-red-900/50 to-slate-900 border border-red-500/20 rounded-2xl p-5 shadow-lg relative overflow-hidden">

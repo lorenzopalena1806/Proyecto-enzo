@@ -20,11 +20,11 @@ export function PremiumManager({ userId, isPremium }: { userId: string, isPremiu
     <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 mt-6">
       <h2 className="text-lg font-bold text-white flex items-center gap-2 mb-4">
         <Crown className="w-5 h-5 text-amber-400" />
-        Suscripción PRO B2B
+        Suscripción B2B
       </h2>
       
       <p className="text-sm text-slate-400 mb-4">
-        Estado actual: <strong className={isPremium ? 'text-amber-400' : 'text-slate-500'}>{isPremium ? 'Activo (Lazoo PRO)' : 'Inactivo (Plan Básico)'}</strong>
+        Estado actual: <strong className={isPremium ? 'text-amber-400' : 'text-slate-500'}>{isPremium ? 'Activo' : 'Inactivo'}</strong>
       </p>
 
       <button
@@ -37,7 +37,7 @@ export function PremiumManager({ userId, isPremium }: { userId: string, isPremiu
         }`}
       >
         {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-        {isPremium ? 'Revocar Acceso PRO' : 'Habilitar Acceso PRO'}
+        {isPremium ? 'Revocar Acceso' : 'Habilitar Acceso'}
       </button>
     </div>
   );

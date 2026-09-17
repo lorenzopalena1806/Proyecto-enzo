@@ -62,7 +62,7 @@ export async function createSubscription(planType: 'basic' | 'pro', userId: stri
   const proPrice = getSetting('pricing_pro', 80000);
 
   const amount = planType === 'basic' ? basicPrice : proPrice;
-  const reason = planType === 'basic' ? 'Lazoo Plan Básico' : 'Lazoo Plan PRO';
+  const reason = planType === 'basic' ? 'Lazoo Plan Básico' : 'Suscripción Lazoo';
 
   try {
     const response = await fetch('https://api.mercadopago.com/preapproval', {

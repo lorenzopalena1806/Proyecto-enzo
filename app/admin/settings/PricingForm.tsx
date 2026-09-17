@@ -41,7 +41,7 @@ export function PricingForm({ currentBasic, currentPro }: { currentBasic: number
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">Precio Plan PRO ($ ARS)</label>
+          <label className="block text-sm font-medium text-slate-300 mb-2">Precio Suscripción ($ ARS)</label>
           <input
             type="number"
             value={pro}

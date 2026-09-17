@@ -33,7 +33,7 @@ export default async function QRPage() {
     .eq('role', 'merchant')
     .eq('is_active', true);
 
-  // Sort: PRO first, then featured, then created_at
+  // Sort: featured, then created_at
   const merchants = (merchantsData || []).sort((a, b) => {
     if (a.is_featured && !b.is_featured) return -1;
     if (!a.is_featured && b.is_featured) return 1;

@@ -42,7 +42,7 @@ export function ProSubscriptionButtons({ type, userId }: { type: 'basic' | 'pro'
       disabled={loading}
       className="w-full py-4 rounded-xl font-bold text-slate-900 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 transition-all shadow-lg shadow-amber-500/25 flex items-center justify-center gap-2 disabled:opacity-50"
     >
-      {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Suscribirse al Plan PRO'}
+      {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Activar Suscripción'}
     </button>
   );
 }

@@ -62,7 +62,6 @@ const MERCHANT_NAV_ITEMS = [
     label: 'Ventas',
     icon: History,
     exact: false,
-    badge: 'PRO',
     id: 'tour-history',
   },
   { isHeader: true, label: 'Negocio' },
@@ -93,7 +92,6 @@ const MERCHANT_NAV_ITEMS = [
     label: 'Mis Sucursales',
     icon: MapPin,
     exact: false,
-    badge: 'PRO',
     id: 'tour-branches',
   },
   {
@@ -103,14 +101,7 @@ const MERCHANT_NAV_ITEMS = [
     exact: false,
     id: 'tour-profile',
   },
-  {
-    href: '/dashboard/pro',
-    label: 'Planes y Suscripción',
-    icon: Crown,
-    exact: false,
-    id: 'tour-pro',
-    badge: 'PRO',
-  },
+  
 ];
 
 const ADMIN_NAV_ITEMS = [
@@ -253,15 +244,7 @@ export function Sidebar({ profile, branches = [], activeBranchId = null }: Sideb
               <Icon className={`h-4 w-4 flex-shrink-0 ${active ? 'text-white' : 'text-slate-500 group-hover:text-white'}`} />
               <span>{item.label}</span>
               
-              {item.badge && (
-                <span className="ml-auto bg-violet-600/20 text-violet-300 border border-violet-500/30 text-[9px] px-1.5 py-0.5 rounded-full uppercase tracking-wider font-bold">
-                  {item.badge}
-                </span>
-              )}
-              {active && !item.badge && <ChevronRight className="h-3 w-3 ml-auto" />}
-            </Link>
-          );
-        })}
+              
       </nav>
 
       {/* Logout */}

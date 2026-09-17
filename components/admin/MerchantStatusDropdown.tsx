@@ -33,7 +33,7 @@ export function MerchantStatusDropdown({ merchantId, currentPlan, isActive }: { 
   if (isActive) {
     if (currentPlan === 'pro') {
       currentStyle = 'bg-amber-950/40 text-amber-400 border-amber-900/50';
-      currentLabel = 'Plan PRO';
+      currentLabel = 'Activo';
       CurrentIcon = Shield;
     } else {
       currentStyle = 'bg-blue-950/40 text-blue-400 border-blue-900/50';
@@ -66,7 +66,7 @@ export function MerchantStatusDropdown({ merchantId, currentPlan, isActive }: { 
             onClick={() => handleSelect('pro')}
             className="w-full text-left px-4 py-3 text-sm text-amber-400 hover:bg-slate-800 flex items-center gap-2 transition-colors border-b border-slate-800/50"
           >
-            <Shield className="w-4 h-4" /> Activar Plan PRO
+            <Shield className="w-4 h-4" /> Activar
           </button>
           <button 
             onClick={() => handleSelect('inactive')}
