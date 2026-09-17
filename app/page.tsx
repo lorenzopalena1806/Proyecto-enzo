@@ -179,8 +179,10 @@ export default async function Home() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 text-center">
             <p className="text-sm font-semibold text-cyan-400 uppercase tracking-widest mb-10">Confían en nuestra tecnología</p>
             <div className="flex flex-wrap justify-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-              {/* Placeholders that look like real business logos */}
-              <div className="flex items-center gap-2 font-black text-xl text-white"><Store className="w-6 h-6 text-cyan-500"/> EL ABASTO</div>
+              {/* Real and Placeholder logos */}
+              <div className="flex items-center justify-center">
+                <img src="/logos/pepis.png" alt="Pepi's Lomos" className="h-12 w-auto object-contain rounded-full" />
+              </div>
               <div className="flex items-center gap-2 font-black text-xl text-white"><TrendingUp className="w-6 h-6 text-blue-500"/> MERCADO NORTE</div>
               <div className="flex items-center gap-2 font-black text-xl text-white"><Users className="w-6 h-6 text-emerald-500"/> RED CARNES</div>
               <div className="flex items-center gap-2 font-black text-xl text-white"><Zap className="w-6 h-6 text-amber-500"/> KIOSCO 24HS</div>
