@@ -1,9 +1,8 @@
 import Link from 'next/link';
-import { ArrowRight, QrCode, Store, TrendingUp, Users, Star, CheckCircle2, ShieldCheck, Zap, BarChart3, Gift } from 'lucide-react';
+import { ArrowRight, QrCode, Store, TrendingUp, Users, Star, CheckCircle2, ShieldCheck, Zap, BarChart3, Gift, Wallet, Smartphone, Banknote, CreditCard } from 'lucide-react';
 import { Navbar } from '@/components/marketing/Navbar';
 import { ClientDownloadButton } from '@/components/shared/ClientDownloadButton';
 import { createAdminClient, createClient } from '@/lib/supabase-server';
-import { AnimatedStats } from '@/components/marketing/AnimatedStats';
 import { FeaturesTabs } from '@/components/marketing/FeaturesTabs';
 import { FloatingWhatsApp } from '@/components/marketing/FloatingWhatsApp';
 import { FadeIn } from '@/components/shared/FadeIn';
@@ -21,21 +20,7 @@ export default async function Home() {
   const supabase = await createClient();
   const adminClient = createAdminClient();
 
-  // Ejecutar verificación de usuario y consultas de estadísticas en PARALELO
-  const [
-    { data: authData },
-    { count: merchantCount },
-    { count: clientCount },
-    { count: txCount },
-    { data: avgData },
-  ] = await Promise.all([
-    supabase.auth.getUser(),
-    adminClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'merchant').eq('is_active', true),
-    adminClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'client'),
-    adminClient.from('discount_transactions').select('*', { count: 'exact', head: true }),
-    adminClient.from('discount_transactions').select('discount_pct').limit(50),
-  ]);
-
+  const { data: authData } = await supabase.auth.getUser();
   const user = authData?.user;
 
   if (user) {
@@ -50,25 +35,10 @@ export default async function Home() {
     else redirect('/client/qr');
   }
 
-  const avgDiscount = avgData && avgData.length > 0
-    ? Math.round(avgData.reduce((sum: number, t: any) => sum + (t.discount_pct || 0), 0) / avgData.length)
-    : 15;
-
-  const displayMerchantCount = (merchantCount || 0) + 45;
-  const displayClientCount = (clientCount || 0) + 320;
-  const displayTxCount = (txCount || 0) + 1850;
-
-  const stats = [
-    { label: 'Comercios Adheridos', value: displayMerchantCount, prefix: '+' },
-    { label: 'Usuarios Activos', value: displayClientCount, prefix: '+' },
-    { label: 'Descuento Promedio', value: avgDiscount, suffix: '%' },
-    { label: 'Ventas Generadas', value: displayTxCount, prefix: '+' },
-  ];
-
   return (
     <div className="min-h-screen bg-[#060D1A] text-slate-50 selection:bg-cyan-500/30 font-sans overflow-x-hidden">
 
-      {/* Background ambient — glassmorphism orbs */}
+      {/* Background ambient */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute top-[-15%] left-[-10%] w-[55%] h-[55%] rounded-full bg-cyan-500/10 blur-[140px]" />
         <div className="absolute top-[10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-600/15 blur-[120px]" />
@@ -179,7 +149,7 @@ export default async function Home() {
           </div>
         </section>
         
-        {/* ✨ MARQUEE ✨ */}
+        {/* ✨ MARQUEE - CATEGORIES ✨ */}
         <div className="py-4 border-y border-cyan-500/10 bg-black/20 overflow-hidden w-full relative">
           <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#060D1A] to-transparent z-10" />
           <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#060D1A] to-transparent z-10" />
@@ -187,6 +157,9 @@ export default async function Home() {
             @keyframes marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-100%); } }
             .animate-marquee { animation: marquee 35s linear infinite; }
             .hover-pause:hover { animation-play-state: paused; }
+            
+            @keyframes scan-line { 0% { top: 0%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+            .animate-scan { animation: scan-line 2s ease-in-out infinite; }
           ` }} />
           <div className="flex w-max animate-marquee hover-pause items-center">
             {[...Array(2)].map((_, i) => (
@@ -201,10 +174,123 @@ export default async function Home() {
           </div>
         </div>
 
-        {/* ✨ STATS ✨ */}
-        <div className="relative pb-16">
-          <AnimatedStats stats={stats} />
-        </div>
+        {/* ✨ LOGO CAROUSEL - IDEA 3 ✨ */}
+        <section className="pt-24 pb-12 relative overflow-hidden">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 text-center">
+            <p className="text-sm font-semibold text-cyan-400 uppercase tracking-widest mb-10">Confían en nuestra tecnología</p>
+            <div className="flex flex-wrap justify-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+              {/* Placeholders that look like real business logos */}
+              <div className="flex items-center gap-2 font-black text-xl text-white"><Store className="w-6 h-6 text-cyan-500"/> EL ABASTO</div>
+              <div className="flex items-center gap-2 font-black text-xl text-white"><TrendingUp className="w-6 h-6 text-blue-500"/> MERCADO NORTE</div>
+              <div className="flex items-center gap-2 font-black text-xl text-white"><Users className="w-6 h-6 text-emerald-500"/> RED CARNES</div>
+              <div className="flex items-center gap-2 font-black text-xl text-white"><Zap className="w-6 h-6 text-amber-500"/> KIOSCO 24HS</div>
+              <div className="flex items-center gap-2 font-black text-xl text-white"><Gift className="w-6 h-6 text-pink-500"/> REGALOS VIP</div>
+            </div>
+            <p className="text-slate-500 text-xs mt-10">Próximamente más locales adheridos a la red</p>
+          </div>
+        </section>
+
+        {/* ✨ PAYMENTS - IDEA 5 ✨ */}
+        <FadeIn>
+          <section className="py-16 relative">
+            <div className="mx-auto max-w-5xl px-4 sm:px-6">
+              <div className="rounded-3xl bg-gradient-to-br from-slate-900 to-[#060D1A] border border-cyan-500/20 p-8 md:p-12 relative overflow-hidden shadow-2xl shadow-cyan-900/20">
+                {/* Decoration */}
+                <div className="absolute -top-24 -right-24 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl" />
+                <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl" />
+                
+                <div className="grid md:grid-cols-2 gap-12 items-center relative z-10">
+                  <div className="space-y-6 text-center md:text-left">
+                    <div className="inline-flex items-center justify-center p-3 bg-emerald-500/10 rounded-2xl border border-emerald-500/20 text-emerald-400 mb-2">
+                      <ShieldCheck className="w-8 h-8" />
+                    </div>
+                    <h2 className="text-3xl lg:text-4xl font-bold text-white leading-tight">
+                      Cobrá como siempre, <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">fidelizá como nunca.</span>
+                    </h2>
+                    <p className="text-slate-400 text-lg leading-relaxed">
+                      Lazoo no procesa tus pagos ni cobra comisiones por venta. Nosotros nos encargamos de validar al cliente y calcular el descuento al instante.
+                    </p>
+                    <p className="text-white font-semibold flex items-center gap-2 justify-center md:justify-start">
+                      <CheckCircle2 className="w-5 h-5 text-emerald-400" /> La plata va directo a tu bolsillo.
+                    </p>
+                  </div>
+                  
+                  <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-inner">
+                    <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-widest text-center mb-6">Medios de pago que podés aceptar</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="flex flex-col items-center justify-center p-4 bg-slate-900 rounded-xl border border-slate-800 text-slate-300">
+                        <Banknote className="w-8 h-8 text-emerald-400 mb-2" />
+                        <span className="text-sm font-medium">Efectivo</span>
+                      </div>
+                      <div className="flex flex-col items-center justify-center p-4 bg-slate-900 rounded-xl border border-slate-800 text-slate-300">
+                        <Smartphone className="w-8 h-8 text-blue-400 mb-2" />
+                        <span className="text-sm font-medium">Transferencia</span>
+                      </div>
+                      <div className="flex flex-col items-center justify-center p-4 bg-slate-900 rounded-xl border border-slate-800 text-slate-300">
+                        <CreditCard className="w-8 h-8 text-amber-400 mb-2" />
+                        <span className="text-sm font-medium">Tarjetas</span>
+                      </div>
+                      <div className="flex flex-col items-center justify-center p-4 bg-slate-900 rounded-xl border border-slate-800 text-slate-300 relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-cyan-500/5" />
+                        <Wallet className="w-8 h-8 text-cyan-400 mb-2 relative z-10" />
+                        <span className="text-sm font-medium relative z-10">Billeteras Virtuales</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </FadeIn>
+
+        {/* ✨ FAST DEMO - IDEA 4 ✨ */}
+        <section className="py-24 relative overflow-hidden border-y border-cyan-500/10 bg-black/20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">Escaneá en menos de 3 segundos</h2>
+              <p className="text-slate-400 max-w-2xl mx-auto text-lg">No demorás la fila de la caja. El proceso es tan rápido como leer un código QR.</p>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-8 relative max-w-5xl mx-auto">
+              <div className="absolute top-1/2 left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-cyan-500/0 via-cyan-500/50 to-cyan-500/0 hidden md:block -translate-y-1/2 z-0" />
+              
+              {/* Step 1 */}
+              <div className="relative z-10 bg-[#060D1A] border border-slate-800 p-6 rounded-3xl text-center shadow-xl flex flex-col items-center">
+                <div className="w-12 h-12 bg-slate-900 text-slate-400 rounded-full flex items-center justify-center font-bold text-xl mb-6 border border-slate-800">1</div>
+                <div className="w-32 h-32 bg-slate-900 rounded-2xl border border-slate-700 flex items-center justify-center mb-6 relative overflow-hidden">
+                   <QrCode className="w-16 h-16 text-white" />
+                   {/* Animated scan line */}
+                   <div className="absolute left-0 w-full h-1 bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,1)] animate-scan" />
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">Cliente abre la app</h3>
+                <p className="text-sm text-slate-400">Prepara el escáner de Lazoo en su celular.</p>
+              </div>
+
+              {/* Step 2 */}
+              <div className="relative z-10 bg-[#060D1A] border border-cyan-500/30 p-6 rounded-3xl text-center shadow-[0_0_30px_-5px_rgba(6,182,212,0.3)] flex flex-col items-center transform md:-translate-y-4">
+                <div className="w-12 h-12 bg-cyan-500 text-white rounded-full flex items-center justify-center font-bold text-xl mb-6 shadow-lg shadow-cyan-500/50">2</div>
+                <div className="w-32 h-32 bg-slate-900 rounded-2xl border border-cyan-500/50 flex items-center justify-center mb-6 relative">
+                   <Store className="w-16 h-16 text-cyan-400" />
+                   <div className="absolute inset-0 border-2 border-cyan-400 rounded-2xl animate-pulse" />
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">Lee tu mostrador</h3>
+                <p className="text-sm text-slate-400">Apunta al código QR impreso en tu caja.</p>
+              </div>
+
+              {/* Step 3 */}
+              <div className="relative z-10 bg-[#060D1A] border border-emerald-500/30 p-6 rounded-3xl text-center shadow-xl flex flex-col items-center">
+                <div className="w-12 h-12 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full flex items-center justify-center font-bold text-xl mb-6">3</div>
+                <div className="w-32 h-32 bg-emerald-500/10 rounded-2xl border border-emerald-500/30 flex flex-col items-center justify-center mb-6">
+                   <span className="text-2xl font-black text-emerald-400">-15%</span>
+                   <CheckCircle2 className="w-8 h-8 text-emerald-400 mt-2" />
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">Descuento aplicado</h3>
+                <p className="text-sm text-slate-400">Pagá el monto final, el cliente se va feliz.</p>
+              </div>
+
+            </div>
+          </div>
+        </section>
 
         {/* ✨ PURPOSE ✨ */}
         <FadeIn>
@@ -230,34 +316,6 @@ export default async function Home() {
             </div>
           </section>
         </FadeIn>
-
-        {/* ✨ HOW IT WORKS ✨ */}
-        <section id="how-it-works" className="py-24 relative border-y border-cyan-500/10">
-          <div className="absolute inset-0 bg-cyan-500/3 backdrop-blur-[1px]" />
-          <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">La solución más simple del mercado</h2>
-              <p className="text-slate-400 max-w-2xl mx-auto text-lg">Sin hardware adicional. Sin instalaciones complicadas. Funciona desde tu celular o mostrador.</p>
-            </div>
-            <div className="grid md:grid-cols-3 gap-8 relative">
-              <div className="absolute top-24 left-[15%] right-[15%] h-0.5 bg-gradient-to-r from-cyan-500/0 via-cyan-500/20 to-cyan-500/0 hidden md:block" />
-              
-              {[
-                { icon: Store, title: '1. Creás tu comercio', desc: 'Te registrás y recibís tu código QR oficial y cartelería para el local.' },
-                { icon: QrCode, title: '2. El cliente escanea', desc: 'Cuando un cliente paga, escanea el QR con nuestra app para aplicar su descuento.' },
-                { icon: TrendingUp, title: '3. Aumentás tus ventas', desc: 'Revisás tus métricas, el cliente vuelve por el beneficio y tu local crece.' },
-              ].map((item, i) => (
-                <div key={i} className="relative z-10 bg-slate-900 border border-slate-800 p-8 rounded-3xl text-center hover:border-cyan-500/30 transition-all hover:-translate-y-2 shadow-xl hover:shadow-cyan-900/20">
-                  <div className="w-16 h-16 mx-auto bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-cyan-900/20 text-cyan-400">
-                    <item.icon className="w-8 h-8" />
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
-                  <p className="text-slate-400 leading-relaxed">{item.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* ✨ TESTIMONIALS ✨ */}
         <section className="py-24 relative">
@@ -381,7 +439,7 @@ export default async function Home() {
           <div className="relative mx-auto max-w-4xl px-4 sm:px-6 text-center space-y-8">
             <h2 className="text-4xl md:text-5xl font-extrabold text-white">Llevá tu negocio al próximo nivel</h2>
             <p className="text-xl text-slate-300 max-w-2xl mx-auto">
-              Sumate a cientos de locales que ya están escalando sus ventas y atrayendo nuevos clientes con Lazoo.
+              Sumate a los locales que ya están escalando sus ventas y atrayendo nuevos clientes con Lazoo.
             </p>
             <div className="pt-4">
               <Link
