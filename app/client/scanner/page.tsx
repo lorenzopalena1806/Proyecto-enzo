@@ -1,7 +1,6 @@
 import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
-import dynamic from 'next/dynamic';
-const ClientScanner = dynamic(() => import('@/components/client/ClientScanner').then(mod => mod.ClientScanner), { ssr: false, loading: () => <div className="animate-pulse bg-slate-900 rounded-2xl h-80 flex items-center justify-center text-slate-500 border border-slate-800">Cargando cámara...</div> });
+import { ClientScanner } from '@/components/client/ClientScanner';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
 import React from 'react';

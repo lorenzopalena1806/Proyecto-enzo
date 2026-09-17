@@ -18,7 +18,7 @@ interface Branch {
   longitude: number;
 }
 
-export function BranchManager({ branches, planType = 'basic' }: { branches: Branch[], planType?: string }) {
+export function BranchManager({ branches }: { branches: Branch[] }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingBranch, setEditingBranch] = useState<Branch | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,8 +27,6 @@ export function BranchManager({ branches, planType = 'basic' }: { branches: Bran
   const [businessHours, setBusinessHours] = useState('');
 
   const router = useRouter();
-
-  const isBasicAndLimited = planType === 'basic' && branches.length >= 1;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -49,11 +47,6 @@ export function BranchManager({ branches, planType = 'basic' }: { branches: Bran
         setIsLoading(false);
       }
     } else {
-      if (isBasicAndLimited) {
-        setErrorMsg('El Plan Básico permite máximo 1 sucursal.');
-        setIsLoading(false);
-        return;
-      }
       const result = await createBranchAction(formData);
       if (result.success) {
         setIsModalOpen(false);
@@ -86,19 +79,11 @@ export function BranchManager({ branches, planType = 'basic' }: { branches: Bran
         <div>
           <button 
             onClick={() => {
-              if (isBasicAndLimited) {
-                alert('El Plan Básico permite máximo 1 sucursal. Mejorá tu plan a PRO para agregar más sucursales.');
-                return;
-              }
               setEditingBranch(null);
               setBusinessHours('');
               setIsModalOpen(true);
             }}
-            className={`font-bold py-2 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95 ${
-              isBasicAndLimited 
-                ? 'bg-slate-700 text-slate-400 cursor-not-allowed' 
-                : 'bg-violet-600 hover:bg-violet-500 text-white'
-            }`}
+            className="font-bold py-2 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95 bg-violet-600 hover:bg-violet-500 text-white"
           >
             <Plus className="h-5 w-5" />
             Nueva Sucursal

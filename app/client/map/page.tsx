@@ -22,7 +22,7 @@ export default async function MapPage() {
   // Traemos todos los perfiles de los comercios activos para heredar nombre, logo, etc.
   const { data: merchants } = await adminClient
     .from('profiles')
-    .select('id, business_name, avatar_url, category, plan_type')
+    .select('id, business_name, avatar_url, category')
     .eq('role', 'merchant')
     .eq('is_active', true);
 
@@ -60,7 +60,7 @@ export default async function MapPage() {
         address: branch.address,
         latitude: branch.latitude,
         longitude: branch.longitude,
-        is_premium: mother?.plan_type === 'pro'
+        is_premium: false
       };
     });
   }

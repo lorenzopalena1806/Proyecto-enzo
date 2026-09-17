@@ -1,69 +1,43 @@
 const fs = require('fs');
+
 let code = fs.readFileSync('components/dashboard/ProfileEditForm.tsx', 'utf8');
 
+// Use string replacement for ProfileEditForm
 code = code.replace(
-  `avatar_url: profile.avatar_url || '',`,
-  `avatar_url: profile.avatar_url || '',
-    banner_url: (profile as any).banner_url || '',`
-);
-
-code = code.replace(
-  `avatar_url: formData.avatar_url || null,`,
-  `avatar_url: formData.avatar_url || null,
-      banner_url: formData.banner_url || null,`
-);
-
-const bannerFieldHtml = `            </div>
-          </div>
-        </div>
-
-        {/* Banner Input (new) */}
-        <div className="glass-panel p-6 sm:p-8 rounded-3xl relative overflow-hidden mt-6">
-          <div className="absolute top-0 right-0 p-6 opacity-10 pointer-events-none">
-            <ImageIcon className="w-32 h-32 text-indigo-500" />
-          </div>
-          <h2 className="text-xl font-bold text-white mb-6 relative z-10 flex items-center gap-2">
-            <ImageIcon className="text-indigo-400 w-5 h-5" />
-            Banner del Perfil
-          </h2>
-          
-          <div className="space-y-4 relative z-10">
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
-                URL de tu foto de portada
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span className="text-slate-500 font-bold text-sm">http://</span>
+  `            {!isPro && (
+              <a href="/dashboard/pro" className="absolute inset-0 bg-slate-950/60 backdrop-blur-[1px] z-10 flex flex-col items-center justify-center rounded-xl cursor-pointer hover:bg-slate-950/40 transition-colors">
+                <div className="bg-slate-900 border border-slate-700 px-4 py-2 rounded-lg flex items-center gap-2 shadow-xl">
+                  <svg className="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                  <span className="text-sm text-slate-300 font-medium">Exclusivo Plan PRO</span>
                 </div>
-                <input
-                  name="banner_url"
-                  type="url"
-                  value={formData.banner_url}
-                  onChange={handleProfileChange}
-                  placeholder="Ej: https://misitio.com/banner.png"
-                  className="w-full pl-16 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
-                />
-              </div>
-              <p className="mt-2 text-xs text-slate-400">
-                Esta foto se mostrará grande arriba de todo en tu perfil. Si no ponés nada, se usará tu logo.
-              </p>
-            </div>
-            
-            {formData.banner_url && (
-              <div className="mt-4 border border-slate-700 rounded-xl overflow-hidden relative h-32 w-full bg-slate-900">
-                <img src={formData.banner_url} alt="Banner Preview" className="w-full h-full object-cover" />
-              </div>
-            )}
-          </div>
-        </div>`;
+              </a>
+            )}`,
+  ''
+);
 
 code = code.replace(
-  `            </div>
-          </div>
-        </div>`,
-  bannerFieldHtml
+  '                disabled={!isPro}\n                placeholder',
+  '                placeholder'
+);
+
+code = code.replace(
+  `              <span className="flex items-center gap-2">
+                Instagram <span className="bg-amber-500/20 text-amber-400 text-[10px] px-1.5 py-0.5 rounded uppercase font-bold tracking-wider">Plan Pro</span>
+              </span>`,
+  `              <span className="flex items-center gap-2">
+                Instagram
+              </span>`
+);
+
+code = code.replace(
+  'export function ProfileEditForm({ profile, userEmail, isPro = false }: ProfileEditFormProps) {',
+  'export function ProfileEditForm({ profile, userEmail }: ProfileEditFormProps) {'
+);
+
+code = code.replace(
+  '  isPro?: boolean;\n',
+  ''
 );
 
 fs.writeFileSync('components/dashboard/ProfileEditForm.tsx', code);
-console.log('Added banner_url to ProfileEditForm');
+console.log('✅ components/dashboard/ProfileEditForm.tsx fixed via script');

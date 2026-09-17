@@ -20,12 +20,12 @@ export default async function MerchantHistoryPage() {
 
   const { data: profile } = await adminClient
     .from('profiles')
-    .select('role, plan_type')
+    .select('role')
     .eq('id', user.id)
     .single();
 
   if (profile?.role !== 'merchant') redirect('/dashboard');
-  const isBasic = profile?.plan_type === 'basic';
+  
 
   const cookieStore = await cookies();
   const activeBranchId = cookieStore.get('lazoo_active_branch')?.value || null;
@@ -88,44 +88,13 @@ export default async function MerchantHistoryPage() {
         <p className="text-slate-400 mt-1">Métricas, sugerencias de negocio y el registro completo de tus ventas.</p>
       </div>
 
-      {isBasic ? (
-        <div className="bg-gradient-to-r from-amber-500/10 to-amber-700/10 border border-amber-500/20 rounded-2xl p-6 relative overflow-hidden shadow-[0_0_40px_rgba(245,158,11,0.05)]">
-          <div className="absolute top-0 right-0 p-4 opacity-10 rotate-12">
-            <svg className="w-32 h-32 text-amber-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          </div>
-          <div className="relative z-10 space-y-3">
-            <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-amber-500/20 text-amber-400 text-[10px] font-black uppercase tracking-wider">
-              Exclusivo PRO
-            </div>
-            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">Reportes Avanzados</h2>
-            <p className="text-slate-300 text-sm max-w-md leading-relaxed">Pasate a PRO para acceder a <strong>Lazoo Insights</strong>: análisis inteligente de tu clientela, horarios pico, sugerencias de ofertas automáticas y un resumen de las métricas clave para potenciar tus ventas.</p>
-            <div className="pt-2">
-              <a href="/dashboard/pro" className="inline-block bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-900 font-bold px-6 py-3 rounded-xl transition-all shadow-lg active:scale-95">Conocer Beneficios PRO</a>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <LazooInsights merchantId={user.id} />
-      )}
+      <LazooInsights merchantId={user.id} />
 
       {/* Stats & Gráfico (Bloqueados si es Basic) */}
       <div className="relative">
-        {isBasic && (
-          <div className="absolute inset-0 z-20 flex flex-col items-center justify-start pt-20 sm:pt-32 bg-slate-950/60 backdrop-blur-md rounded-2xl border border-slate-800/50">
-            <svg className="w-12 h-12 text-slate-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
-            <h3 className="text-xl font-bold text-white mb-2">Estadísticas Bloqueadas</h3>
-            <p className="text-slate-400 text-sm max-w-sm text-center mb-4">
-              Las métricas detalladas y gráficos de escaneos están disponibles solo en el Plan PRO.
-            </p>
-            <a href="/dashboard/pro" className="bg-white hover:bg-slate-200 text-slate-900 font-bold py-2 px-6 rounded-xl transition-colors">
-              Mejorar Plan
-            </a>
-          </div>
-        )}
+        
 
-        <div className={`space-y-6 ${isBasic ? 'opacity-20 pointer-events-none blur-sm' : ''}`}>
+        <div className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
               <Receipt className="h-5 w-5 text-violet-400" />

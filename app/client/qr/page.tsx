@@ -120,14 +120,12 @@ export default async function ClientQRPage() {
   // 3. Fetch Locales Adheridos (active merchants)
   const { data: merchantsData } = await adminClient
     .from('profiles')
-    .select('id, business_name, avatar_url, maps_url, category, is_featured, address, latitude, longitude, plan_type, created_at')
+    .select('id, business_name, avatar_url, maps_url, category, is_featured, address, latitude, longitude, created_at')
     .eq('role', 'merchant')
     .eq('is_active', true);
     
-  // Sort: PRO first, then featured, then created_at
+  // Sort: featured, then created_at
   const merchants = (merchantsData || []).sort((a, b) => {
-    if (a.plan_type === 'pro' && b.plan_type !== 'pro') return -1;
-    if (a.plan_type !== 'pro' && b.plan_type === 'pro') return 1;
     if (a.is_featured && !b.is_featured) return -1;
     if (!a.is_featured && b.is_featured) return 1;
     return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();

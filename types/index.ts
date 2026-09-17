@@ -21,7 +21,7 @@ export interface Profile {
   address: string | null;
   business_hours: string | null;
   subscription_expires_at: string | null;
-  plan_type?: 'basic' | 'pro' | null;
+  plan_type?: string | null;
   mp_subscription_status?: string | null;
   instagram?: string | null;
   has_seen_tutorial?: boolean;

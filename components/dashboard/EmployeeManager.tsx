@@ -10,18 +10,14 @@ export function EmployeeManager({
   employees, 
   branches,
   baseUrl,
-  planType = 'basic'
 }: { 
   employees: any[]; 
   branches: any[];
   baseUrl: string;
-  planType?: string;
 }) {
   const router = useRouter();
   const [isCreating, setIsCreating] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
-
-  const isBasicAndLimited = planType === 'basic' && employees.length >= 0;
 
   const copyLink = (id: string) => {
     navigator.clipboard.writeText(`${baseUrl}/cajero/${id}`);
@@ -31,10 +27,6 @@ export function EmployeeManager({
 
   const handleCreate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isBasicAndLimited) {
-      alert('El Plan Básico no permite crear cajeros. Mejorá tu plan a PRO para gestionar empleados.');
-      return;
-    }
     setIsCreating(true);
     const formData = new FormData(e.currentTarget);
     await createEmployeeServer(formData);
@@ -100,23 +92,8 @@ export function EmployeeManager({
 
       {/* Create Form */}
       <div className="glass-panel rounded-2xl p-6 shadow-lg border border-white/5 relative overflow-hidden">
-        {isBasicAndLimited && (
-          <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center p-6 text-center">
-            <Shield className="w-12 h-12 text-amber-500 mb-4" />
-            <h3 className="text-xl font-bold text-white mb-2">Límite Alcanzado</h3>
-            <p className="text-slate-300 text-sm max-w-sm mb-4">
-              El Plan Básico no incluye gestión de cajeros. Mejorá tu plan a PRO para agregar sucursales y cajeros ilimitados.
-            </p>
-            <button 
-              onClick={() => router.push('/dashboard/pro')}
-              className="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-6 rounded-xl transition-colors"
-            >
-              Mejorar Plan
-            </button>
-          </div>
-        )}
 
-        <h2 className="text-xl font-bold text-white flex items-center gap-2 mb-6">
+<h2 className="text-xl font-bold text-white flex items-center gap-2 mb-6">
           <Shield className="w-5 h-5 text-emerald-400" />
           Crear Nuevo Cajero
         </h2>
@@ -160,7 +137,7 @@ export function EmployeeManager({
 
           <button
             type="submit"
-            disabled={isCreating || isBasicAndLimited}
+            disabled={isCreating}
             className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
           >
             {isCreating ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Crear Cajero'}

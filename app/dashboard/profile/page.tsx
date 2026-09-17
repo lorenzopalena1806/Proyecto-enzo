@@ -32,7 +32,7 @@ export default async function ProfilePage() {
 
       <PushManager />
 
-      <ProfileEditForm profile={profile} userEmail={user.email || ''} isPro={isPro} />
+      <ProfileEditForm profile={profile} userEmail={user.email || ''} />
       <div className="glass-panel p-6 rounded-2xl border border-white/5 space-y-4">
         <h2 className="text-lg font-semibold text-white">Tutorial Interactivo</h2>
         <p className="text-sm text-slate-400">Si querés volver a ver la guía paso a paso de cómo usar tu panel, podés reiniciarla acá.</p>

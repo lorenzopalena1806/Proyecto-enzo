@@ -58,13 +58,6 @@ export async function confirmScannedPaymentServer(merchantId: string, amount: nu
     return { success: false, reason: 'Demasiados intentos de pago. Esperá unos segundos por seguridad.' };
   }
 
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  
-  if (!user) {
-    return { success: false, reason: 'Debes iniciar sesión para confirmar el pago.' };
-  }
-
   const adminClient = createAdminClient();
 
   const { data: qrData } = await adminClient

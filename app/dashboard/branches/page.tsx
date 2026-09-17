@@ -15,7 +15,7 @@ export default async function BranchesPage() {
   const adminClient = createAdminClient();
 
   // Verificar rol y plan
-  const { data: profile } = await adminClient.from('profiles').select('role, plan_type').eq('id', user.id).single();
+  const { data: profile } = await adminClient.from('profiles').select('role').eq('id', user.id).single();
   if (profile?.role !== 'merchant') redirect('/dashboard');
 
   const { data: branches } = await adminClient
@@ -26,7 +26,7 @@ export default async function BranchesPage() {
 
   return (
     <div className="space-y-6">
-      <BranchManager branches={branches || []} planType={profile.plan_type || 'basic'} />
+      <BranchManager branches={branches || []} />
     </div>
   );
 }
