@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { AlertTriangle, MapPin, Zap, Star, ExternalLink, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { ProSubscriptionButtons } from '@/app/dashboard/pro/ProSubscriptionButtons';
-import { LogoutButton } from '@/components/client/LogoutButton';
+import { LogoutButton } from '@/components/dashboard/LogoutButton';
 
 export const metadata = {
   title: 'Cuenta Suspendida | Lazoo',

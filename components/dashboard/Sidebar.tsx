@@ -245,6 +245,9 @@ export function Sidebar({ profile, branches = [], activeBranchId = null }: Sideb
               <span>{item.label}</span>
               
               
+            </Link>
+          );
+        })}
       </nav>
 
       {/* Logout */}
