@@ -56,11 +56,6 @@ export default async function Home() {
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               {/* Left text */}
               <div className="space-y-8 text-center lg:text-left z-20">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 backdrop-blur-md text-sm font-medium text-cyan-300">
-                  <SparklesIcon className="w-4 h-4" />
-                  <span>El primer club de beneficios de tu ciudad</span>
-                </div>
-
                 <h1 className="text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight leading-[1.1]">
                   <span className="text-white">Convertí visitas en </span>
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-cyan-400">
