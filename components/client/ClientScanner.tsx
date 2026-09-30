@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { Html5Qrcode } from 'html5-qrcode';
+import type { Html5Qrcode } from 'html5-qrcode';
 import { useRouter } from 'next/navigation';
 import { Scan, AlertTriangle, Loader2 } from 'lucide-react';
 
@@ -13,43 +13,49 @@ export function ClientScanner() {
 
   useEffect(() => {
     let isMounted = true;
-    const scanner = new Html5Qrcode("reader");
-    scannerRef.current = scanner;
+    
+    // Dynamic import to avoid loading this heavy library on initial page load
+    import('html5-qrcode').then(({ Html5Qrcode }) => {
+      if (!isMounted) return;
+      
+      const scanner = new Html5Qrcode("reader");
+      scannerRef.current = scanner;
 
-    scanner.start(
-      { facingMode: "environment" },
-      { fps: 10, qrbox: { width: 250, height: 250 } },
-      (decodedText) => {
-        if (decodedText.includes('/pay?m=')) {
-          try {
-            const url = new URL(decodedText);
-            scanner.stop().then(() => {
-              if (isMounted) router.push(url.pathname + url.search);
-            });
-          } catch (e) {
-            if (decodedText.startsWith('/pay')) {
+      scanner.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: { width: 250, height: 250 } },
+        (decodedText) => {
+          if (decodedText.includes('/pay?m=')) {
+            try {
+              const url = new URL(decodedText);
               scanner.stop().then(() => {
-                if (isMounted) router.push(decodedText);
+                if (isMounted) router.push(url.pathname + url.search);
               });
-            } else {
-              setError('El código QR no pertenece a Lazoo.');
+            } catch (e) {
+              if (decodedText.startsWith('/pay')) {
+                scanner.stop().then(() => {
+                  if (isMounted) router.push(decodedText);
+                });
+              } else {
+                setError('El código QR no pertenece a Lazoo.');
+              }
             }
+          } else {
+            setError('Código QR no válido o de otra aplicación.');
           }
-        } else {
-          setError('Código QR no válido o de otra aplicación.');
+        },
+        (errorMessage) => {
+          // Ignore normal scan errors
         }
-      },
-      (errorMessage) => {
-        // Ignore normal scan errors
-      }
-    ).then(() => {
-      if (isMounted) setIsStarting(false);
-    }).catch((err) => {
-      if (isMounted) {
-        setIsStarting(false);
-        setError('No se pudo acceder a la cámara. Por favor, dale permisos al navegador.');
-        console.error(err);
-      }
+      ).then(() => {
+        if (isMounted) setIsStarting(false);
+      }).catch((err) => {
+        if (isMounted) {
+          setIsStarting(false);
+          setError('No se pudo acceder a la cámara. Por favor, dale permisos al navegador.');
+          console.error(err);
+        }
+      });
     });
 
     return () => {
