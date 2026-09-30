@@ -6,12 +6,6 @@ const rateLimit = new Map<string, number>();
 
 export async function POST(req: Request) {
   try {
-    // Verify internal secret to prevent public abuse
-    const secret = req.headers.get('x-log-secret');
-    if (!secret || secret !== process.env.LOG_SECRET) {
-      return NextResponse.json({ success: false }, { status: 401 });
-    }
-
     const ip = req.headers.get('x-forwarded-for') || 'unknown';
     const now = Date.now();
     const lastRequest = rateLimit.get(ip);

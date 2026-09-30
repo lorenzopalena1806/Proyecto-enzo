@@ -18,7 +18,6 @@ export default function Error({
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'x-log-secret': process.env.NEXT_PUBLIC_LOG_SECRET || '',
       },
       body: JSON.stringify({
         message: error.message,
