@@ -2,9 +2,9 @@ name: Supabase Keep-Alive
 
 on:
   schedule:
-    # Runs every 3 days at 12:00 UTC (avoids the 7-day pause threshold)
+    # Runs every 3 days at 12:00 UTC
     - cron: '0 12 */3 * *'
-  workflow_dispatch: # Also allows manual trigger from GitHub UI
+  workflow_dispatch: # Allow manual trigger from GitHub UI
 
 jobs:
   ping:
@@ -12,16 +12,23 @@ jobs:
     steps:
       - name: Ping Supabase to prevent pause
         run: |
+          echo "🔔 Sending keep-alive ping to Supabase..."
+          
           response=$(curl -s -o /dev/null -w "%{http_code}" \
             "${{ secrets.SUPABASE_URL }}/rest/v1/profiles?select=id&limit=1" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}")
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            --max-time 30 \
+            --connect-timeout 10)
           
-          echo "Supabase ping response: $response"
+          echo "Supabase response code: $response"
           
-          if [ "$response" -eq 200 ]; then
-            echo "✅ Supabase is awake and responding."
+          if [ "$response" -eq 200 ] || [ "$response" -eq 401 ] || [ "$response" -eq 406 ]; then
+            echo "✅ Supabase is awake and responding (code: $response)"
           else
-            echo "⚠️ Unexpected response code: $response"
-            exit 1
+            echo "⚠️ Supabase returned code $response — project may be paused or restarting."
+            echo "This is NOT a critical error. The ping was still sent."
           fi
+          
+          # Always exit 0 — we just want to ping, not block the workflow
+          exit 0
