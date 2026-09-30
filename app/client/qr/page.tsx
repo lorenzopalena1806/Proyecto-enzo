@@ -64,48 +64,54 @@ export default async function ClientQRPage() {
   }
 
 
-  // 1. Fetch active offers from active merchants
-  const { data: offers } = await adminClient
-    .from('merchant_offers')
-    .select(`
-      *,
-      merchant:profiles!inner (
-        business_name,
-        full_name,
-        is_active
-      )
-    `)
-    .eq('is_active', true)
-    .eq('merchant.is_active', true)
-    .in('target_role', ['client', 'all'])
-    .order('created_at', { ascending: false });
+  // Fetch all independent data IN PARALLEL — reduces page load time significantly
+  const [
+    { data: offers },
+    { data: clientHistory },
+    { data: merchantsData },
+    { data: favoritesData },
+  ] = await Promise.all([
+    // 1. Active offers from active merchants
+    adminClient
+      .from('merchant_offers')
+      .select(`*, merchant:profiles!inner (business_name, full_name, is_active)`)
+      .eq('is_active', true)
+      .eq('merchant.is_active', true)
+      .in('target_role', ['client', 'all'])
+      .order('created_at', { ascending: false }),
 
-  // Filtrar ofertas por día válido y stock (stock logic usually handled here or in client, but let's do day filter)
+    // 2. Client transaction history
+    adminClient
+      .from('discount_transactions')
+      .select(`*, scanner:profiles!scanner_id(business_name, full_name), offer:merchant_offers(title)`)
+      .eq('scanned_user_id', user.id)
+      .order('applied_at', { ascending: false }),
+
+    // 3. Active merchants list
+    adminClient
+      .from('profiles')
+      .select('id, business_name, avatar_url, maps_url, category, is_featured, address, latitude, longitude, created_at')
+      .eq('role', 'merchant')
+      .eq('is_active', true),
+
+    // 4. Favorites for current user
+    adminClient
+      .from('favorites')
+      .select('merchant_id')
+      .eq('client_id', user.id),
+  ]);
+
+  // Filtrar ofertas por día válido y stock
   const argDate = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Argentina/Buenos_Aires"}));
   const todayString = argDate.getDay().toString();
 
   const activeOffers = (offers || []).filter((offer: any) => {
-    // Si la oferta tiene un límite de stock y ya se agotó, no mostrarla (opcional, pero buena práctica)
     if (offer.stock_limit && offer.used_count >= offer.stock_limit) return false;
-    
-    // Si tiene días válidos configurados (array no vacío), debe incluir el día de hoy
     if (offer.valid_days && Array.isArray(offer.valid_days) && offer.valid_days.length > 0) {
       if (!offer.valid_days.includes(todayString)) return false;
     }
-    
     return true;
   });
-
-  // 2. Fetch this client's transaction history
-  const { data: clientHistory } = await adminClient
-    .from('discount_transactions')
-    .select(`
-      *,
-      scanner:profiles!scanner_id(business_name, full_name),
-      offer:merchant_offers(title)
-    `)
-    .eq('scanned_user_id', user.id)
-    .order('applied_at', { ascending: false });
 
   // Calcular ahorro total histórico
   const totalSaved = (clientHistory || []).reduce((acc: number, tx: any) => {
@@ -117,25 +123,13 @@ export default async function ClientQRPage() {
 
   const displayHistory = clientHistory?.slice(0, 20) || [];
 
-  // 3. Fetch Locales Adheridos (active merchants)
-  const { data: merchantsData } = await adminClient
-    .from('profiles')
-    .select('id, business_name, avatar_url, maps_url, category, is_featured, address, latitude, longitude, created_at')
-    .eq('role', 'merchant')
-    .eq('is_active', true);
-    
-  // Sort: featured, then created_at
+  // Sort merchants: featured first, then by newest
   const merchants = (merchantsData || []).sort((a, b) => {
     if (a.is_featured && !b.is_featured) return -1;
     if (!a.is_featured && b.is_featured) return 1;
     return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
   });
 
-  // 4. Fetch Favorites for current user
-  const { data: favoritesData } = await adminClient
-    .from('favorites')
-    .select('merchant_id')
-    .eq('client_id', user.id);
   const initialFavorites = favoritesData?.map((f: any) => f.merchant_id) || [];
 
   return (

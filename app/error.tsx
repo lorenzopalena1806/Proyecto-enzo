@@ -16,7 +16,10 @@ export default function Error({
     // Enviar al servidor mediante API Route
     fetch('/api/log', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'x-log-secret': process.env.NEXT_PUBLIC_LOG_SECRET || '',
+      },
       body: JSON.stringify({
         message: error.message,
         stack: error.stack,
