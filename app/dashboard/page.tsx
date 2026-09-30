@@ -2,11 +2,7 @@ import { createAdminClient, createClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { QrCode, ScanLine, ImageIcon, TrendingUp, ArrowRight, AlertTriangle, Star, ShieldCheck, Briefcase, Printer, Heart, Package, CheckCircle2 } from 'lucide-react';
-import dynamic from 'next/dynamic';
-const MerchantChart = dynamic(() => import('@/components/dashboard/MerchantChart').then(mod => mod.MerchantChart), {
-  ssr: false,
-  loading: () => <div className="h-64 flex items-center justify-center text-slate-500 border border-dashed border-slate-700 rounded-xl bg-slate-900/50">Cargando gráfico...</div>
-});
+import { MerchantChart } from '@/components/dashboard/MerchantChart';
 import { RestartTourButton } from '@/components/dashboard/RestartTourButton';
 
 import { cookies } from 'next/headers';

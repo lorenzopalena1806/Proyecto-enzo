@@ -5,11 +5,7 @@ import { createClient, createAdminClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import { Receipt, TrendingUp, Users, DollarSign } from 'lucide-react';
 import { UndoChargeButton } from '@/components/dashboard/UndoChargeButton';
-import dynamic from 'next/dynamic';
-const MerchantChart = dynamic(() => import('@/components/dashboard/MerchantChart').then(mod => mod.MerchantChart), {
-  ssr: false,
-  loading: () => <div className="h-64 flex items-center justify-center text-slate-500 border border-dashed border-slate-700 rounded-xl bg-slate-900/50">Cargando gráfico...</div>
-});
+import { MerchantChart } from '@/components/dashboard/MerchantChart';
 import { HistoryTableClient } from '@/components/dashboard/HistoryTableClient';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { LazooInsights } from '@/components/dashboard/LazooInsights';
