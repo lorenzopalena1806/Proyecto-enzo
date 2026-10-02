@@ -210,14 +210,10 @@ export function DiscoverSection({
                       </button>
                     </div>
                     
-                    {/* Estrellas y distancia */}
-                    <div className="flex items-center gap-0.5 mb-1">
-                      <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                      <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                      <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                      <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                      <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                      <div className="flex items-center gap-1 text-slate-400 text-[10px] ml-1.5 truncate max-w-[80px] sm:max-w-[100px]">
+                    {/* Categoría y distancia */}
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-[10px] font-medium text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded uppercase tracking-wider">{merchant.category || 'Rubro General'}</span>
+                      <div className="flex items-center gap-1 text-slate-400 text-[10px] truncate max-w-[80px] sm:max-w-[100px]">
                         <MapPin className="w-3 h-3 flex-shrink-0" />
                         <span className="truncate">
                           {userLocation && merchant.latitude && merchant.longitude
@@ -226,10 +222,6 @@ export function DiscoverSection({
                         </span>
                       </div>
                     </div>
-
-                    <p className="text-[10px] sm:text-[11px] text-slate-400 truncate mb-1.5 sm:mb-2">
-                      {merchant.category || 'Rubro General'} • <span className="text-emerald-400/80">Abierto ahora</span>
-                    </p>
 
                     {hasOffer ? (
                       <div className="inline-flex items-center px-2 py-0.5 rounded bg-amber-500/10 text-amber-400/90 text-[9px] sm:text-[10px] font-bold border border-amber-500/20 shadow-sm">

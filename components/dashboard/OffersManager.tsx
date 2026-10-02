@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { createOffer, updateOffer, toggleOfferStatus, deleteOffer, resetOfferStock } from '@/app/actions/offers';
 import { Plus, Tag, Trash2, Power, PowerOff, Loader2, AlertTriangle, Edit2, CalendarDays } from 'lucide-react';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { toast } from 'sonner';
 import Image from 'next/image';
 import { OffersTour } from './OffersTour';
 
@@ -117,27 +118,43 @@ export function OffersManager({ initialOffers, branches = [] }: OffersManagerPro
     setLoading(false);
     
     if (res && !res.success) {
-      alert(res.error || `Error al ${editingOffer ? 'actualizar' : 'crear'} la oferta`);
+      toast.error(res.error || `Error al ${editingOffer ? 'actualizar' : 'crear'} la oferta`);
       return;
     }
     
+    toast.success(`Oferta ${editingOffer ? 'actualizada' : 'creada'} exitosamente`);
     setIsFormOpen(false);
     setEditingOffer(null);
   };
 
   const handleToggle = async (id: string, currentStatus: boolean) => {
-    await toggleOfferStatus(id, !currentStatus);
+    const res = await toggleOfferStatus(id, !currentStatus);
+    if (res && !res.success) {
+      toast.error('Error al cambiar el estado');
+    } else {
+      toast.success(`Oferta ${currentStatus ? 'pausada' : 'activada'}`);
+    }
   };
 
   const handleDelete = async (id: string) => {
     if (confirm('¿Seguro que querés eliminar esta oferta?')) {
-      await deleteOffer(id);
+      const res = await deleteOffer(id);
+      if (res && !res.success) {
+        toast.error('Error al eliminar');
+      } else {
+        toast.success('Oferta eliminada');
+      }
     }
   };
 
   const handleResetStock = async (id: string) => {
     if (confirm('¿Querés renovar el stock de esta oferta? Esto reiniciará el contador a 0 y la volverá a activar automáticamente.')) {
-      await resetOfferStock(id);
+      const res = await resetOfferStock(id);
+      if (res && !res.success) {
+        toast.error('Error al renovar stock');
+      } else {
+        toast.success('Stock renovado');
+      }
     }
   };
 

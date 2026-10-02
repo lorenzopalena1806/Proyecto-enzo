@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   description:
     'Lazoo es la red inteligente de descuentos y beneficios exclusiva para comercios y usuarios en La Calera, Córdoba, Argentina. Incrementá tus ventas con códigos QR y fidelización.',
   keywords: ['Lazoo', 'descuentos La Calera', 'beneficios Córdoba', 'red B2B', 'fidelización Argentina', 'comercios La Calera', 'QR', 'SaaS'],
-  manifest: '/manifest.json',
+  manifest: '/manifest.webmanifest',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',

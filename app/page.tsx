@@ -183,12 +183,67 @@ export default async function Home() {
           </div>
         </section>
 
+        {/* ✨ FAST DEMO - IDEA 4 ✨ */}
+        <section className="py-24 relative overflow-hidden border-y border-cyan-500/10 bg-black/20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">Escaneá en menos de 3 segundos</h2>
+              <p className="text-slate-400 max-w-2xl mx-auto text-lg">No demorás la fila de la caja. El proceso es tan rápido como leer un código QR.</p>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-8 relative max-w-5xl mx-auto">
+              <div className="absolute top-1/2 left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-cyan-500/0 via-cyan-500/50 to-cyan-500/0 hidden md:block -translate-y-1/2 z-0" />
+              
+              {/* Step 1 */}
+              <div className="relative z-10 bg-[#060D1A] border border-slate-800 p-6 rounded-3xl text-center shadow-xl flex flex-col items-center">
+                <div className="w-12 h-12 bg-slate-900 text-slate-400 rounded-full flex items-center justify-center font-bold text-xl mb-6 border border-slate-800">1</div>
+                <div className="w-32 h-32 bg-slate-900 rounded-2xl border border-slate-700 flex items-center justify-center mb-6 relative overflow-hidden">
+                   <QrCode className="w-16 h-16 text-white" />
+                   <div className="absolute left-0 w-full h-1 bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,1)] animate-scan" />
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">Cliente abre la app</h3>
+                <p className="text-sm text-slate-400">Prepara el escáner de Lazoo en su celular.</p>
+              </div>
+
+              {/* Step 2 */}
+              <div className="relative z-10 bg-[#060D1A] border border-cyan-500/30 p-6 rounded-3xl text-center shadow-[0_0_30px_-5px_rgba(6,182,212,0.3)] flex flex-col items-center transform md:-translate-y-4">
+                <div className="w-12 h-12 bg-cyan-500 text-white rounded-full flex items-center justify-center font-bold text-xl mb-6 shadow-lg shadow-cyan-500/50">2</div>
+                <div className="w-32 h-32 bg-slate-900 rounded-2xl border border-cyan-500/50 flex items-center justify-center mb-6 relative">
+                   <Store className="w-16 h-16 text-cyan-400" />
+                   <div className="absolute inset-0 border-2 border-cyan-400 rounded-2xl animate-pulse" />
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">Lee tu mostrador</h3>
+                <p className="text-sm text-slate-400">Apunta al código QR impreso en tu caja.</p>
+              </div>
+
+              {/* Step 3 */}
+              <div className="relative z-10 bg-[#060D1A] border border-emerald-500/30 p-6 rounded-3xl text-center shadow-xl flex flex-col items-center">
+                <div className="w-12 h-12 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full flex items-center justify-center font-bold text-xl mb-6">3</div>
+                <div className="w-32 h-32 bg-emerald-500/10 rounded-2xl border border-emerald-500/30 flex flex-col items-center justify-center mb-6">
+                   <span className="text-2xl font-black text-emerald-400">-15%</span>
+                   <CheckCircle2 className="w-8 h-8 text-emerald-400 mt-2" />
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">Descuento aplicado</h3>
+                <p className="text-sm text-slate-400">Pagá el monto final, el cliente se va feliz.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ✨ FEATURES ✨ */}
+        <FadeIn>
+          <section id="features" className="py-24 relative">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6">
+              <FeaturesTabs />
+            </div>
+          </section>
+        </FadeIn>
+
         {/* ✨ PAYMENTS - IDEA 5 ✨ */}
         <FadeIn>
           <section className="py-16 relative">
             <div className="mx-auto max-w-5xl px-4 sm:px-6">
               <div className="rounded-3xl bg-gradient-to-br from-slate-900 to-[#060D1A] border border-cyan-500/20 p-8 md:p-12 relative overflow-hidden shadow-2xl shadow-cyan-900/20">
-                {/* Decoration */}
                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl" />
                 <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl" />
                 
@@ -235,109 +290,6 @@ export default async function Home() {
             </div>
           </section>
         </FadeIn>
-
-        {/* ✨ FAST DEMO - IDEA 4 ✨ */}
-        <section className="py-24 relative overflow-hidden border-y border-cyan-500/10 bg-black/20">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">Escaneá en menos de 3 segundos</h2>
-              <p className="text-slate-400 max-w-2xl mx-auto text-lg">No demorás la fila de la caja. El proceso es tan rápido como leer un código QR.</p>
-            </div>
-            
-            <div className="grid md:grid-cols-3 gap-8 relative max-w-5xl mx-auto">
-              <div className="absolute top-1/2 left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-cyan-500/0 via-cyan-500/50 to-cyan-500/0 hidden md:block -translate-y-1/2 z-0" />
-              
-              {/* Step 1 */}
-              <div className="relative z-10 bg-[#060D1A] border border-slate-800 p-6 rounded-3xl text-center shadow-xl flex flex-col items-center">
-                <div className="w-12 h-12 bg-slate-900 text-slate-400 rounded-full flex items-center justify-center font-bold text-xl mb-6 border border-slate-800">1</div>
-                <div className="w-32 h-32 bg-slate-900 rounded-2xl border border-slate-700 flex items-center justify-center mb-6 relative overflow-hidden">
-                   <QrCode className="w-16 h-16 text-white" />
-                   {/* Animated scan line */}
-                   <div className="absolute left-0 w-full h-1 bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,1)] animate-scan" />
-                </div>
-                <h3 className="text-lg font-bold text-white mb-2">Cliente abre la app</h3>
-                <p className="text-sm text-slate-400">Prepara el escáner de Lazoo en su celular.</p>
-              </div>
-
-              {/* Step 2 */}
-              <div className="relative z-10 bg-[#060D1A] border border-cyan-500/30 p-6 rounded-3xl text-center shadow-[0_0_30px_-5px_rgba(6,182,212,0.3)] flex flex-col items-center transform md:-translate-y-4">
-                <div className="w-12 h-12 bg-cyan-500 text-white rounded-full flex items-center justify-center font-bold text-xl mb-6 shadow-lg shadow-cyan-500/50">2</div>
-                <div className="w-32 h-32 bg-slate-900 rounded-2xl border border-cyan-500/50 flex items-center justify-center mb-6 relative">
-                   <Store className="w-16 h-16 text-cyan-400" />
-                   <div className="absolute inset-0 border-2 border-cyan-400 rounded-2xl animate-pulse" />
-                </div>
-                <h3 className="text-lg font-bold text-white mb-2">Lee tu mostrador</h3>
-                <p className="text-sm text-slate-400">Apunta al código QR impreso en tu caja.</p>
-              </div>
-
-              {/* Step 3 */}
-              <div className="relative z-10 bg-[#060D1A] border border-emerald-500/30 p-6 rounded-3xl text-center shadow-xl flex flex-col items-center">
-                <div className="w-12 h-12 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full flex items-center justify-center font-bold text-xl mb-6">3</div>
-                <div className="w-32 h-32 bg-emerald-500/10 rounded-2xl border border-emerald-500/30 flex flex-col items-center justify-center mb-6">
-                   <span className="text-2xl font-black text-emerald-400">-15%</span>
-                   <CheckCircle2 className="w-8 h-8 text-emerald-400 mt-2" />
-                </div>
-                <h3 className="text-lg font-bold text-white mb-2">Descuento aplicado</h3>
-                <p className="text-sm text-slate-400">Pagá el monto final, el cliente se va feliz.</p>
-              </div>
-
-            </div>
-          </div>
-        </section>
-
-        {/* ✨ PURPOSE ✨ */}
-        <FadeIn>
-          <section className="py-24 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-b from-[#060D1A] via-cyan-900/10 to-[#060D1A]" />
-            <div className="relative mx-auto max-w-4xl px-4 sm:px-6 text-center">
-              <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">Nuestro Propósito</h2>
-              <div className="relative p-8 md:p-12 rounded-3xl bg-white/5 border border-cyan-500/20 backdrop-blur-md shadow-2xl">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-full blur-2xl opacity-50" />
-                <p className="text-lg md:text-xl text-slate-300 leading-relaxed font-medium">
-                  Creemos que los comercios de barrio son el corazón de la ciudad. Nacimos para darles la misma tecnología de fidelización que usan las grandes cadenas, pero fácil de usar. Nuestro objetivo es que <strong className="text-cyan-400 font-bold">los locales vendan más</strong> atrayendo nuevos clientes y <strong className="text-cyan-400 font-bold">los vecinos ahorren</strong> en su día a día.
-                </p>
-              </div>
-            </div>
-          </section>
-        </FadeIn>
-
-        {/* ✨ FEATURES ✨ */}
-        <FadeIn>
-          <section id="features" className="py-12 relative">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6">
-              <FeaturesTabs />
-            </div>
-          </section>
-        </FadeIn>
-
-        {/* ✨ TESTIMONIALS ✨ */}
-        <section className="py-24 relative">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">Locales que ya crecen con Lazoo</h2>
-            </div>
-            
-            <div className="grid md:grid-cols-3 gap-6">
-              {[
-                { name: 'Martina L.', biz: 'Cafetería La Esquina', text: '"Los martes eran un día muerto. Desde que sumamos el descuento de la red, se llena de clientes nuevos que nos descubrieron por la app."' },
-                { name: 'Jorge M.', biz: 'Verdulería El Sol', text: '"Es comodísimo. Yo les muestro el QR de la verdulería, el cliente escanea con su celu y ya le queda el descuento aplicado. Muy fácil."' },
-                { name: 'Sofía R.', biz: 'Peluquería Style', text: '"Lo que más me gusta es el descuento de Dueño a Dueño. Cuando voy a comprar la comida para el local, uso mi descuento B2B."' }
-              ].map((t, i) => (
-                <div key={i} className="rounded-3xl border border-cyan-500/15 bg-white/3 p-8 backdrop-blur-sm relative">
-                  <div className="text-cyan-500/20 absolute top-4 right-6 text-6xl font-serif">&quot;</div>
-                  <p className="text-slate-300 italic mb-6 relative z-10">{t.text}</p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold">{t.name.charAt(0)}</div>
-                    <div>
-                      <h4 className="text-white font-bold text-sm">{t.name}</h4>
-                      <p className="text-cyan-400 text-xs">{t.biz}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* ✨ PRICING ✨ */}
         <section id="pricing" className="py-24">
@@ -426,25 +378,37 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* ✨ CTA Final ✨ */}
-        <section className="py-24 relative overflow-hidden border-t border-cyan-500/10">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#060D1A] via-cyan-900/20 to-[#060D1A]" />
-          <div className="relative mx-auto max-w-4xl px-4 sm:px-6 text-center space-y-8">
-            <h2 className="text-4xl md:text-5xl font-extrabold text-white">Llevá tu negocio al próximo nivel</h2>
-            <p className="text-xl text-slate-300 max-w-2xl mx-auto">
-              Sumate a los locales que ya están escalando sus ventas y atrayendo nuevos clientes con Lazoo.
-            </p>
-            <div className="pt-4">
-              <Link
-                href="/auth/register?role=merchant"
-                className="inline-flex items-center justify-center gap-2 px-10 py-5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-extrabold text-lg hover:scale-105 transition-transform shadow-[0_0_40px_rgba(6,182,212,0.3)]"
-              >
-                Comenzar ahora gratis por 7 días
-                <ArrowRight className="h-5 w-5" />
-              </Link>
+        {/* ✨ PURPOSE + CTA ✨ */}
+        <FadeIn>
+          <section className="py-24 relative overflow-hidden border-t border-cyan-500/10">
+            <div className="absolute inset-0 bg-gradient-to-b from-[#060D1A] via-cyan-900/10 to-[#060D1A]" />
+            <div className="relative mx-auto max-w-4xl px-4 sm:px-6 text-center">
+              <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">Nuestro Propósito</h2>
+              <div className="relative p-8 md:p-12 rounded-3xl bg-white/5 border border-cyan-500/20 backdrop-blur-md shadow-2xl mb-16">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-full blur-2xl opacity-50" />
+                <p className="text-lg md:text-xl text-slate-300 leading-relaxed font-medium">
+                  Creemos que los comercios de barrio son el corazón de la ciudad. Nacimos para darles la misma tecnología de fidelización que usan las grandes cadenas, pero fácil de usar. Nuestro objetivo es que <strong className="text-cyan-400 font-bold">los locales vendan más</strong> atrayendo nuevos clientes y <strong className="text-cyan-400 font-bold">los vecinos ahorren</strong> en su día a día.
+                </p>
+              </div>
+
+              <div className="space-y-8 mt-12">
+                <h2 className="text-4xl md:text-5xl font-extrabold text-white">Llevá tu negocio al próximo nivel</h2>
+                <p className="text-xl text-slate-300 max-w-2xl mx-auto">
+                  Sumate a los locales que ya están escalando sus ventas y atrayendo nuevos clientes con Lazoo.
+                </p>
+                <div className="pt-4">
+                  <Link
+                    href="/auth/register?role=merchant"
+                    className="inline-flex items-center justify-center gap-2 px-10 py-5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-extrabold text-lg hover:scale-105 transition-transform shadow-[0_0_40px_rgba(6,182,212,0.3)]"
+                  >
+                    Comenzar ahora gratis por 7 días
+                    <ArrowRight className="h-5 w-5" />
+                  </Link>
+                </div>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </FadeIn>
       </main>
 
       <footer className="border-t border-cyan-500/10 bg-black/40 backdrop-blur-lg">
